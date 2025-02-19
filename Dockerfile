@@ -1,21 +1,23 @@
-# FROM gcr.io/xcuseme-app/xme-build:0.0.1 as ssh
-
-FROM node:22 AS build
-
-# RUN mkdir /root/.ssh
-# COPY --from=ssh /root/.ssh /root/.ssh
-
-# RUN chmod 400 -R ~/.ssh
-
-ARG build_env API_WS_URL API_URL APP_DOMAIN APP_URL
-ENV BUILD_ENV=$build_env APP_URL=$APP_URL APP_DOMAIN=$APP_DOMAIN API_URL=$API_URL API_WS_URL=$API_WS_URL
+FROM node:18-slim AS builder
 
 WORKDIR /app
 COPY . .
 
+# Install dependencies and build
 RUN npm install
 RUN npm run build
 
-FROM nginx
+# Production stage
+FROM nginx:alpine
+
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/spa /usr/share/nginx/html
+
+# Copy built assets from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
