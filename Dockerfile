@@ -15,7 +15,7 @@ COPY . .
 
 RUN npm install -g @quasar/cli
 RUN npm install
-RUN quasar build
+RUN npm run build
 
 FROM nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
