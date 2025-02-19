@@ -13,7 +13,6 @@ ENV BUILD_ENV=$build_env APP_URL=$APP_URL APP_DOMAIN=$APP_DOMAIN API_URL=$API_UR
 WORKDIR /app
 COPY . .
 
-RUN npm install -g @quasar/cli
 RUN npm install
 RUN npm run build
 
