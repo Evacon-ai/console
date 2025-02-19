@@ -1,6 +1,6 @@
 # FROM gcr.io/xcuseme-app/xme-build:0.0.1 as ssh
 
-FROM node:18 AS build
+FROM node:22 AS build
 
 # RUN mkdir /root/.ssh
 # COPY --from=ssh /root/.ssh /root/.ssh
