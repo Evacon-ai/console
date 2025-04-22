@@ -1,7 +1,17 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { User, LoginCredentials } from '../types'
-import { supabase } from '../lib/supabase'
+import type { User, LoginCredentials, SignUpCredentials } from '../types'
+import api from '../lib/axios'
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth'
+import { auth } from '../lib/firebase'
+import { mockApi } from '../lib/mockDb'
 
 export const useUserStore = defineStore('user', () => {
   const currentUser = ref<User | null>(null)
@@ -9,42 +19,64 @@ export const useUserStore = defineStore('user', () => {
   const error = ref<string | null>(null)
 
   const isAuthenticated = computed(() => currentUser.value !== null)
-  const isEvaconStaff = computed(() => 
-    currentUser.value?.role === 'evacon_admin' || 
-    currentUser.value?.role === 'evacon_staff'
-  )
-  const isEvaconAdmin = computed(() => 
-    currentUser.value?.role === 'evacon_admin'
-  )
+  const isEvaconStaff = computed(() => currentUser.value?.level === 'evacon')
+  const isEvaconAdmin = computed(() => currentUser.value?.role === 'evacon_admin')
 
-  async function login({ email, password }: LoginCredentials) {
+  async function signUp({ email, password }: SignUpCredentials) {
     loading.value = true
     error.value = null
     
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password
+      const { user: firebaseUser } = await createUserWithEmailAndPassword(auth, email, password)
+      
+      // Create user in our API
+      const newUser = await api.post('/users', {
+        firebase_uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        role: 'customer_user',
+        level: 'customer'
       })
-
-      if (authError) throw authError
-
-      if (authData.user) {
-        const metadata = authData.user.user_metadata
-        currentUser.value = {
-          id: authData.user.id,
-          email: authData.user.email!,
-          firstName: metadata.first_name || '',
-          lastName: metadata.last_name || '',
-          role: metadata.role || 'customer_user',
-          createdAt: authData.user.created_at,
-          updatedAt: authData.user.updated_at
-        }
-        return true
-      }
-      return false
+      
+      currentUser.value = newUser
+      return true
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Login failed'
+      error.value = e instanceof Error ? e.message : 'Sign up failed'
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function login({ email, password }: LoginCredentials) {
+    loading.value = true
+    error.value = null
+    let errorMessage = null
+    
+    try {
+      const { user: firebaseUser } = await signInWithEmailAndPassword(auth, email, password)
+      
+      // Get user metadata from our API
+      const userData = await api.get(`/users/me`)
+      if (!userData || !userData.id) {
+        errorMessage = 'User account not found'
+        throw new Error(errorMessage)
+      }
+      
+      currentUser.value = userData
+      return true
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Login failed'
+      error.value = message
+      
+      // Map Firebase errors to user-friendly messages
+      if (message.includes('auth/wrong-password')) {
+        error.value = 'Invalid email or password'
+      } else if (message.includes('auth/user-not-found')) {
+        error.value = 'No account found with this email'
+      } else if (message.includes('auth/too-many-requests')) {
+        error.value = 'Too many attempts. Please try again later'
+      }
+      
       return false
     } finally {
       loading.value = false
@@ -56,11 +88,7 @@ export const useUserStore = defineStore('user', () => {
     error.value = null
 
     try {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/new-password`
-      })
-
-      if (resetError) throw resetError
+      await sendPasswordResetEmail(auth, email)
       return true
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Password reset failed'
@@ -70,16 +98,12 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  async function updatePassword(password: string) {
+  async function updatePassword(code: string, newPassword: string) {
     loading.value = true
     error.value = null
 
     try {
-      const { error: updateError } = await supabase.auth.updateUser({
-        password
-      })
-
-      if (updateError) throw updateError
+      await confirmPasswordReset(auth, code, newPassword)
       return true
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Password update failed'
@@ -90,29 +114,34 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function logout() {
-    const { error: signOutError } = await supabase.auth.signOut()
-    if (signOutError) {
-      error.value = signOutError.message
+    try {
+      await signOut(auth)
+      currentUser.value = null
+      return true
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Logout failed'
       return false
     }
-    currentUser.value = null
-    return true
   }
 
   async function initSession() {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (session?.user) {
-      const metadata = session.user.user_metadata
-      currentUser.value = {
-        id: session.user.id,
-        email: session.user.email!,
-        firstName: metadata.first_name || '',
-        lastName: metadata.last_name || '',
-        role: metadata.role || 'customer_user',
-        createdAt: session.user.created_at,
-        updatedAt: session.user.updated_at
-      }
-    }
+    return new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          // Get user metadata from our API
+          const userData = await api.get(`/users/me`)
+          if (userData) {
+            currentUser.value = userData
+          } else {
+            currentUser.value = null
+          }
+        } else {
+          currentUser.value = null
+        }
+        unsubscribe()
+        resolve(true)
+      })
+    })
   }
 
   return {
@@ -122,6 +151,7 @@ export const useUserStore = defineStore('user', () => {
     isAuthenticated,
     isEvaconStaff,
     isEvaconAdmin,
+    signUp,
     login,
     logout,
     resetPassword,

@@ -8,7 +8,7 @@
         
         <q-card-section class="text-center" style="margin-top: 80px">
           <Logo class="q-mb-lg" :size="64" />
-          <div class="text-h5 q-mb-md">{{ $t('auth.signInTitle') }}</div>
+          <div class="text-h5 q-mb-md">{{ isSignUp ? $t('auth.signUpTitle') : $t('auth.signInTitle') }}</div>
         </q-card-section>
 
         <q-card-section class="q-px-lg">
@@ -44,8 +44,9 @@
             </q-input>
 
             <div class="row items-center justify-between q-mt-md" :class="{ reverse: isRTL }">
-              <q-checkbox v-model="remember" :label="$t('common.rememberMe')" :disable="userStore.loading" />
+              <q-checkbox v-if="!isSignUp" v-model="remember" :label="$t('common.rememberMe')" :disable="userStore.loading" />
               <q-btn 
+                v-if="!isSignUp"
                 flat 
                 color="primary" 
                 :label="$t('common.forgotPassword')" 
@@ -65,9 +66,18 @@
               color="primary"
               class="full-width q-py-sm q-mt-xl"
               size="large"
-              :label="$t('common.signIn')"
+              :label="isSignUp ? $t('auth.signUp') : $t('common.signIn')"
               :loading="userStore.loading"
             />
+
+            <div class="text-center q-mt-sm">
+              <q-btn
+                flat
+                color="primary"
+                :label="isSignUp ? $t('auth.haveAccount') : $t('auth.needAccount')"
+                @click="isSignUp = !isSignUp"
+              />
+            </div>
           </q-form>
         </q-card-section>
       </q-card>
@@ -77,13 +87,14 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
 import Logo from '../components/Logo.vue'
 import LanguageSelector from '../components/LanguageSelector.vue'
 
 const router = useRouter()
+const route = useRoute()
 const { locale } = useI18n()
 const userStore = useUserStore()
 
@@ -91,19 +102,36 @@ const email = ref('')
 const password = ref('')
 const isPwd = ref(true)
 const remember = ref(false)
+const isSignUp = ref(false)
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 
-const onSubmit = async () => {
-  const success = await userStore.login({
-    email: email.value,
-    password: password.value
-  })
+// Check for error message in route query
+if (route.query.error) {
+  userStore.error = route.query.error as string
+}
 
-  if (success) {
-    if (remember.value) {
-      localStorage.setItem('remember', 'true')
+const onSubmit = async () => {
+  if (isSignUp.value) {
+    const success = await userStore.signUp({
+      email: email.value,
+      password: password.value
+    })
+
+    if (success) {
+      router.push('/dashboard')
     }
-    router.push('/dashboard')
+  } else {
+    const success = await userStore.login({
+      email: email.value,
+      password: password.value
+    })
+
+    if (success) {
+      if (remember.value) {
+        localStorage.setItem('remember', 'true')
+      }
+      router.push('/dashboard')
+    }
   }
 }
 </script>

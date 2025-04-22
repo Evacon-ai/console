@@ -9,14 +9,14 @@
         <q-avatar size="24px" class="q-mr-sm">
           <img :src="avatarUrl">
         </q-avatar>
-        <div class="text-white">{{ userStore.currentUser?.firstName }} {{ userStore.currentUser?.lastName }}</div>
+        <div class="text-white">{{ userStore.currentUser?.first_name }} {{ userStore.currentUser?.last_name }}</div>
       </div>
     </template>
 
     <q-list style="min-width: 200px">
       <q-item>
         <q-item-section>
-          <q-item-label>{{ userStore.currentUser?.firstName }} {{ userStore.currentUser?.lastName }}</q-item-label>
+          <q-item-label>{{ userStore.currentUser?.first_name }} {{ userStore.currentUser?.last_name }}</q-item-label>
           <q-item-label caption>{{ userStore.currentUser?.email }}</q-item-label>
         </q-item-section>
       </q-item>
@@ -58,6 +58,48 @@
         </q-menu>
       </q-item>
 
+      <q-item clickable>
+        <q-item-section avatar>
+          <Moon v-if="$q.dark.isActive" class="w-5 h-5" />
+          <Sun v-else class="w-5 h-5" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{ $t('common.theme') }}</q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-icon name="chevron_right" />
+        </q-item-section>
+
+        <q-menu anchor="top end" self="top start" :offset="[0, 0]">
+          <q-list style="min-width: 150px">
+            <q-item
+              clickable
+              v-close-popup
+              @click="$q.dark.set(false)"
+            >
+              <q-item-section>
+                <q-item-label>{{ $t('common.lightMode') }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon v-if="!$q.dark.isActive" name="check" />
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              v-close-popup
+              @click="$q.dark.set(true)"
+            >
+              <q-item-section>
+                <q-item-label>{{ $t('common.darkMode') }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon v-if="$q.dark.isActive" name="check" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-item>
+
       <q-separator />
 
       <q-item clickable v-close-popup @click="handleSignOut">
@@ -74,12 +116,14 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { User, Languages, LogOut } from 'lucide-vue-next'
+import { User, Languages, LogOut, Moon, Sun } from 'lucide-vue-next'
+import { useQuasar } from 'quasar'
 import { useUserStore } from '../stores/userStore'
 
 const router = useRouter()
 const { locale, t } = useI18n()
 const userStore = useUserStore()
+const $q = useQuasar()
 
 const languages = [
   { code: 'en', name: 'English' },
@@ -97,7 +141,7 @@ const getCurrentLanguageName = computed(() => {
 })
 
 const avatarUrl = computed(() => {
-  const name = `${userStore.currentUser?.firstName || ''} ${userStore.currentUser?.lastName || ''}`.trim()
+  const name = `${userStore.currentUser?.first_name || ''} ${userStore.currentUser?.last_name || ''}`.trim()
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=24&background=0D8ABC&color=fff`
 })
 

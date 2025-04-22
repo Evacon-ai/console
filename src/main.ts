@@ -12,7 +12,6 @@ import '@quasar/extras/material-icons/material-icons.css'
 import App from './App.vue'
 import Dashboard from './pages/Dashboard.vue'
 import Projects from './pages/Projects.vue'
-import Users from './pages/Users.vue'
 import Profile from './pages/Profile.vue'
 import SignIn from './pages/SignIn.vue'
 import ResetPassword from './pages/ResetPassword.vue'
@@ -55,12 +54,6 @@ const routes = [
     component: Projects,
     meta: { requiresAuth: true }
   },
-  {
-    path: '/users',
-    name: 'users',
-    component: Users,
-    meta: { requiresAuth: true, requiresEvacon: true }
-  },
   { 
     path: '/profile', 
     name: 'profile',
@@ -92,8 +85,6 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
     next({ name: 'login' })
   } else if (to.meta.requiresGuest && userStore.isAuthenticated) {
-    next({ name: 'dashboard' })
-  } else if (to.meta.requiresEvacon && !userStore.isEvaconStaff) {
     next({ name: 'dashboard' })
   } else {
     next()

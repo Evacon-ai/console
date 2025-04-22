@@ -91,15 +91,15 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { supabase } from '../lib/supabase'
+import { useUserStore } from '../stores/userStore'
 import Logo from '../components/Logo.vue'
 import LanguageSelector from '../components/LanguageSelector.vue'
 
 const router = useRouter()
-const route = useRoute()
 const { locale, t } = useI18n()
+const userStore = useUserStore()
 
 const password = ref('')
 const confirmPassword = ref('')
@@ -110,30 +110,12 @@ const loading = ref(false)
 const error = ref<string | null>(null)
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 
-onMounted(async () => {
-  const hashParams = new URLSearchParams(window.location.hash.substring(1))
-  const accessToken = hashParams.get('access_token')
-  const refreshToken = hashParams.get('refresh_token')
-  const type = hashParams.get('type')
+onMounted(() => {
+  // Get the oobCode from the URL
+  const urlParams = new URLSearchParams(window.location.search)
+  const oobCode = urlParams.get('oobCode')
 
-  if (!accessToken || !refreshToken || type !== 'recovery') {
-    error.value = t('auth.invalidResetLink')
-    setTimeout(() => {
-      router.push('/login')
-    }, 3000)
-    return
-  }
-
-  try {
-    const { error: sessionError } = await supabase.auth.setSession({
-      access_token: accessToken,
-      refresh_token: refreshToken
-    })
-
-    if (sessionError) {
-      throw sessionError
-    }
-  } catch (e) {
+  if (!oobCode) {
     error.value = t('auth.invalidResetLink')
     setTimeout(() => {
       router.push('/login')
@@ -157,13 +139,17 @@ const onSubmit = async () => {
   error.value = null
   success.value = false
 
+  const urlParams = new URLSearchParams(window.location.search)
+  const oobCode = urlParams.get('oobCode')
+
+  if (!oobCode) {
+    error.value = t('auth.invalidResetLink')
+    loading.value = false
+    return
+  }
+
   try {
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: password.value
-    })
-
-    if (updateError) throw updateError
-
+    await userStore.updatePassword(oobCode, password.value)
     success.value = true
     setTimeout(() => {
       router.push('/login')

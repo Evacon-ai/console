@@ -9,7 +9,7 @@
             <img :src="avatarUrl">
           </q-avatar>
           <div :class="isRTL ? 'q-mr-md' : 'q-ml-md'">
-            <div class="text-h5">{{ userStore.currentUser?.firstName }} {{ userStore.currentUser?.lastName }}</div>
+            <div class="text-h5">{{ userStore.currentUser?.first_name }} {{ userStore.currentUser?.last_name }}</div>
             <div class="text-subtitle1 text-grey-7">{{ userStore.currentUser?.email }}</div>
           </div>
           <q-space />
@@ -77,13 +77,13 @@ const userStore = useUserStore()
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 
 const avatarUrl = computed(() => {
-  const name = `${userStore.currentUser?.firstName || ''} ${userStore.currentUser?.lastName || ''}`.trim()
+  const name = `${userStore.currentUser?.first_name || ''} ${userStore.currentUser?.last_name || ''}`.trim()
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=96&background=0D8ABC&color=fff`
 })
 
 const getRoleDisplay = computed(() => {
   if (userStore.currentUser?.role) {
-    return t(`profile.roles.${userStore.currentUser?.role || "unknown"}`)
+    return t(`profile.roles.${userStore.currentUser?.level || "unknown"}_${userStore.currentUser?.role || "unknown"}`)
   } else {
     return ''
   }

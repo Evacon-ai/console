@@ -49,6 +49,10 @@ export default {
   },
   auth: {
     signInTitle: 'Zaloguj się na swoje konto',
+    signUpTitle: 'Utwórz konto',
+    signUp: 'Zarejestruj się',
+    needAccount: 'Nie masz konta? Zarejestruj się',
+    haveAccount: 'Masz już konto? Zaloguj się',
     emailRequired: 'Email jest wymagany',
     passwordRequired: 'Hasło jest wymagane',
     resetPassword: 'Zresetuj hasło',

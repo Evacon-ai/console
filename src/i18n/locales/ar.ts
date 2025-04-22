@@ -48,6 +48,10 @@ export default {
   },
   auth: {
     signInTitle: 'تسجيل الدخول إلى حسابك',
+    signUpTitle: 'إنشاء حساب جديد',
+    signUp: 'تسجيل',
+    needAccount: 'تحتاج حساب؟ سجل الآن',
+    haveAccount: 'لديك حساب بالفعل؟ تسجيل الدخول',
     emailRequired: 'البريد الإلكتروني مطلوب',
     passwordRequired: 'كلمة المرور مطلوبة',
     resetPassword: 'إعادة تعيين كلمة المرور',

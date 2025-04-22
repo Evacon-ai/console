@@ -48,6 +48,10 @@ export default {
   },
   auth: {
     signInTitle: 'התחבר לחשבון שלך',
+    signUpTitle: 'צור חשבון חדש',
+    signUp: 'הרשמה',
+    needAccount: 'צריך חשבון? הירשם',
+    haveAccount: 'כבר יש לך חשבון? התחבר',
     emailRequired: 'דוא"ל נדרש',
     passwordRequired: 'סיסמה נדרשת',
     resetPassword: 'איפוס סיסמה',

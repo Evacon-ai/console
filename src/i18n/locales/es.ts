@@ -48,6 +48,10 @@ export default {
   },
   auth: {
     signInTitle: 'Inicie sesión en su cuenta',
+    signUpTitle: 'Cree su cuenta',
+    signUp: 'Registrarse',
+    needAccount: '¿Necesita una cuenta? Regístrese',
+    haveAccount: '¿Ya tiene una cuenta? Inicie sesión',
     emailRequired: 'El correo electrónico es requerido',
     passwordRequired: 'La contraseña es requerida',
     resetPassword: 'Restablecer contraseña',

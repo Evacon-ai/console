@@ -48,6 +48,10 @@ export default {
   },
   auth: {
     signInTitle: 'Войдите в свой аккаунт',
+    signUpTitle: 'Создать аккаунт',
+    signUp: 'Регистрация',
+    needAccount: 'Нужен аккаунт? Зарегистрируйтесь',
+    haveAccount: 'Уже есть аккаунт? Войдите',
     emailRequired: 'Требуется эл. почта',
     passwordRequired: 'Требуется пароль',
     resetPassword: 'Сброс пароля',
