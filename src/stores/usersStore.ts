@@ -85,6 +85,8 @@ export const useUsersStore = defineStore('users', () => {
     error,
     customerUsers,
     evaconUsers,
+    customerUsers,
+    evaconUsers,
     fetchUsers,
     createUser,
     updateUser,

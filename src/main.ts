@@ -13,6 +13,7 @@ import App from './App.vue'
 import Dashboard from './pages/Dashboard.vue'
 import Projects from './pages/Projects.vue'
 import Profile from './pages/Profile.vue'
+import Users from './pages/Users.vue'
 import SignIn from './pages/SignIn.vue'
 import ResetPassword from './pages/ResetPassword.vue'
 import NewPassword from './pages/NewPassword.vue'
@@ -58,6 +59,12 @@ const routes = [
     path: '/profile', 
     name: 'profile',
     component: Profile,
+    meta: { requiresAuth: true }
+  },
+  { 
+    path: '/users', 
+    name: 'users',
+    component: Users,
     meta: { requiresAuth: true }
   },
   {

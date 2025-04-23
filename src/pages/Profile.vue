@@ -46,7 +46,7 @@
                   <Calendar class="w-5 h-5 text-grey-7" />
                 </q-item-section>
                 <q-item-section>
-                  {{ $t('profile.joined', { date: formatDate(userStore.currentUser?.createdAt) }) }}
+                  {{ $t('profile.joined', { date: formatDate(userStore.currentUser?.created_at) }) }}
                 </q-item-section>
               </q-item>
               <q-item>
@@ -89,11 +89,14 @@ const getRoleDisplay = computed(() => {
   }
 })
 
-const formatDate = (date?: string) => {
+const formatDate = (date?: { _seconds: number; _nanoseconds: number }) => {
   if (!date) return ''
-  return new Date(date).toLocaleDateString(locale.value, {
+  return new Date(date._seconds * 1000).toLocaleString(locale.value, {
     year: 'numeric',
-    month: 'long'
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   })
 }
 

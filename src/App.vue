@@ -1,11 +1,27 @@
 <template>
   <q-layout view="hHh LpR lff" :dir="isRTL ? 'rtl' : 'ltr'" class="app-container">
+    <q-header v-if="!isGuestPage" class="bg-transparent q-pa-sm">
+      <q-toolbar class="q-px-none">
+        <q-btn
+          flat
+          dense
+          round
+          aria-label="Menu"
+          class="lt-md"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        >
+          <component :is="Menu" class="w-5 h-5" />
+        </q-btn>
+      </q-toolbar>
+    </q-header>
+
     <q-drawer
       v-if="!isGuestPage"
       v-model="leftDrawerOpen"
       show-if-above
       bordered
       :width="250"
+      :breakpoint="1024"
       :side="isRTL ? 'right' : 'left'"
       :dark="$q.dark.isActive"
       :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-1'"
@@ -51,7 +67,7 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Home, FolderKanban } from 'lucide-vue-next'
+import { Home, FolderKanban, Users, Menu } from 'lucide-vue-next'
 import { useQuasar } from 'quasar'
 import { useUserStore } from './stores/userStore'
 import Logo from './components/Logo.vue'
@@ -62,14 +78,15 @@ const router = useRouter()
 const { locale } = useI18n()
 const userStore = useUserStore()
 const $q = useQuasar()
-const leftDrawerOpen = ref(true)
+const leftDrawerOpen = ref($q.screen.gt.sm)
 
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 const isGuestPage = computed(() => ['/login', '/forgot-password', '/new-password'].includes(route.path))
 
 const links = [
   { icon: Home, label: 'common.home', path: '/dashboard' },
-  { icon: FolderKanban, label: 'common.projects', path: '/projects' }
+  { icon: FolderKanban, label: 'common.projects', path: '/projects' },
+  { icon: Users, label: 'users.title', path: '/users' }
 ]
 </script>
 
@@ -77,6 +94,7 @@ const links = [
 .app-container {
   height: 100vh;
   overflow: hidden;
+  padding-top: 0 !important;
 }
 
 .drawer-header {
@@ -165,5 +183,22 @@ const links = [
 /* Active menu item styles for light mode */
 body:not(.body--dark) .menu-item-active {
   background: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Header styles */
+.q-header {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.body--dark .q-header {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hide header on larger screens */
+@media (min-width: 1024px) {
+  .q-header {
+    display: none;
+  }
 }
 </style>

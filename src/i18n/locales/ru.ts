@@ -18,6 +18,7 @@ export default {
     processing: 'Обработка',
     success: 'Успешно',
     pleaseWait: 'Пожалуйста, подождите...',
+    refresh: 'Обновить',
     download: 'Скачать',
     language: 'Язык',
     theme: 'Тема',
@@ -71,15 +72,37 @@ export default {
   },
   users: {
     title: 'Пользователи',
+    noUsersFound: 'Пользователи не найдены',
+    searchUsers: 'Поиск пользователей',
+    fullName: 'Полное имя',
+    failedToLoadUsers: 'Не удалось загрузить пользователей',
+    failedToCreateUser: 'Не удалось создать пользователя',
+    failedToUpdateUser: 'Не удалось обновить пользователя',
+    failedToDeleteUser: 'Не удалось удалить пользователя',
+    confirmDelete: 'Удалить пользователя',
+    confirmDeleteMessage: 'Вы уверены, что хотите удалить этого пользователя? Это действие нельзя отменить.',
     evaconStaff: 'Сотрудники Evacon',
-    customerUsers: 'Пользователи клиента',
+    customerUsers: 'Пользователи-клиенты',
     addUser: 'Добавить пользователя',
     editUser: 'Редактировать пользователя',
     deleteUser: 'Удалить пользователя',
     deleteConfirmation: 'Вы уверены, что хотите удалить этого пользователя?',
     userDeleted: 'Пользователь успешно удален',
     userUpdated: 'Пользователь успешно обновлен',
-    userAdded: 'Пользователь успешно добавлен'
+    userAdded: 'Пользователь успешно добавлен. Отправлено письмо для сброса пароля.',
+    firstName: 'Имя',
+    lastName: 'Фамилия',
+    firstNameRequired: 'Имя обязательно',
+    lastNameRequired: 'Фамилия обязательна',
+    invalidEmail: 'Пожалуйста, введите действительный адрес электронной почты',
+    role: 'Роль',
+    level: 'Уровень',
+    addedBy: 'Добавлено пользователем {name} {date}',
+    updatedBy: 'Последнее обновление от {name} {date}',
+    levels: {
+      customer: 'Клиент',
+      evacon: 'Эвакон'
+    }
   },
   profile: {
     title: 'Профиль',
@@ -95,8 +118,11 @@ export default {
     roles: {
       evacon_admin: 'Администратор Evacon',
       evacon_staff: 'Сотрудник Evacon',
+      evacon_user: 'Сотрудник Evacon',
       customer_admin: 'Администратор клиента',
-      customer_user: 'Пользователь клиента'
+      customer_user: 'Пользователь клиента',
+      user: 'Пользователь',
+      admin: 'Администратор'
     }
   },
   dashboard: {

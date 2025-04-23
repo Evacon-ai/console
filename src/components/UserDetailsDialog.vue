@@ -12,7 +12,7 @@
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6">
               <q-input
-                v-model="form.firstName"
+                v-model="form.first_name"
                 :label="$t('users.firstName')"
                 outlined
                 :rules="[val => !!val || $t('users.firstNameRequired')]"
@@ -21,7 +21,7 @@
             </div>
             <div class="col-12 col-sm-6">
               <q-input
-                v-model="form.lastName"
+                v-model="form.last_name"
                 :label="$t('users.lastName')"
                 outlined
                 :rules="[val => !!val || $t('users.lastNameRequired')]"
@@ -36,11 +36,7 @@
             :label="$t('common.email')"
             class="q-mt-md"
             outlined
-            :rules="[
-              val => !!val || $t('auth.emailRequired'),
-              val => /^[^@]+@[^@]+\.[^@]+$/.test(val) || $t('users.invalidEmail')
-            ]"
-            :disable="loading || !canEdit"
+            disable
           />
 
           <q-select
@@ -54,6 +50,17 @@
             :disable="loading || !canEdit"
           />
 
+          <div class="text-caption text-grey-7 q-mt-lg">
+            <div class="row items-center q-gutter-x-sm">
+       
+              {{ $t('users.addedBy', { name: getFullName(createdByUser), date: formatTime(props.user?.created_at) }) }}
+            </div>
+            <div class="row items-center q-gutter-x-sm q-mt-sm">
+       
+              {{ $t('users.updatedBy', { name: getFullName(updatedByUser), date: formatTime(props.user?.updated_at) }) }}
+            </div>
+          </div>
+
           <div v-if="error" class="text-negative q-mt-sm">
             {{ error }}
           </div>
@@ -61,10 +68,19 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-btn
+            v-if="canEdit"
+            flat
+            color="negative"
+            :label="$t('users.deleteUser')"
+            :disable="loading"
+            @click="showDeleteConfirm = true"
+            class="q-mr-auto"
+          />
+          <q-btn
             flat
             :label="$t('common.cancel')"
-            v-close-popup
             :disable="loading"
+            v-close-popup
           />
           <q-btn
             v-if="canEdit"
@@ -77,14 +93,45 @@
       </q-form>
     </q-card>
   </q-dialog>
+
+  <!-- Delete Confirmation Dialog -->
+  <q-dialog v-model="showDeleteConfirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <div class="text-h6">{{ $t('users.confirmDelete') }}</div>
+      </q-card-section>
+
+      <q-card-section>
+        {{ $t('users.confirmDeleteMessage') }}
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat :label="$t('common.cancel')" v-close-popup />
+        <q-btn
+          flat
+          color="negative"
+          :label="$t('users.deleteUser')"
+          :loading="loading"
+          @click="handleDelete"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
-import { supabase } from '../lib/supabase'
+import api from '../lib/axios'
+import { UserPlus, UserCog } from 'lucide-vue-next'
+import { useTimeFormatter } from '../utils/formatTime'
 import type { UserRole } from '../types'
+
+interface UserMetadata {
+  first_name: string
+  last_name: string
+}
 
 const props = defineProps<{
   modelValue: boolean
@@ -98,6 +145,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const userStore = useUserStore()
+const { formatTime } = useTimeFormatter()
 
 const dialogOpen = computed({
   get: () => props.modelValue,
@@ -106,50 +154,76 @@ const dialogOpen = computed({
 
 const loading = ref(false)
 const error = ref<string | null>(null)
+const showDeleteConfirm = ref(false)
+const createdByUser = ref<UserMetadata | null>(null)
+const updatedByUser = ref<UserMetadata | null>(null)
 const form = ref({
-  firstName: '',
-  lastName: '',
+  first_name: '',
+  last_name: '',
   email: '',
   role: 'customer_user' as UserRole
 })
 
 const canEdit = computed(() => {
-  // Only Evacon staff can edit users
-  return userStore.isEvaconStaff
+  // Only Evacon admins can edit users
+  return userStore.isEvaconAdmin
 })
 
 const availableRoles = computed(() => {
-  const isCustomerUser = props.user?.role?.startsWith('customer_')
-  
-  if (isCustomerUser) {
-    return [
-      { label: t('profile.roles.customer_user'), value: 'customer_user' },
-      { label: t('profile.roles.customer_admin'), value: 'customer_admin' }
-    ]
-  } else {
-    return [
-      { label: t('profile.roles.evacon_staff'), value: 'evacon_staff' },
-      { label: t('profile.roles.evacon_admin'), value: 'evacon_admin' }
-    ]
-  }
+  return [
+    { label: t('profile.roles.user'), value: 'user' },
+    { label: t('profile.roles.admin'), value: 'admin' }
+  ]
 })
 
 watch(() => props.user, (newUser) => {
   if (newUser) {
-    // Extract first and last name from full_name
-    const [firstName = '', lastName = ''] = (newUser.full_name || '').split(' ')
-    
-    // Keep role in underscore format
-    const role = newUser.role || 'customer_user'
+    // Reset user metadata
+    createdByUser.value = null
+    updatedByUser.value = null
     
     form.value = {
-      firstName,
-      lastName,
+      first_name: newUser.first_name || '',
+      last_name: newUser.last_name || '',
       email: newUser.email || '',
-      role
+      role: newUser.role || 'customer_user'
+    }
+    
+    // Fetch user metadata
+    if (newUser.created_by) {
+      fetchUserMetadata(newUser.created_by).then(user => {
+        createdByUser.value = user
+      })
+    }
+    
+    if (newUser.updated_by) {
+      fetchUserMetadata(newUser.updated_by).then(user => {
+        updatedByUser.value = user
+      })
     }
   }
 }, { immediate: true })
+
+const fetchUserMetadata = async (userId: string): Promise<UserMetadata> => {
+  try {
+    const response = await api.get(`/users/${userId}`)
+    return {
+      first_name: response.first_name,
+      last_name: response.last_name
+    }
+  } catch (e) {
+    console.error('Failed to fetch user metadata:', e)
+    return {
+      first_name: '—',
+      last_name: ''
+    }
+  }
+}
+
+const getFullName = (user: UserMetadata | null) => {
+  if (!user) return '—'
+  return `${user.first_name} ${user.last_name}`.trim() || '—'
+}
 
 const onSubmit = async () => {
   if (!canEdit.value) return
@@ -158,36 +232,38 @@ const onSubmit = async () => {
   error.value = null
 
   try {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) throw new Error('Not authenticated')
-
-    const response = await fetch(
-      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update-user`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          userId: props.user.id,
-          firstName: form.value.firstName,
-          lastName: form.value.lastName,
-          email: form.value.email,
-          role: form.value.role
-        })
-      }
-    )
-
-    const result = await response.json()
-    if (!response.ok) {
-      throw new Error(result.error || 'Failed to update user')
-    }
+    await api.put(`/users/${props.user.id}`, {
+      first_name: form.value.first_name,
+      last_name: form.value.last_name,
+      email: form.value.email,
+      role: form.value.role,
+      level: form.value.role.startsWith('customer_') ? 'customer' : 'evacon'
+    })
 
     dialogOpen.value = false
     emit('user-updated')
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to update user'
+    error.value = e instanceof Error ? e.message : t('users.failedToUpdateUser')
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleDelete = async () => {
+  if (!props.user) return
+  
+  loading.value = true
+  error.value = null
+
+  try {
+    // Delete user through our API which will handle both database and Firebase deletion
+    await api.delete(`/users/${props.user.id}`)
+
+    dialogOpen.value = false
+    showDeleteConfirm.value = false
+    emit('user-updated')
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : t('users.failedToDeleteUser')
   } finally {
     loading.value = false
   }

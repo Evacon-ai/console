@@ -1,27 +1,61 @@
 <template>
   <q-page padding>
     <div class="row items-center justify-between q-mb-lg">
-      <div class="text-h4">{{ $t('users.title') }}</div>
-      <q-btn color="primary" icon="add" :label="$t('users.addUser')" @click="showUserForm = true" />
+      <div class="text-h4 q-mr-md">{{ $t('users.title') }}</div>
+      <q-space />
+      <q-btn
+        flat
+        round
+        color="primary"
+        icon="refresh"
+        class="q-mr-sm"
+        :loading="usersStore.loading"
+        @click="loadUsers"
+      >
+        <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+      </q-btn>
+      <q-btn
+        color="primary"
+        icon="add"
+        :label="$t('users.addUser')"
+        @click="showUserForm = true"
+      />
     </div>
 
     <q-card flat bordered>
       <q-tabs
         v-model="activeTab"
-        dense
-        class="text-grey"
+        class="bg-primary text-white"
         active-color="primary"
         indicator-color="primary"
-        align="left"
-        narrow-indicator
+        align="justify"
+        :breakpoint="0"
       >
-        <q-tab name="customers" no-caps :label="$t('users.customerUsers')" />
+        <q-tab 
+          name="customers" 
+          no-caps 
+          class="q-px-md"
+        >
+          <template v-slot:default>
+            <div class="row items-center q-gutter-x-sm">
+              <Users class="w-5 h-5" />
+              <div>{{ $t('users.customerUsers') }}</div>
+            </div>
+          </template>
+        </q-tab>
         <q-tab 
           v-if="userStore.isEvaconAdmin" 
           name="evacon" 
-          no-caps
-          :label="$t('users.evaconStaff')" 
-        />
+          no-caps 
+          class="q-px-md"
+        >
+          <template v-slot:default>
+            <div class="row items-center q-gutter-x-sm">
+              <Shield class="w-5 h-5" />
+              <div>{{ $t('users.evaconStaff') }}</div>
+            </div>
+          </template>
+        </q-tab>
       </q-tabs>
 
       <q-separator />
@@ -43,19 +77,22 @@
                 @click="openUserDetails(props.row)"
               >
                 <q-td key="fullName" :props="props">
-                  {{ props.row.full_name }}
+                  {{ props.row.first_name }} {{ props.row.last_name }}
                 </q-td>
                 <q-td key="email" :props="props">
                   {{ props.row.email }}
                 </q-td>
                 <q-td key="role" :props="props">
                   <q-chip
-                    :color="getRoleColor(props.row.role)"
+                    :color="getRoleColor(`${props.row.level}_${props.row.role}`)"
                     text-color="white"
                     size="sm"
                   >
-                    {{ $t(`profile.roles.${props.row.role}`) }}
+                    {{ $t(`profile.roles.${props.row.level}_${props.row.role}`) }}
                   </q-chip>
+                </q-td>
+                <q-td key="joined" :props="props">
+                  {{ formatTime(props.row.created_at) }}
                 </q-td>
               </q-tr>
             </template>
@@ -68,7 +105,7 @@
 
             <template v-slot:no-data>
               <div class="full-width row flex-center q-pa-md text-grey-8">
-                No users found
+                {{ $t('users.noUsersFound') }}
               </div>
             </template>
           </q-table>
@@ -90,19 +127,22 @@
                 @click="openUserDetails(props.row)"
               >
                 <q-td key="fullName" :props="props">
-                  {{ props.row.full_name }}
+                  {{ props.row.first_name }} {{ props.row.last_name }}
                 </q-td>
                 <q-td key="email" :props="props">
                   {{ props.row.email }}
                 </q-td>
                 <q-td key="role" :props="props">
                   <q-chip
-                    :color="getRoleColor(props.row.role)"
+                    :color="getRoleColor(`${props.row.level}_${props.row.role}`)"
                     text-color="white"
                     size="sm"
                   >
-                    {{ $t(`profile.roles.${props.row.role}`) }}
+                    {{ $t(`profile.roles.${props.row.level}_${props.row.role}`) }}
                   </q-chip>
+                </q-td>
+                <q-td key="joined" :props="props">
+                  {{ formatTime(props.row.created_at) }}
                 </q-td>
               </q-tr>
             </template>
@@ -115,7 +155,7 @@
 
             <template v-slot:no-data>
               <div class="full-width row flex-center q-pa-md text-grey-8">
-                No users found
+                {{ $t('users.noUsersFound') }}
               </div>
             </template>
           </q-table>
@@ -138,7 +178,7 @@
     <q-dialog v-model="showError">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Error</div>
+          <div class="text-h6">{{ $t('users.failedToLoadUsers') }}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -146,7 +186,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Close" color="primary" v-close-popup />
+          <q-btn flat :label="$t('common.close')" color="primary" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -155,11 +195,16 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { Users, Shield } from 'lucide-vue-next'
+import { useTimeFormatter } from '../utils/formatTime'
 import { useUserStore } from '../stores/userStore'
 import { useUsersStore } from '../stores/usersStore'
 import UserFormDialog from '../components/UserFormDialog.vue'
 import UserDetailsDialog from '../components/UserDetailsDialog.vue'
 
+const { t } = useI18n()
+const { formatTime } = useTimeFormatter()
 const userStore = useUserStore()
 const usersStore = useUsersStore()
 const activeTab = ref('customers')
@@ -172,15 +217,15 @@ const columns = [
   {
     name: 'fullName',
     required: true,
-    label: 'Full Name',
+    label: t('users.fullName'),
     align: 'left',
-    field: row => row.full_name,
+    field: row => `${row.first_name} ${row.last_name}`,
     sortable: true
   },
   {
     name: 'email',
     required: true,
-    label: 'Email',
+    label: t('common.email'),
     align: 'left',
     field: 'email',
     sortable: true
@@ -188,9 +233,18 @@ const columns = [
   {
     name: 'role',
     required: true,
-    label: 'Role',
+    label: t('users.role'),
     align: 'left',
     field: 'role',
+    sortable: true
+  },
+  {
+    name: 'joined',
+    required: true,
+    label: t('profile.joined', { date: '' }).replace('{date}', ''),
+    align: 'left',
+    field: 'created_at',
+    format: (val) => formatTime(val),
     sortable: true
   }
 ]
@@ -199,7 +253,7 @@ const getRoleColor = (role: string) => {
   switch (role) {
     case 'evacon_admin':
       return 'purple'
-    case 'evacon_staff':
+    case 'evacon_user':
       return 'deep-purple'
     case 'customer_admin':
       return 'indigo'
@@ -229,6 +283,39 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.q-tabs {
+  position: relative;
+}
+
+.q-tabs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+.q-tab {
+  min-height: 56px;
+  font-weight: 500;
+  font-size: 1rem;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.q-tab:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.q-tab--active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .q-table tbody tr:hover {
   background: rgba(0, 0, 0, 0.05);
 }

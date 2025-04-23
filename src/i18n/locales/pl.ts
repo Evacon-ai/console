@@ -18,6 +18,7 @@ export default {
     processing: 'Przetwarzanie',
     success: 'Sukces',
     pleaseWait: 'Proszę czekać...',
+    refresh: 'Odśwież',
     download: 'Pobierz',
     language: 'Język',
     save: 'Zapisz',
@@ -72,6 +73,15 @@ export default {
   },
   users: {
     title: 'Użytkownicy',
+    noUsersFound: 'Nie znaleziono użytkowników',
+    searchUsers: 'Szukaj użytkowników',
+    fullName: 'Pełne imię i nazwisko',
+    failedToLoadUsers: 'Nie udało się załadować użytkowników',
+    failedToCreateUser: 'Nie udało się utworzyć użytkownika',
+    failedToUpdateUser: 'Nie udało się zaktualizować użytkownika',
+    failedToDeleteUser: 'Nie udało się usunąć użytkownika',
+    confirmDelete: 'Usuń użytkownika',
+    confirmDeleteMessage: 'Czy na pewno chcesz usunąć tego użytkownika? Tej akcji nie można cofnąć.',
     evaconStaff: 'Pracownicy Evacon',
     customerUsers: 'Użytkownicy Klienta',
     addUser: 'Dodaj użytkownika',
@@ -80,13 +90,20 @@ export default {
     deleteConfirmation: 'Czy na pewno chcesz usunąć tego użytkownika?',
     userDeleted: 'Użytkownik został pomyślnie usunięty',
     userUpdated: 'Użytkownik został pomyślnie zaktualizowany',
-    userAdded: 'Użytkownik został pomyślnie dodany',
+    userAdded: 'Użytkownik został pomyślnie dodany. Wysłano email do zresetowania hasła.',
     firstName: 'Imię',
     lastName: 'Nazwisko',
     firstNameRequired: 'Imię jest wymagane',
     lastNameRequired: 'Nazwisko jest wymagane',
     invalidEmail: 'Proszę wprowadzić prawidłowy adres email',
-    role: 'Rola'
+    role: 'Rola',
+    level: 'Poziom',
+    addedBy: 'Dodano przez {name} {date}',
+    updatedBy: 'Ostatnia aktualizacja przez {name} {date}',
+    levels: {
+      customer: 'Klient',
+      evacon: 'Evacon'
+    }
   },
   profile: {
     title: 'Profil',
@@ -102,8 +119,11 @@ export default {
     roles: {
       evacon_admin: 'Administrator Evacon',
       evacon_staff: 'Pracownik Evacon',
+      evacon_user: 'Pracownik Evacon',
       customer_admin: 'Administrator klienta',
-      customer_user: 'Użytkownik klienta'
+      customer_user: 'Użytkownik klienta',
+      user: 'Użytkownik',
+      admin: 'Administrator'
     }
   },
   dashboard: {

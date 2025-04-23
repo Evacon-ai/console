@@ -3,9 +3,20 @@ import { useI18n } from 'vue-i18n'
 export function useTimeFormatter() {
   const { t } = useI18n()
 
-  const formatTime = (timestamp: string | Date) => {
+  const formatTime = (timestamp: string | Date | { _seconds: number; _nanoseconds: number }) => {
     const now = new Date()
-    const date = new Date(timestamp)
+    let date: Date
+    
+    if (typeof timestamp === 'object' && '_seconds' in timestamp) {
+      date = new Date(timestamp._seconds * 1000)
+    } else {
+      date = new Date(timestamp)
+    }
+
+    if (isNaN(date.getTime())) {
+      return ''
+    }
+
     const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
 
     const minutes = Math.floor(diff / 60)

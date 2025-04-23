@@ -1,12 +1,12 @@
 export interface User {
   id: string
   email: string
-  firstName?: string
-  lastName?: string
+  first_name?: string
+  last_name?: string
   level: 'customer' | 'evacon'
   role: 'evacon_admin' | 'evacon_staff' | 'customer_admin' | 'customer_user'
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }
 
 export interface LoginCredentials {
@@ -20,8 +20,8 @@ export interface SignUpCredentials {
 }
 
 export interface UserMetadata {
-  firstName: string
-  lastName: string
+  first_name: string
+  last_name: string
   level: User['level']
   role: User['role']
 }

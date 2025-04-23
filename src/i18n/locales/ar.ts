@@ -18,6 +18,7 @@ export default {
     processing: 'جاري المعالجة',
     success: 'تم بنجاح',
     pleaseWait: 'يرجى الانتظار...',
+    refresh: 'تحديث',
     download: 'تحميل',
     language: 'اللغة',
     theme: 'المظهر',
@@ -71,6 +72,15 @@ export default {
   },
   users: {
     title: 'المستخدمون',
+    noUsersFound: 'لم يتم العثور على مستخدمين',
+    searchUsers: 'البحث عن مستخدمين',
+    fullName: 'الاسم الكامل',
+    failedToLoadUsers: 'فشل في تحميل المستخدمين',
+    failedToCreateUser: 'فشل في إنشاء المستخدم',
+    failedToUpdateUser: 'فشل في تحديث المستخدم',
+    failedToDeleteUser: 'فشل في حذف المستخدم',
+    confirmDelete: 'حذف المستخدم',
+    confirmDeleteMessage: 'هل أنت متأكد أنك تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.',
     evaconStaff: 'فريق إيفاكون',
     customerUsers: 'مستخدمو العملاء',
     addUser: 'إضافة مستخدم',
@@ -79,7 +89,20 @@ export default {
     deleteConfirmation: 'هل أنت متأكد من رغبتك في حذف هذا المستخدم؟',
     userDeleted: 'تم حذف المستخدم بنجاح',
     userUpdated: 'تم تحديث المستخدم بنجاح',
-    userAdded: 'تمت إضافة المستخدم بنجاح'
+    userAdded: 'تمت إضافة المستخدم بنجاح. تم إرسال رابط إعادة تعيين كلمة المرور.',
+    firstName: 'الاسم الأول',
+    lastName: 'اسم العائلة',
+    firstNameRequired: 'الاسم الأول مطلوب',
+    lastNameRequired: 'اسم العائلة مطلوب',
+    invalidEmail: 'يرجى إدخال عنوان بريد إلكتروني صالح',
+    role: 'الدور',
+    level: 'المستوى',
+    addedBy: 'تمت الإضافة بواسطة {name} {date}',
+    updatedBy: 'آخر تحديث بواسطة {name} {date}',
+    levels: {
+      customer: 'عميل',
+      evacon: 'إيفاكون'
+    }
   },
   profile: {
     title: 'الملف الشخصي',
@@ -95,8 +118,11 @@ export default {
     roles: {
       evacon_admin: 'مدير إيفاكون',
       evacon_staff: 'موظف إيفاكون',
+      evacon_user: 'موظف إيفاكون',
       customer_admin: 'مدير العميل',
-      customer_user: 'مستخدم العميل'
+      customer_user: 'مستخدم العميل',
+      user: 'مستخدم',
+      admin: 'مدير'
     }
   },
   dashboard: {

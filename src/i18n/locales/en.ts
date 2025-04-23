@@ -18,6 +18,7 @@ export default {
     processing: 'Processing',
     success: 'Success',
     pleaseWait: 'Please wait...',
+    refresh: 'Refresh',
     download: 'Download',
     language: 'Language',
     save: 'Save',
@@ -50,11 +51,38 @@ export default {
     passwordsDoNotMatch: 'Passwords do not match'
   },
   users: {
+    title: 'Users',
+    noUsersFound: 'No users found',
+    searchUsers: 'Search users',
+    fullName: 'Full Name',
+    failedToLoadUsers: 'Failed to load users',
+    failedToCreateUser: 'Failed to create user',
+    failedToUpdateUser: 'Failed to update user',
+    failedToDeleteUser: 'Failed to delete user',
+    confirmDelete: 'Delete User',
+    confirmDeleteMessage: 'Are you sure you want to delete this user? This action cannot be undone.',
+    evaconStaff: 'Evacon Staff',
+    customerUsers: 'Customer Users',
+    addUser: 'Add User',
+    editUser: 'Edit User',
+    deleteUser: 'Delete User',
+    deleteConfirmation: 'Are you sure you want to delete this user?',
+    userDeleted: 'User successfully deleted',
+    userUpdated: 'User successfully updated',
+    userAdded: 'User successfully added. A password reset email has been sent.',
     firstName: 'First Name',
     lastName: 'Last Name',
     firstNameRequired: 'First name is required',
     lastNameRequired: 'Last name is required',
-    invalidEmail: 'Please enter a valid email address'
+    invalidEmail: 'Please enter a valid email address',
+    role: 'Role',
+    level: 'Level',
+    addedBy: 'Added by {name} {date}',
+    updatedBy: 'Last updated by {name} {date}',
+    levels: {
+      customer: 'Customer',
+      evacon: 'Evacon'
+    }
   },
   projects: {
     title: 'Projects',
@@ -92,8 +120,11 @@ export default {
     roles: {
       evacon_admin: 'Evacon Administrator',
       evacon_staff: 'Evacon Staff',
+      evacon_user: 'Evacon Staff',
       customer_admin: 'Customer Administrator',
-      customer_user: 'Customer User'
+      customer_user: 'Customer User',
+      user: 'User',
+      admin: 'Administrator'
     }
   },
   dashboard: {

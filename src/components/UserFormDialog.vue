@@ -12,7 +12,7 @@
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6">
               <q-input
-                v-model="form.firstName"
+                v-model="form.first_name"
                 :label="$t('users.firstName')"
                 outlined
                 :rules="[val => !!val || $t('users.firstNameRequired')]"
@@ -21,7 +21,7 @@
             </div>
             <div class="col-12 col-sm-6">
               <q-input
-                v-model="form.lastName"
+                v-model="form.last_name"
                 :label="$t('users.lastName')"
                 outlined
                 :rules="[val => !!val || $t('users.lastNameRequired')]"
@@ -40,6 +40,17 @@
               val => !!val || $t('auth.emailRequired'),
               val => /^[^@]+@[^@]+\.[^@]+$/.test(val) || $t('users.invalidEmail')
             ]"
+            :disable="loading"
+          />
+
+          <q-select
+            v-model="form.level"
+            :options="levelOptions"
+            :label="$t('users.level')"
+            class="q-mt-md"
+            outlined
+            emit-value
+            map-options
             :disable="loading"
           />
 
@@ -82,8 +93,10 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
-import { supabase } from '../lib/supabase'
-import type { UserRole } from '../types'
+import { createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
+import { auth } from '../lib/firebase'
+import { generateRandomPassword } from '../utils/password'
+import api from '../lib/axios'
 
 const props = defineProps<{
   modelValue: boolean
@@ -104,26 +117,28 @@ const dialogOpen = computed({
 
 const loading = ref(false)
 const error = ref<string | null>(null)
+const isPwd = ref(true)
 const form = ref({
-  firstName: '',
-  lastName: '',
+  first_name: '',
+  last_name: '',
   email: '',
-  role: 'customer_user' as UserRole
+  level: '',
+  role: '' 
 })
 
+const levelOptions = computed(() => {
+  const options = [
+    { label: t('users.levels.evacon'), value: 'evacon' },
+    { label: t('users.levels.customer'), value: 'customer' }
+  ]
+  return options
+})
+  
 const roleOptions = computed(() => {
   const options = [
-    { label: t('profile.roles.customer_user'), value: 'customer_user' },
-    { label: t('profile.roles.customer_admin'), value: 'customer_admin' }
+    { label: t('profile.roles.user'), value: 'user' },
+    { label: t('profile.roles.admin'), value: 'admin' }
   ]
-
-  if (userStore.isEvaconAdmin) {
-    options.unshift(
-      { label: t('profile.roles.evacon_staff'), value: 'evacon_staff' },
-      { label: t('profile.roles.evacon_admin'), value: 'evacon_admin' }
-    )
-  }
-
   return options
 })
 
@@ -132,35 +147,34 @@ const onSubmit = async () => {
   error.value = null
 
   try {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) throw new Error('Not authenticated')
 
-    const response = await fetch(
-      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-user`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          firstName: form.value.firstName,
-          lastName: form.value.lastName,
-          email: form.value.email,
-          role: form.value.role
-        })
-      }
-    )
-
-    const result = await response.json()
-    if (!response.ok) {
-      throw new Error(result.error || 'Failed to create user')
-    }
+    // Send new user creation command to the server:
+    
+    await api.post('/users', {
+      created_by: userStore.currentUser?.id,
+      first_name: form.value.first_name,
+      last_name: form.value.last_name,
+      email: form.value.email,
+      level: form.value.level,
+      role: form.value.role
+    })
 
     dialogOpen.value = false
     emit('user-added')
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to create user'
+    // Handle Firebase-specific errors
+    if (e instanceof Error) {
+      if (e.message.includes('auth/email-already-in-use')) {
+        error.value = t('users.emailAlreadyInUse')
+      } else if (e.message.includes('auth/invalid-email')) {
+        error.value = t('users.invalidEmail')
+      } else {
+        error.value = e.message
+      }
+    } else {
+      error.value = t('users.failedToCreateUser')
+    }
+    error.value = e instanceof Error ? e.message : t('users.failedToCreateUser')
   } finally {
     loading.value = false
   }

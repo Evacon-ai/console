@@ -18,6 +18,7 @@ export default {
     processing: 'Verarbeitung',
     success: 'Erfolgreich',
     pleaseWait: 'Bitte warten...',
+    refresh: 'Aktualisieren',
     download: 'Herunterladen',
     language: 'Sprache',
     theme: 'Design',
@@ -71,6 +72,15 @@ export default {
   },
   users: {
     title: 'Benutzer',
+    noUsersFound: 'Keine Benutzer gefunden',
+    searchUsers: 'Benutzer suchen',
+    fullName: 'Vollständiger Name',
+    failedToLoadUsers: 'Fehler beim Laden der Benutzer',
+    failedToCreateUser: 'Fehler beim Erstellen des Benutzers',
+    failedToUpdateUser: 'Fehler beim Aktualisieren des Benutzers',
+    failedToDeleteUser: 'Fehler beim Löschen des Benutzers',
+    confirmDelete: 'Benutzer löschen',
+    confirmDeleteMessage: 'Sind Sie sicher, dass Sie diesen Benutzer löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.',
     evaconStaff: 'Evacon Mitarbeiter',
     customerUsers: 'Kundenbenutzer',
     addUser: 'Benutzer hinzufügen',
@@ -79,7 +89,20 @@ export default {
     deleteConfirmation: 'Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?',
     userDeleted: 'Benutzer wurde erfolgreich gelöscht',
     userUpdated: 'Benutzer wurde erfolgreich aktualisiert',
-    userAdded: 'Benutzer wurde erfolgreich hinzugefügt'
+    userAdded: 'Benutzer wurde erfolgreich hinzugefügt. Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet.',
+    firstName: 'Vorname',
+    lastName: 'Nachname',
+    firstNameRequired: 'Vorname ist erforderlich',
+    lastNameRequired: 'Nachname ist erforderlich',
+    invalidEmail: 'Bitte geben Sie eine gültige E-Mail-Adresse ein',
+    role: 'Rolle',
+    level: 'Ebene',
+    addedBy: 'Hinzugefügt von {name} {date}',
+    updatedBy: 'Zuletzt aktualisiert von {name} {date}',
+    levels: {
+      customer: 'Kunde',
+      evacon: 'Evacon'
+    }
   },
   profile: {
     title: 'Profil',
@@ -95,8 +118,11 @@ export default {
     roles: {
       evacon_admin: 'Evacon Administrator',
       evacon_staff: 'Evacon Mitarbeiter',
+      evacon_user: 'Evacon Mitarbeiter',
       customer_admin: 'Kundenadministrator',
-      customer_user: 'Kundenbenutzer'
+      customer_user: 'Kundenbenutzer',
+      user: 'Benutzer',
+      admin: 'Administrator'
     }
   },
   dashboard: {

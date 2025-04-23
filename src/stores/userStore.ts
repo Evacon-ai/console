@@ -19,8 +19,8 @@ export const useUserStore = defineStore('user', () => {
   const error = ref<string | null>(null)
 
   const isAuthenticated = computed(() => currentUser.value !== null)
-  const isEvaconStaff = computed(() => currentUser.value?.level === 'evacon')
-  const isEvaconAdmin = computed(() => currentUser.value?.role === 'evacon_admin')
+  const isEvaconAdmin = computed(() => currentUser.value?.level === 'evacon' && currentUser.value?.role === 'admin')
+  const isEvaconStaff = computed(() => currentUser.value?.level === 'evacon' && currentUser.value?.role === 'user')
 
   async function signUp({ email, password }: SignUpCredentials) {
     loading.value = true
@@ -149,8 +149,8 @@ export const useUserStore = defineStore('user', () => {
     loading,
     error,
     isAuthenticated,
-    isEvaconStaff,
     isEvaconAdmin,
+    isEvaconStaff,
     signUp,
     login,
     logout,

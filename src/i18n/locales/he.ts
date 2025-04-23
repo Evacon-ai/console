@@ -18,6 +18,7 @@ export default {
     processing: 'מעבד',
     success: 'הצלחה',
     pleaseWait: 'אנא המתן...',
+    refresh: 'רענן',
     download: 'הורדה',
     language: 'שפה',
     theme: 'ערכת נושא',
@@ -71,6 +72,15 @@ export default {
   },
   users: {
     title: 'משתמשים',
+    noUsersFound: 'לא נמצאו משתמשים',
+    searchUsers: 'חיפוש משתמשים',
+    fullName: 'שם מלא',
+    failedToLoadUsers: 'טעינת המשתמשים נכשלה',
+    failedToCreateUser: 'יצירת המשתמש נכשלה',
+    failedToUpdateUser: 'עדכון המשתמש נכשל',
+    failedToDeleteUser: 'מחיקת המשתמש נכשלה',
+    confirmDelete: 'מחיקת משתמש',
+    confirmDeleteMessage: 'האם אתה בטוח שברצונך למחוק משתמש זה? לא ניתן לבטל פעולה זו.',
     evaconStaff: 'צוות Evacon',
     customerUsers: 'משתמשי לקוח',
     addUser: 'הוסף משתמש',
@@ -79,7 +89,20 @@ export default {
     deleteConfirmation: 'האם אתה בטוח שברצונך למחוק משתמש זה?',
     userDeleted: 'המשתמש נמחק בהצלחה',
     userUpdated: 'המשתמש עודכן בהצלחה',
-    userAdded: 'המשתמש נוסף בהצלחה'
+    userAdded: 'המשתמש נוסף בהצלחה. נשלח דוא"ל לאיפוס הסיסמה.',
+    firstName: 'שם פרטי',
+    lastName: 'שם משפחה',
+    firstNameRequired: 'שם פרטי נדרש',
+    lastNameRequired: 'שם משפחה נדרש',
+    invalidEmail: 'נא להזין כתובת דואר אלקטרוני תקינה',
+    role: 'תפקיד',
+    level: 'רמה',
+    addedBy: 'נוסף על ידי {name} {date}',
+    updatedBy: 'עודכן לאחרונה על ידי {name} {date}',
+    levels: {
+      customer: 'לקוח',
+      evacon: 'איבקון'
+    }
   },
   profile: {
     title: 'פרופיל',
@@ -95,8 +118,11 @@ export default {
     roles: {
       evacon_admin: 'מנהל Evacon',
       evacon_staff: 'צוות Evacon',
+      evacon_user: 'צוות Evacon',
       customer_admin: 'מנהל לקוח',
-      customer_user: 'משתמש לקוח'
+      customer_user: 'משתמש לקוח',
+      user: 'משתמש',
+      admin: 'מנהל'
     }
   },
   dashboard: {
