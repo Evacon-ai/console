@@ -67,7 +67,7 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Home, FolderKanban, Users, Menu } from 'lucide-vue-next'
+import { Home, FolderKanban, Users, Building2, Menu } from 'lucide-vue-next'
 import { useQuasar } from 'quasar'
 import { useUserStore } from './stores/userStore'
 import Logo from './components/Logo.vue'
@@ -85,6 +85,7 @@ const isGuestPage = computed(() => ['/login', '/forgot-password', '/new-password
 
 const links = [
   { icon: Home, label: 'common.home', path: '/dashboard' },
+  { icon: Building2, label: 'common.organizations', path: '/organizations' },
   { icon: FolderKanban, label: 'common.projects', path: '/projects' },
   { icon: Users, label: 'users.title', path: '/users' }
 ]

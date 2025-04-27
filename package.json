@@ -10,6 +10,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@firebase/storage": "^0.12.0",
     "@quasar/extras": "^1.16.9",
     "axios": "^1.6.7",
     "firebase": "^10.8.0",

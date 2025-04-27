@@ -9,7 +9,9 @@
         <q-avatar size="24px" class="q-mr-sm">
           <img :src="avatarUrl">
         </q-avatar>
-        <div class="text-white">{{ userStore.currentUser?.first_name }} {{ userStore.currentUser?.last_name }}</div>
+        <div :class="$q.dark.isActive ? 'text-white' : 'text-dark'">
+          {{ userStore.currentUser?.first_name }} {{ userStore.currentUser?.last_name }}
+        </div>
       </div>
     </template>
 
@@ -167,5 +169,9 @@ const handleSignOut = async () => {
 
 .user-menu :deep(.q-btn__wrapper) {
   padding-right: 4px;
+}
+
+.text-dark {
+  color: #424242;
 }
 </style>

@@ -10,6 +10,7 @@ export default {
     home: 'Home',
     projects: 'Projects',
     profile: 'Profile',
+    organizations: 'Organizations',
     newProject: 'New Project',
     cancel: 'Cancel',
     continue: 'Continue',
@@ -147,5 +148,17 @@ export default {
     day: 'day | days',
     week: 'week | weeks',
     month: 'month | months'
+  },
+  organizations: {
+    title: 'Organizations',
+    addNew: 'Add Organization',
+    name: 'Organization Name',
+    nameRequired: 'Organization name is required',
+    addedOn: 'Added on {date}',
+    noOrganizations: 'No organizations found',
+    failedToLoad: 'Failed to load organizations',
+    failedToCreate: 'Failed to create organization',
+    failedToUpdate: 'Failed to update organization',
+    failedToDelete: 'Failed to delete organization'
   }
 }
