@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogOpen" persistent>
     <q-card style="min-width: 400px">
       <q-card-section class="row items-center">
-        <div class="text-h6">Update Organization Logo</div>
+        <div class="text-h6">{{ $t('organizations.details.logo.update') }}</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -36,22 +36,22 @@
             </template>
             <template v-else>
               <Upload class="q-mb-sm upload-icon" />
-              <div>Drop your logo here or click to select</div>
-              <div class="text-caption text-grey">Supported formats: PNG, JPG, GIF</div>
+              <div>{{ $t('organizations.details.logo.dropHint') }}</div>
+              <div class="text-caption text-grey">{{ $t('organizations.details.logo.supportedFormats') }}</div>
             </template>
           </div>
 
           <div v-if="error" class="text-negative text-caption q-mt-sm">
-            {{ error }}
+            {{ $t(error) }}
           </div>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
           <q-btn 
             type="submit" 
             color="primary" 
-            label="Save" 
+            :label="$t('common.save')" 
             :loading="loading"
             :disable="!selectedFile"
           />
@@ -98,11 +98,11 @@ const validateFile = (file: File) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
 
   if (!allowedTypes.includes(file.type)) {
-    throw new Error('Please select a valid image file (PNG, JPG, or GIF)')
+    throw new Error('organizations.details.logo.invalidFormat')
   }
 
   if (file.size > maxSize) {
-    throw new Error('File size must be less than 5MB')
+    throw new Error('organizations.details.logo.fileTooLarge')
   }
 }
 

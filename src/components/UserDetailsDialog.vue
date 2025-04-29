@@ -50,6 +50,35 @@
             :disable="loading || !canEdit"
           />
 
+          <q-select
+            v-if="form.level === 'customer'"
+            v-model="form.organization_id"
+            :options="organizationOptions" 
+            :label="$t('organizations.organization')"
+            class="q-mt-md"
+            outlined
+            emit-value
+            map-options
+            :disable="loading || !canEdit"
+          >
+            <template v-slot:selected>
+              <div class="row items-center" v-if="getSelectedOrg">
+                <q-avatar size="24px" class="q-mr-sm">
+                  <template v-if="getSelectedOrg.logo_url">
+                    <img :src="getSelectedOrg.logo_url" :alt="getSelectedOrg.name">
+                  </template>
+                  <template v-else>
+                    <div class="default-logo">
+                      <Building2 class="w-4 h-4 text-grey-6" />
+                    </div>
+                  </template>
+                </q-avatar>
+                {{ getSelectedOrg.name }}
+              </div>
+              <div v-else>Select organization</div>
+            </template>
+          </q-select>
+
           <div class="text-caption text-grey-7 q-mt-lg">
             <div class="row items-center q-gutter-x-sm">
        
@@ -120,11 +149,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
-import api from '../lib/axios'
-import { UserPlus, UserCog } from 'lucide-vue-next'
+import { useUsersStore } from '../stores/usersStore'
+import { useOrganizationsStore } from '../stores/organizationsStore'
+import { UserPlus, UserCog, Building2 } from 'lucide-vue-next'
 import { useTimeFormatter } from '../utils/formatTime'
 import type { UserRole } from '../types'
 
@@ -145,7 +175,9 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const userStore = useUserStore()
+const usersStore = useUsersStore()
 const { formatTime } = useTimeFormatter()
+const organizationsStore = useOrganizationsStore()
 
 const dialogOpen = computed({
   get: () => props.modelValue,
@@ -161,7 +193,13 @@ const form = ref({
   first_name: '',
   last_name: '',
   email: '',
-  role: 'customer_user' as UserRole
+  role: 'user' as UserRole,
+  level: '',
+  organization_id: ''
+})
+
+onMounted(() => {
+  organizationsStore.fetchOrganizations()
 })
 
 const canEdit = computed(() => {
@@ -176,33 +214,17 @@ const availableRoles = computed(() => {
   ]
 })
 
-watch(() => props.user, (newUser) => {
-  if (newUser) {
-    // Reset user metadata
-    createdByUser.value = null
-    updatedByUser.value = null
-    
-    form.value = {
-      first_name: newUser.first_name || '',
-      last_name: newUser.last_name || '',
-      email: newUser.email || '',
-      role: newUser.role || 'customer_user'
-    }
-    
-    // Fetch user metadata
-    if (newUser.created_by) {
-      fetchUserMetadata(newUser.created_by).then(user => {
-        createdByUser.value = user
-      })
-    }
-    
-    if (newUser.updated_by) {
-      fetchUserMetadata(newUser.updated_by).then(user => {
-        updatedByUser.value = user
-      })
-    }
-  }
-}, { immediate: true })
+const organizationOptions = computed(() => {
+  return organizationsStore.organizations.map(org => ({
+    label: org.name,
+    value: org.id,
+    logo_url: org.logo_url
+  }))
+})
+
+const getSelectedOrg = computed(() => {
+  return organizationsStore.organizations.find(org => org.id === form.value.organization_id)
+})
 
 const fetchUserMetadata = async (userId: string): Promise<UserMetadata> => {
   try {
@@ -220,6 +242,28 @@ const fetchUserMetadata = async (userId: string): Promise<UserMetadata> => {
   }
 }
 
+watch(() => props.user, async (newUser) => {
+  if (newUser) {
+    // Reset user metadata
+    createdByUser.value = null
+    updatedByUser.value = null
+    
+    form.value = {
+      first_name: newUser.first_name || '',
+      last_name: newUser.last_name || '',
+      email: newUser.email || '',
+      role: newUser.role || 'customer_user',
+      level: newUser.level || 'customer',
+      organization_id: newUser.organization_id || ''
+    }
+    
+    // Fetch user metadata
+    if (newUser.updated_by) {
+      updatedByUser.value = await userStore.fetchUserMetadata(newUser.updated_by)
+    }
+  }
+}, { immediate: true })
+
 const getFullName = (user: UserMetadata | null) => {
   if (!user) return '—'
   return `${user.first_name} ${user.last_name}`.trim() || '—'
@@ -232,10 +276,11 @@ const onSubmit = async () => {
   error.value = null
 
   try {
-    await api.put(`/users/${props.user.id}`, {
+    await usersStore.updateUser(props.user.id, {
       first_name: form.value.first_name,
       last_name: form.value.last_name,
       email: form.value.email,
+      organization_id: form.value.organization_id,
       role: form.value.role,
       level: form.value.role.startsWith('customer_') ? 'customer' : 'evacon'
     })
@@ -256,8 +301,7 @@ const handleDelete = async () => {
   error.value = null
 
   try {
-    // Delete user through our API which will handle both database and Firebase deletion
-    await api.delete(`/users/${props.user.id}`)
+    await usersStore.deleteUser(props.user.id)
 
     dialogOpen.value = false
     showDeleteConfirm.value = false
@@ -268,4 +312,26 @@ const handleDelete = async () => {
     loading.value = false
   }
 }
+
+watch(() => dialogOpen.value, (newVal) => {
+  if (newVal) {
+    organizationsStore.fetchOrganizations()
+  }
+})
 </script>
+
+<style scoped>
+.default-logo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+}
+
+.body--dark .default-logo {
+  background-color: #424242;
+}
+</style>

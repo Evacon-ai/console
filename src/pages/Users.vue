@@ -69,6 +69,12 @@
             row-key="id"
             :loading="usersStore.loading"
             :pagination="{ rowsPerPage: 10 }"
+            :rows-per-page-label="$t('common.table.rowsPerPage')"
+            :records-per-page-label="$t('common.table.recordsPerPage')"
+            :no-data-label="$t('common.table.noData')"
+            :no-results-label="$t('common.table.noResults')"
+            :loading-label="$t('common.table.loading')"
+            :selected-records-label="$t('common.table.selectedRecords')"
           >
             <template v-slot:body="props">
               <q-tr
@@ -81,6 +87,22 @@
                 </q-td>
                 <q-td key="email" :props="props">
                   {{ props.row.email }}
+                </q-td>
+                <q-td key="organization" :props="props">
+                  <div class="row items-center" v-if="props.row.organization_id">
+                    <q-avatar size="32px" class="q-mr-sm">
+                      <template v-if="getOrgLogo(props.row.organization_id)">
+                        <img :src="getOrgLogo(props.row.organization_id)" :alt="getOrgName(props.row.organization_id)">
+                      </template>
+                      <template v-else>
+                        <div class="default-logo">
+                          <Building2 class="w-5 h-5 text-grey-6" />
+                        </div>
+                      </template>
+                    </q-avatar>
+                    {{ getOrgName(props.row.organization_id) }}
+                  </div>
+                  <span v-else>—</span>
                 </q-td>
                 <q-td key="role" :props="props">
                   <q-chip
@@ -119,6 +141,12 @@
             row-key="id"
             :loading="usersStore.loading"
             :pagination="{ rowsPerPage: 10 }"
+            :rows-per-page-label="$t('common.table.rowsPerPage')"
+            :records-per-page-label="$t('common.table.recordsPerPage')"
+            :no-data-label="$t('common.table.noData')"
+            :no-results-label="$t('common.table.noResults')"
+            :loading-label="$t('common.table.loading')"
+            :selected-records-label="$t('common.table.selectedRecords')"
           >
             <template v-slot:body="props">
               <q-tr
@@ -168,7 +196,9 @@
       @user-added="loadUsers"
     />
 
+    <!-- Only render UserDetailsDialog when selectedUser exists -->
     <UserDetailsDialog
+      v-if="selectedUser"
       v-model="showUserDetails"
       :user="selectedUser"
       @user-updated="loadUsers"
@@ -196,10 +226,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Users, Shield } from 'lucide-vue-next'
+import { Users, Shield, Building2 } from 'lucide-vue-next'
 import { useTimeFormatter } from '../utils/formatTime'
 import { useUserStore } from '../stores/userStore'
 import { useUsersStore } from '../stores/usersStore'
+import { useOrganizationsStore } from '../stores/organizationsStore'
 import UserFormDialog from '../components/UserFormDialog.vue'
 import UserDetailsDialog from '../components/UserDetailsDialog.vue'
 
@@ -207,6 +238,7 @@ const { t } = useI18n()
 const { formatTime } = useTimeFormatter()
 const userStore = useUserStore()
 const usersStore = useUsersStore()
+const organizationsStore = useOrganizationsStore()
 const activeTab = ref('customers')
 const showUserForm = ref(false)
 const showUserDetails = ref(false)
@@ -229,6 +261,17 @@ const columns = [
     align: 'left',
     field: 'email',
     sortable: true
+  },
+  {
+    name: 'organization',
+    required: true,
+    label: t('organizations.organization'),
+    align: 'left',
+    field: 'organization_id',
+    format: (val) => {
+      const org = organizationsStore.organizations.find(org => org.id === val)
+      return org?.name || '—'
+    }
   },
   {
     name: 'role',
@@ -279,10 +322,35 @@ const loadUsers = async () => {
 
 onMounted(() => {
   loadUsers()
+  organizationsStore.fetchOrganizations()
 })
+
+const getOrgLogo = (orgId: string) => {
+  const org = organizationsStore.organizations.find(org => org.id === orgId)
+  return org?.logo_url
+}
+
+const getOrgName = (orgId: string) => {
+  const org = organizationsStore.organizations.find(org => org.id === orgId)
+  return org?.name || '—'
+}
 </script>
 
 <style scoped>
+.default-logo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+}
+
+.body--dark .default-logo {
+  background-color: #424242;
+}
+
 .q-tabs {
   position: relative;
 }

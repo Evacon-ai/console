@@ -2,18 +2,27 @@ export default {
   common: {
     signIn: 'Войти',
     signOut: 'Выйти',
+    table: {
+      recordsPerPage: 'Записей на странице',
+      noData: 'Нет данных',
+      noResults: 'Ничего не найдено',
+      loading: 'Загрузка...',
+      selectedRecords: 'Выбранные записи',
+      rowsPerPage: 'Строк на странице:'
+    },
     email: 'Эл. почта',
     password: 'Пароль',
     rememberMe: 'Запомнить меня',
     forgotPassword: 'Забыли пароль?',
+    back: 'Назад',
     home: 'Главная',
     projects: 'Проекты',
     profile: 'Профиль',
+    organizations: 'Организации',
     newProject: 'Новый проект',
     cancel: 'Отмена',
     continue: 'Продолжить',
     finish: 'Завершить',
-    back: 'Назад',
     close: 'Закрыть',
     processing: 'Обработка',
     success: 'Успешно',
@@ -21,35 +30,14 @@ export default {
     refresh: 'Обновить',
     download: 'Скачать',
     language: 'Язык',
+    save: 'Сохранить',
     theme: 'Тема',
     lightMode: 'Светлая тема',
     darkMode: 'Тёмная тема'
   },
-  projects: {
-    title: 'Проекты',
-    createNew: 'Создать новый проект',
-    description: 'Описание',
-    projectDescription: 'Описание проекта',
-    generated: '{time} назад',
-    wizard: {
-      projectName: 'Название проекта',
-      nameYourProject: 'Назовите ваш проект',
-      projectNamePlaceholder: 'Введите название проекта',
-      fdsTitle: 'Файл FDS',
-      fdsUpload: 'Загрузить файл FDS',
-      setPointTitle: 'Файл уставок',
-      setPointUpload: 'Загрузить файл уставок',
-      designTitle: 'Файл проекта',
-      designUpload: 'Загрузить файл проекта',
-      ioTitle: 'Файл ввода/вывода',
-      ioUpload: 'Загрузить файл ввода/вывода',
-      processingTitle: 'Обработка файлов',
-      uploadToTIA: 'Загрузить в TIA Portal'
-    }
-  },
   auth: {
     signInTitle: 'Войдите в свой аккаунт',
-    signUpTitle: 'Создать аккаунт',
+    signUpTitle: 'Создайте аккаунт',
     signUp: 'Регистрация',
     needAccount: 'Нужен аккаунт? Зарегистрируйтесь',
     haveAccount: 'Уже есть аккаунт? Войдите',
@@ -101,14 +89,36 @@ export default {
     updatedBy: 'Последнее обновление от {name} {date}',
     levels: {
       customer: 'Клиент',
-      evacon: 'Эвакон'
+      evacon: 'Evacon'
+    }
+  },
+  projects: {
+    title: 'Проекты',
+    createNew: 'Создать новый проект',
+    description: 'Описание',
+    projectDescription: 'Описание проекта',
+    generated: '{time} назад',
+    wizard: {
+      projectName: 'Название проекта',
+      nameYourProject: 'Назовите ваш проект',
+      projectNamePlaceholder: 'Введите название проекта',
+      fdsTitle: 'Файл FDS',
+      fdsUpload: 'Загрузить файл FDS',
+      setPointTitle: 'Файл уставок',
+      setPointUpload: 'Загрузить файл уставок',
+      designTitle: 'Файл проекта',
+      designUpload: 'Загрузить файл проекта',
+      ioTitle: 'Файл ввода/вывода',
+      ioUpload: 'Загрузить файл ввода/вывода',
+      processingTitle: 'Обработка файлов',
+      uploadToTIA: 'Загрузить в TIA Portal'
     }
   },
   profile: {
     title: 'Профиль',
     role: 'Роль',
     company: 'Компания',
-    joined: 'Присоединился в {date}',
+    joined: 'Присоединился {date}',
     contactInfo: 'Контактная информация',
     companyInfo: 'Информация о компании',
     accountInfo: 'Информация об аккаунте',
@@ -145,5 +155,136 @@ export default {
     day: 'день | дня | дней',
     week: 'неделя | недели | недель',
     month: 'месяц | месяца | месяцев'
+  },
+  organizations: {
+    title: 'Организации',
+    addNew: 'Добавить организацию',
+    notes: {
+      title: 'Заметки',
+      edit: 'Редактировать заметки'
+    },
+    details: {
+      title: 'Детали',
+      name: {
+        edit: 'Редактировать название организации',
+        name: 'Название организации',
+        nameRequired: 'Название организации обязательно'
+      },
+      logo: {
+        update: 'Обновить логотип организации',
+        dropHint: 'Перетащите логотип сюда или нажмите для выбора',
+        supportedFormats: 'Поддерживаемые форматы: PNG, JPG, GIF',
+        invalidFormat: 'Пожалуйста, выберите допустимый файл изображения (PNG, JPG или GIF)',
+        fileTooLarge: 'Размер файла должен быть меньше 5МБ',
+        uploadFailed: 'Не удалось загрузить логотип'
+      },
+      address: {
+        edit: 'Редактировать адрес',
+        street: 'Улица',
+        streetRequired: 'Улица обязательна',
+        city: 'Город',
+        cityRequired: 'Город обязателен',
+        state: 'Штат',
+        province: 'Провинция',
+        stateTerritory: 'Штат/Территория',
+        stateProvince: 'Штат/Провинция',
+        stateRequired: 'Штат/Провинция обязательна',
+        postalCode: 'Почтовый индекс',
+        postalCodeRequired: 'Почтовый индекс обязателен',
+        country: 'Страна',
+        countryRequired: 'Страна обязательна'
+      },
+      contact: {
+        edit: 'Редактировать имя контакта',
+        editEmail: 'Редактировать email контакта',
+        updatePhone: 'Обновить номер телефона',
+        name: 'Имя контакта',
+        nameRequired: 'Имя контакта обязательно',
+        email: 'Email контакта',
+        emailTooLong: 'Адрес электронной почты слишком длинный'
+      },
+      website: {
+        edit: 'Редактировать URL сайта',
+        url: 'URL сайта',
+        invalidUrl: 'Пожалуйста, введите действительный URL, начинающийся с http:// или https://',
+        emptyHint: 'Оставьте пустым, если нет сайта'
+      },
+      timezone: {
+        edit: 'Редактировать часовой пояс',
+        label: 'Часовой пояс',
+        required: 'Часовой пояс обязателен'
+      },
+      notes: {
+        edit: 'Редактировать заметки'
+      }
+    },
+    status: {
+      active: 'Активен',
+      inactive: 'Неактивен'
+    },
+    billing: {
+      title: 'Оплата',
+      currentPlan: 'Текущий план',
+      upgradePlan: 'Улучшить план',
+      freeTrial: 'Бесплатный период',
+      trialEnds: 'Ваш пробный период заканчивается через {days} дней',
+      paymentMethods: 'Способы оплаты',
+      addPaymentMethod: 'Добавить способ оплаты',
+      noPaymentMethods: 'Способы оплаты не добавлены',
+      addCreditCard: 'Добавьте кредитную карту для автоматических платежей',
+      billingHistory: 'История платежей',
+      export: 'Экспорт',
+      noInvoices: 'Нет счетов',
+      invoicesWillAppear: 'История платежей появится здесь, когда вы начнете использовать платные функции',
+      comingSoon: 'Функции оплаты скоро появятся! Мы работаем над интеграцией Stripe для безопасных платежей.'
+    },
+    integrations: {
+      title: 'Интеграции',
+      configureApiKey: 'Настроить API-ключ',
+      tiaPortal: {
+        description: 'Подключение к TIA Portal для автоматизированного программирования и настройки ПЛК.',
+        title: 'Интеграция с TIA Portal',
+        apiKeyLabel: 'API-ключ TIA Portal',
+        apiKeyDescription: 'Введите ваш API-ключ TIA Portal для включения автоматизированного программирования и настройки ПЛК.'
+      },
+      eplan: {
+        description: 'Интеграция с EPLAN для электротехнического проектирования и документации.',
+        title: 'Интеграция с EPLAN',
+        apiKeyLabel: 'API-ключ EPLAN',
+        apiKeyDescription: 'Введите ваш API-ключ EPLAN для включения интеграции электротехнического проектирования.'
+      },
+      comingSoon: 'Скоро'
+    },
+    organization: 'Организация',
+    name: 'Название организации',
+    nameRequired: 'Название организации обязательно',
+    addedOn: 'Добавлено {date}',
+    noOrganizations: 'Организации не найдены',
+    failedToLoad: 'Не удалось загрузить организации',
+    failedToCreate: 'Не удалось создать организацию',
+    failedToUpdate: 'Не удалось обновить организацию',
+    failedToDelete: 'Не удалось удалить организацию',
+    users: {
+      title: 'Пользователи организации',
+      noUsers: 'Пользователи не найдены',
+      noUsersCaption: 'Добавьте пользователей в вашу организацию, чтобы начать совместную работу',
+      addUser: 'Добавить пользователя',
+      editRole: 'Изменить роль',
+      remove: 'Удалить',
+      removeTitle: 'Удалить пользователя',
+      removeConfirm: 'Вы уверены, что хотите удалить {name} из этой организации?',
+      removeWarning: 'Это действие нельзя отменить.',
+      onlyAdminsCanAdd: 'Только администраторы могут добавлять пользователей',
+      selectOrganization: 'Выберите организацию',
+      roles: {
+        administrator: 'Администратор',
+        user: 'Пользователь'
+      },
+      edit: {
+        title: 'Изменить роль',
+        role: 'Роль',
+        roleRequired: 'Роль обязательна'
+      }
+    }
   }
 }

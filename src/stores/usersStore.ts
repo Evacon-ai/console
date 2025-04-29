@@ -9,12 +9,16 @@ export const useUsersStore = defineStore('users', () => {
   const error = ref<string | null>(null)
 
   // Getters
+  const organizationUsers = (organizationId: string) => computed(() => 
+    Array.isArray(users.value) ? users.value.filter(user => user.organization_id === organizationId) : []
+  )
+
   const customerUsers = computed(() => 
-    users.value.filter(user => user.level === 'customer')
+    Array.isArray(users.value) ? users.value.filter(user => user.level === 'customer') : []
   )
 
   const evaconUsers = computed(() => 
-    users.value.filter(user => user.level === 'evacon')
+    Array.isArray(users.value) ? users.value.filter(user => user.level === 'evacon') : []
   )
 
   // Actions
@@ -83,8 +87,7 @@ export const useUsersStore = defineStore('users', () => {
     users,
     loading,
     error,
-    customerUsers,
-    evaconUsers,
+    organizationUsers,
     customerUsers,
     evaconUsers,
     fetchUsers,

@@ -2,7 +2,11 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { Quasar } from 'quasar'
 import i18n from './i18n'
+import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
+import { useThemeHandler } from 'maz-ui';
+import 'maz-ui/css/main.css'
 import { useUserStore } from './stores/userStore'
+import { useI18n } from 'vue-i18n'
 
 // Import Quasar css
 import 'quasar/dist/quasar.css'
@@ -127,5 +131,6 @@ app.use(Quasar, {
   }
 })
 app.use(i18n)
+app.component('MazPhoneNumberInput', MazPhoneNumberInput)
 
 app.mount('#app')

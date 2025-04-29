@@ -85,7 +85,7 @@ const isGuestPage = computed(() => ['/login', '/forgot-password', '/new-password
 
 const links = [
   { icon: Home, label: 'common.home', path: '/dashboard' },
-  { icon: Building2, label: 'common.organizations', path: '/organizations' },
+  { icon: Building2, label: 'organizations.title', path: '/organizations' },
   { icon: FolderKanban, label: 'common.projects', path: '/projects' },
   { icon: Users, label: 'users.title', path: '/users' }
 ]

@@ -4,16 +4,17 @@
     position="right"
     :maximized="$q.screen.lt.lg"
     full-height
-    :style="$q.screen.gt.md ? 'width: 1000px' : ''"
+    :style="$q.screen.gt.md ? 'width: 1200px' : ''"
     transition-show="slide-left"
     transition-hide="slide-right"
+    @hide="onDialogHide"
   >
-    <q-card class="full-height" style="min-width: 1000px">
+    <q-card v-if="organization" class="full-height" style="width: 100%; min-width: 1100px;">
       <!-- Header -->
       <div class="org-header q-px-lg q-py-md">
         <div class="row items-center full-width">
           <q-avatar size="96px" class="q-mr-md cursor-pointer" @click="showLogoEdit = true">
-            <template v-if="organization?.logo_url">
+            <template v-if="organization.logo_url">
               <img :src="organization.logo_url" alt="Organization logo">
             </template>
             <template v-else>
@@ -23,11 +24,11 @@
             </template>
           </q-avatar>
           <div class="column">
-            <div class="text-h5 cursor-pointer" @click="showNameEdit = true">{{ organization?.name }}</div>
+            <div class="text-h5 cursor-pointer" @click="showNameEdit = true">{{ organization.name }}</div>
             <div class="text-subtitle1 text-grey-7">
               <q-btn
-                :color="organization?.account_status === 'active' ? 'positive' : 'grey'"
-                :label="organization?.account_status"
+                :color="organization.account_status === 'active' ? 'positive' : 'grey'"
+                :label="$t(`organizations.status.${organization.account_status}`)"
                 class="q-mt-sm status-btn"
                 size="sm"
                 @click="toggleStatus"
@@ -48,156 +49,62 @@
       <q-separator />
 
       <div class="column" style="min-height: 0;">
-        <div class="row" >
+        <div class="row no-wrap" style="width: 100%; height: calc(100vh - 140px);">
           <!-- Left Menu -->
-          <div class="col-auto row">
-            <q-list class="q-pa-md">
-              <q-item
-                v-for="tab in tabs"
-                :key="tab.value"
-                clickable
-                :active="activeTab === tab.value"
-                @click="activeTab = tab.value"
-                active-class="org-menu-item-active"
-              >
-                <q-item-section avatar>
-                  <component :is="tab.icon" class="w-5 h-5 menu-icon" />
-                </q-item-section>
-                <q-item-section>{{ tab.label }}</q-item-section>
-              </q-item>
-            </q-list>
+          <div class="col-auto" style="width: 250px; height: 100%;">
+            <q-scroll-area class="fit">
+              <q-list class="q-pa-md">
+                <q-item
+                  v-for="tab in tabs"
+                  :key="tab.value"
+                  clickable
+                  :active="activeTab === tab.value"
+                  @click="activeTab = tab.value"
+                  active-class="org-menu-item-active"
+                >
+                  <q-item-section avatar>
+                    <component :is="tab.icon" class="w-5 h-5 menu-icon" />
+                  </q-item-section>
+                  <q-item-section>{{ $t(`organizations.${tab.value}.title`) }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-scroll-area>
           </div>
   
-  
           <!-- Content Area -->
-          <div class="col q-pa-lg scroll">
-            <!-- Details Tab -->
-            <div v-if="activeTab === 'details'">
-              <div class="row q-col-gutter-md">
-                <div class="col-12">            
-                  <div class="text-subtitle1 text-weight-medium q-mb-sm">Contact Information</div>
-                  <q-list bordered separator>
-                    <q-item>
-                      <q-item-section avatar>
-                        <MapPin class="w-5 h-5" />
-                      </q-item-section>
-                      <q-item-section class="text-body1 cursor-pointer" @click="showAddressEdit = true">
-                        <div class="row justify-start">
-                          <div class="col-auto">
-                            {{ [
-                              organization?.address?.street,
-                              organization?.address?.city,
-                              organization?.address?.state,
-                              organization?.address?.postal_code
-                            ].filter(Boolean).join(', ') }}
-                          </div>
-                          <div class="col q-ml-sm">
-                            <img 
-                              :src="`https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`" 
-                              :alt="organization?.address?.country"
-                              style="height: 1em; width: auto; vertical-align: middle; border-radius: 2px;"
-                            />
-                          </div>
-                          <div class="col-auto q-ml-sm">
-                            <a 
-                              :href="mapsUrl" 
-                              target="_blank" 
-                              class="maps-link"
-                              style="text-decoration: none"
-                            >
-                              <ExternalLink class="w-4 h-4" />
-                            </a>
-                          </div>
-                        </div>
-                      </q-item-section>
-                    </q-item>
+          <div class="col row full-width" style="height: 100%;">
+            <q-scroll-area class="col full-width">
+              <div class="q-pa-lg">
+                <!-- Details Tab -->
+                <DetailsPanel
+                  v-if="activeTab === 'details'"
+                  :organization="organization"
+                  :created-by-user="createdByUser"
+                  :updated-by-user="updatedByUser"
+                  @edit-address="showAddressEdit = true"
+                  @edit-contact="showContactEdit = true"
+                  @edit-email="showEmailEdit = true"
+                  @edit-phone="showPhoneEdit = true"
+                  @edit-timezone="showTimezoneEdit = true"
+                  @edit-website="showWebsiteEdit = true"
+                  @edit-notes="showNotesEdit = true"
+                />
   
-                    <q-item>
-                      <q-item-section avatar>
-                        <User class="w-5 h-5" />
-                      </q-item-section>
-                      <q-item-section class="text-body1 cursor-pointer" @click="showContactEdit = true">
-                        {{ organization?.contact.name }}
-                      </q-item-section>
-                    </q-item>
-  
-                    <q-item>
-                      <q-item-section avatar>
-                        <Mail class="w-5 h-5" />
-                      </q-item-section>
-                      <q-item-section class="text-body1 cursor-pointer" @click="showEmailEdit = true">
-                        {{ organization?.contact.email }}
-                      </q-item-section>
-                    </q-item>
-  
-                    <q-item>
-                      <q-item-section avatar>
-                        <Phone class="w-5 h-5" />
-                      </q-item-section>
-                      <q-item-section class="text-body1 cursor-pointer" @click="showPhoneEdit = true">
-                        {{ organization?.contact.phone || '' }}
-                      </q-item-section>
-                    </q-item>
-  
-                    <q-item>
-                      <q-item-section avatar>
-                        <Globe class="w-5 h-5" />
-                      </q-item-section>
-                      <q-item-section class="text-body1 cursor-pointer" @click="showWebsiteEdit = true">
-                        <div class="row justify-start">
-                          <div class="col">{{ organization?.website }}</div>
-                          <div v-if="organization?.website" class="col-auto q-ml-sm">
-                            <a 
-                              :href="organization.website" 
-                              target="_blank" 
-                              class="maps-link"
-                              style="text-decoration: none"
-                            >
-                              <ExternalLink class="w-4 h-4" />
-                            </a>
-                          </div>
-                        </div>
-                      </q-item-section>
-                    </q-item>
-  
-                    <q-item>
-                      <q-item-section avatar>
-                        <Clock class="w-5 h-5" />
-                      </q-item-section>
-                      <q-item-section class="text-body1 cursor-pointer" @click="showTimezoneEdit = true">                        
-                        {{ getTimezoneLabel(organization?.time_zone) }}
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
+                <!-- Users Tab -->
+                <UsersPanel v-else-if="activeTab === 'users'" :organizationId="organization.id"/>
+
+                <!-- Billing Tab -->
+                <BillingPanel v-else-if="activeTab === 'billing'" :organizationId="organization.id" />
+
+                <!-- Integrations Tab -->
+                <IntegrationsPanel
+                  v-else-if="activeTab === 'integrations'"
+                  :organizationId="organization.id"
+                  @configure-tia="showTiaKeyDialog = true"
+                  @configure-eplan="showEplanKeyDialog = true"
+                />
               </div>
-  
-              <div class="text-subtitle1 text-weight-medium q-mt-lg q-mb-sm">Notes</div>
-              <q-card flat bordered class="cursor-pointer" @click="showNotesEdit = true">
-                <q-card-section>
-                  {{ organization?.notes || '' }}
-                </q-card-section>
-              </q-card>
-  
-              <div class="text-caption text-grey-7 q-mt-lg">
-                <div class="row items-center q-gutter-x-sm">
-                  <span>{{ $t('users.addedBy', { name: getFullName(createdByUser), date: formatTime(organization?.created_at) }) }}</span>
-                </div>
-                <div v-if="organization?.updated_by" class="row items-center q-gutter-x-sm q-mt-sm">
-                  <span>{{ $t('users.updatedBy', { name: getFullName(updatedByUser), date: formatTime(organization?.updated_at) }) }}</span>
-                </div>
-              </div>
-            </div>
-  
-            <!-- Users Tab -->
-            <div v-else-if="activeTab === 'users'" class="q-pa-none">
-              <div class="text-subtitle1 text-weight-medium q-mb-sm">Organization Users</div>
-              <q-card flat bordered>
-                <q-card-section>
-                  <div class="text-grey-7">User management coming soon...</div>
-                </q-card-section>
-              </q-card>
-            </div>
+            </q-scroll-area>
           </div>
         </div>
       </div>
@@ -205,57 +112,82 @@
   </q-dialog>
 
   <PhoneNumberDialog
+    v-if="organization"
     v-model="showPhoneEdit"
     :organization="organization"
     @submit="onPhoneSubmit"
   />
 
   <AddressDialog
+    v-if="organization"
     v-model="showAddressEdit"
     :organization="organization"
     @submit="onAddressSubmit"
   />
 
   <ContactDialog
+    v-if="organization"
     v-model="showContactEdit"
     :organization="organization"
     @submit="onContactSubmit"
   />
 
   <EmailDialog
+    v-if="organization"
     v-model="showEmailEdit"
     :organization="organization"
     @submit="onEmailSubmit"
   />
 
   <WebsiteDialog
+    v-if="organization"
     v-model="showWebsiteEdit"
     :organization="organization"
     @submit="onWebsiteSubmit"
   />
 
   <TimezoneDialog
+    v-if="organization"
     v-model="showTimezoneEdit"
     :organization="organization"
     @submit="onTimezoneSubmit"
   />
 
   <NotesDialog
+    v-if="organization"
     v-model="showNotesEdit"
     :organization="organization"
     @submit="onNotesSubmit"
   />
 
   <NameDialog
+    v-if="organization"
     v-model="showNameEdit"
     :organization="organization"
     @submit="onNameSubmit"
   />
 
   <LogoDialog
+    v-if="organization"
     v-model="showLogoEdit"
     :organization="organization"
     @submit="onLogoSubmit"
+  />
+
+  <ApiKeyDialog
+    v-model="showTiaKeyDialog"
+    title="TIA Portal Integration"
+    label="TIA Portal API Key"
+    description="Enter your TIA Portal API key to enable automated PLC programming and configuration."
+    @submit="onTiaKeySubmit"
+  />
+
+  <ApiKeyDialog
+    v-model="showEplanKeyDialog"
+    title="EPLAN Integration"
+    label="EPLAN API Key"
+    description="Enter your EPLAN API key to enable electrical engineering integration."
+    @submit="onEplanKeySubmit"
   />
 </template>
 
@@ -263,12 +195,10 @@
 import { ref, computed, watch } from 'vue'
 import { useOrganizationsStore } from '../stores/organizationsStore'
 import { useUserStore } from '../stores/userStore'
-import { Building2, Mail, Phone, Globe, Clock, MapPin, ExternalLink, User, Users, FileText } from 'lucide-vue-next'
+import { Building2, Users, FileText, CreditCard, Plug } from 'lucide-vue-next'
 import { useTimeFormatter } from '../utils/formatTime'
+import { useQuasar } from 'quasar'
 import type { Organization } from '../types'
-import { countries } from '../utils/countries'
-import { timezones } from '../utils/timezones'
-import api from '../lib/axios'
 import PhoneNumberDialog from './organization/PhoneNumberDialog.vue'
 import AddressDialog from './organization/AddressDialog.vue'
 import ContactDialog from './organization/ContactDialog.vue'
@@ -278,6 +208,11 @@ import TimezoneDialog from './organization/TimezoneDialog.vue'
 import NotesDialog from './organization/NotesDialog.vue'
 import NameDialog from './organization/NameDialog.vue'
 import LogoDialog from './organization/LogoDialog.vue'
+import ApiKeyDialog from './organization/ApiKeyDialog.vue'
+import DetailsPanel from './organization/panels/DetailsPanel.vue'
+import UsersPanel from './organization/panels/UsersPanel.vue'
+import BillingPanel from './organization/panels/BillingPanel.vue'
+import IntegrationsPanel from './organization/panels/IntegrationsPanel.vue'
 
 interface UserMetadata {
   first_name: string
@@ -294,6 +229,7 @@ const emit = defineEmits<{
   (e: 'organization-updated'): void
 }>()
 
+const $q = useQuasar()
 const { formatTime } = useTimeFormatter()
 const organizationsStore = useOrganizationsStore()
 const userStore = useUserStore()
@@ -306,14 +242,18 @@ const showTimezoneEdit = ref(false)
 const showNotesEdit = ref(false)
 const showNameEdit = ref(false)
 const showLogoEdit = ref(false)
+const showTiaKeyDialog = ref(false)
+const showEplanKeyDialog = ref(false)
 const updating = ref(false)
 const activeTab = ref('details')
 const createdByUser = ref<UserMetadata | null>(null)
 const updatedByUser = ref<UserMetadata | null>(null)
 
 const tabs = [
-  { label: 'Details', value: 'details', icon: FileText },
-  { label: 'Users', value: 'users', icon: Users }
+  { value: 'details', icon: FileText },
+  { value: 'users', icon: Users },
+  { value: 'billing', icon: CreditCard },
+  { value: 'integrations', icon: Plug }
 ]
 
 // Watch for organization changes to fetch creator info
@@ -323,40 +263,44 @@ watch(() => props.organization, async (newOrg) => {
     updatedByUser.value = null
     
     try {
-      const response = await api.get(`/users/${newOrg.created_by}`)
-      createdByUser.value = {
-        first_name: response.first_name,
-        last_name: response.last_name
+      createdByUser.value = await userStore.fetchUserMetadata(newOrg.created_by)
+      
+      if (newOrg.updated_by) {
+        updatedByUser.value = await userStore.fetchUserMetadata(newOrg.updated_by)
       }
     } catch (error) {
-      console.error('Failed to fetch creator info:', error)
-      createdByUser.value = {
-        first_name: '—',
-        last_name: ''
-      }
-    }
-    
-    if (newOrg.updated_by) {
-      try {
-        const response = await api.get(`/users/${newOrg.updated_by}`)
-        updatedByUser.value = {
-          first_name: response.first_name,
-          last_name: response.last_name
-        }
-      } catch (error) {
-        console.error('Failed to fetch updater info:', error)
-        updatedByUser.value = {
-          first_name: '—',
-          last_name: ''
-        }
-      }
+      console.error('Failed to fetch user metadata:', error)
     }
   }
 }, { immediate: true })
 
+const onDialogHide = () => {
+  // Reset all dialog states
+  showAddressEdit.value = false
+  showContactEdit.value = false
+  showEmailEdit.value = false
+  showPhoneEdit.value = false
+  showWebsiteEdit.value = false
+  showTimezoneEdit.value = false
+  showNotesEdit.value = false
+  showNameEdit.value = false
+  showLogoEdit.value = false
+  showTiaKeyDialog.value = false
+  showEplanKeyDialog.value = false
+  activeTab.value = 'details'
+}
+
 const getFullName = (user: UserMetadata | null) => {
   if (!user) return '—'
   return `${user.first_name} ${user.last_name}`.trim() || '—'
+}
+
+const formatPhoneNumber = (number: string, defaultCountry = 'US') => {
+  const phoneNumber = parsePhoneNumberFromString(number, defaultCountry)
+  if (phoneNumber && phoneNumber.isValid()) {
+    return phoneNumber.formatInternational()
+  }
+  return number
 }
 
 const onPhoneSubmit = async (contact: { phone: string }) => {
@@ -548,6 +492,16 @@ const onLogoSubmit = async (data: { logo_url: string }) => {
   }
 }
 
+const onTiaKeySubmit = async (data: { apiKey: string }) => {
+  // TODO: Implement TIA Portal API key storage
+  console.log('TIA Portal API Key:', data.apiKey)
+}
+
+const onEplanKeySubmit = async (data: { apiKey: string }) => {
+  // TODO: Implement EPLAN API key storage
+  console.log('EPLAN API Key:', data.apiKey)
+}
+
 const canEdit = computed(() => {
   return userStore.isEvaconAdmin
 })
@@ -615,31 +569,6 @@ const getTimezoneLabel = (timezone?: string) => {
 
 .body--dark .default-logo {
   background-color: #424242;
-}
-
-.website-link,
-.maps-link {
-  color: var(--q-primary);
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
-}
-
-.website-link:hover,
-.maps-link:hover {
-  opacity: 1;
-}
-
-.body--dark .website-link,
-.body--dark .maps-link {
-  color: var(--q-secondary);
-  opacity: 1;
-  text-shadow: 0 0 1px rgba(38, 166, 154, 0.2);
-}
-
-.body--dark .website-link:hover,
-.body--dark .maps-link:hover {
-  opacity: 1;
-  text-shadow: 0 0 2px rgba(38, 166, 154, 0.3);
 }
 
 .cursor-pointer {

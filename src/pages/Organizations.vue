@@ -27,7 +27,7 @@
         <q-spinner-dots size="40px" color="primary" />
       </div>
       
-      <template v-else>
+      <template v-else-if="organizations.length">
         <div class="col-12" v-for="org in organizations" :key="org.id" @click="showOrganization(org)">
           <q-card flat bordered class="rounded-borders">
             <q-card-section>
@@ -45,12 +45,12 @@
                   </q-avatar>
                   <div>
                     <div class="text-h6">{{ org.name }}</div>
-                    <div class="text-grey-7">{{ org.contact.name }}</div>
+                    <div class="text-grey-7">{{ org?.contact?.name || '—' }}</div>
                   </div>
                 </div>
                 <q-btn
                   :color="org.account_status === 'active' ? 'positive' : 'grey'"
-                  :label="org.account_status"
+                  :label="$t(`organizations.status.${org.account_status}`)"
                   class="status-btn"
                   size="sm"
                   @click.stop="toggleOrgStatus(org)"
@@ -72,12 +72,17 @@
           </q-card>
         </div>
       </template>
+      <div v-else class="col-12 text-center text-grey q-pa-xl">
+        {{ $t('organizations.noOrganizations') }}
+      </div>
     </div>
 
     <OrganizationDetails
+      v-if="showDetails && selectedOrg"
       v-model="showDetails"
       :organization="selectedOrg"
       @organization-updated="onOrganizationUpdated"
+      @update:modelValue="handleDetailsClose"
     />
 
     <CreateDialog
@@ -114,6 +119,15 @@ const canEdit = computed(() => {
 
 const isUpdating = (id: string) => updatingIds.value.includes(id)
 
+const handleDetailsClose = (value: boolean) => {
+  if (!value) {
+    // Wait for transition to complete before clearing selected org
+    setTimeout(() => {
+      selectedOrg.value = null
+    }, 300)
+  }
+}
+
 const toggleOrgStatus = async (org: Organization) => {
   if (!canEdit.value) return
   
@@ -133,20 +147,26 @@ const toggleOrgStatus = async (org: Organization) => {
 }
 
 // Load organizations when component mounts
-onMounted(() => {
-  organizationsStore.fetchOrganizations()
+onMounted(async () => {
+  try {
+    await organizationsStore.fetchOrganizations()
+  } catch (error) {
+    console.error('Failed to fetch organizations:', error)
+  }
 })
 
 const showOrganization = (org: Organization) => {
-  selectedOrg.value = org
+  if (!org) return
+  selectedOrg.value = { ...org } // Create a copy to prevent mutation
   showDetails.value = true
 }
 
-const onOrganizationUpdated = () => {
+const onOrganizationUpdated = async () => {
+  await organizationsStore.fetchOrganizations()
   // Find and update the selected organization with fresh data
   const updatedOrg = organizationsStore.organizations.find(org => org.id === selectedOrg.value?.id)
   if (updatedOrg) {
-    selectedOrg.value = updatedOrg
+    selectedOrg.value = { ...updatedOrg }
   }
 }
 
@@ -154,13 +174,15 @@ const onOrganizationCreated = async (id: string) => {
   await organizationsStore.fetchOrganizations()
   const newOrg = organizationsStore.organizations.find(org => org.id === id)
   if (newOrg) {
-    selectedOrg.value = newOrg
+    selectedOrg.value = { ...newOrg }
     showDetails.value = true
   }
 }
 
-// Use organizations from store
-const organizations = computed(() => organizationsStore.organizations)
+// Ensure organizations is always an array
+const organizations = computed(() => {
+  return Array.isArray(organizationsStore.organizations) ? organizationsStore.organizations : []
+})
 </script>
 
 <style scoped>

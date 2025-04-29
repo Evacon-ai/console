@@ -2,6 +2,14 @@ export default {
   common: {
     signIn: 'Iniciar sesión',
     signOut: 'Cerrar sesión',
+    table: {
+      recordsPerPage: 'Registros por página',
+      noData: 'No hay datos disponibles',
+      noResults: 'No se encontraron registros coincidentes',
+      loading: 'Cargando...',
+      selectedRecords: 'Registros seleccionados',
+      rowsPerPage: 'Filas por página:'
+    },
     email: 'Correo electrónico',
     password: 'Contraseña',
     rememberMe: 'Recordarme',
@@ -9,6 +17,7 @@ export default {
     home: 'Inicio',
     projects: 'Proyectos',
     profile: 'Perfil',
+    organizations: 'Organizaciones',
     newProject: 'Nuevo Proyecto',
     cancel: 'Cancelar',
     continue: 'Continuar',
@@ -21,6 +30,8 @@ export default {
     refresh: 'Actualizar',
     download: 'Descargar',
     language: 'Idioma',
+    save: 'Guardar',
+    save: 'Guardar',
     theme: 'Tema',
     lightMode: 'Modo Claro',
     darkMode: 'Modo Oscuro'
@@ -136,6 +147,147 @@ export default {
       title: 'Actividad Reciente',
       timeAgo: 'hace {time}',
       day: 'día | días'
+    }
+  },
+  organizations: {
+    title: 'Organizaciones',
+    addNew: 'Agregar organización',
+    notes: {
+      title: 'Notas',
+      edit: 'Editar notas'
+    },
+    status: {
+      active: 'Activo',
+      inactive: 'Inactivo'
+    },
+    billing: {
+      title: 'Facturación',
+      currentPlan: 'Plan actual',
+      upgradePlan: 'Mejorar plan',
+      freeTrial: 'Prueba gratuita',
+      trialEnds: 'Su prueba termina en {days} días',
+      paymentMethods: 'Métodos de pago',
+      addPaymentMethod: 'Agregar método de pago',
+      noPaymentMethods: 'No se han agregado métodos de pago',
+      addCreditCard: 'Agregue una tarjeta de crédito para habilitar pagos automáticos',
+      billingHistory: 'Historial de facturación',
+      export: 'Exportar',
+      noInvoices: 'No hay facturas aún',
+      invoicesWillAppear: 'Su historial de facturación aparecerá aquí una vez que comience a usar funciones pagas',
+      comingSoon: '¡Funciones de facturación próximamente! Estamos trabajando en la integración de Stripe para pagos seguros.'
+    },
+    integrations: {
+      title: 'Integraciones',
+      configureApiKey: 'Configurar clave API',
+      tiaPortal: {
+        description: 'Conéctese a TIA Portal para programación y configuración automatizada de PLC.',
+        title: 'Integración TIA Portal',
+        apiKeyLabel: 'Clave API de TIA Portal',
+        apiKeyDescription: 'Ingrese su clave API de TIA Portal para habilitar la programación y configuración automatizada de PLC.'
+      },
+      eplan: {
+        description: 'Integración con EPLAN para ingeniería eléctrica y documentación.',
+        title: 'Integración EPLAN',
+        apiKeyLabel: 'Clave API de EPLAN',
+        apiKeyDescription: 'Ingrese su clave API de EPLAN para habilitar la integración de ingeniería eléctrica.'
+      },
+      comingSoon: 'Próximamente'
+    },
+    integrations: {
+      title: 'Integraciones',
+      configureApiKey: 'Configurar clave API',
+      tiaPortal: {
+        description: 'Conéctese a TIA Portal para programación y configuración automatizada de PLC.',
+        title: 'Integración TIA Portal',
+        apiKeyLabel: 'Clave API de TIA Portal',
+        apiKeyDescription: 'Ingrese su clave API de TIA Portal para habilitar la programación y configuración automatizada de PLC.'
+      },
+      eplan: {
+        description: 'Integración con EPLAN para ingeniería eléctrica y documentación.',
+        title: 'Integración EPLAN',
+        apiKeyLabel: 'Clave API de EPLAN',
+        apiKeyDescription: 'Ingrese su clave API de EPLAN para habilitar la integración de ingeniería eléctrica.'
+      },
+      comingSoon: 'Próximamente'
+    },
+    details: {
+      title: 'Detalles',
+      address: {
+        edit: 'Editar dirección',
+        street: 'Calle',
+        streetRequired: 'La calle es requerida',
+        city: 'Ciudad',
+        cityRequired: 'La ciudad es requerida',
+        state: 'Estado/Provincia',
+        stateRequired: '{label} es requerido',
+        postalCode: 'Código postal',
+        postalCodeRequired: 'El código postal es requerido',
+        country: 'País',
+        countryRequired: 'El país es requerido'
+      },
+      name: {
+        edit: 'Editar nombre de la organización',
+        name: 'Nombre de la organización',
+        nameRequired: 'El nombre de la organización es requerido'
+      },
+      logo: {
+        update: 'Actualizar logo de la organización',
+        dropHint: 'Suelta tu logo aquí o haz clic para seleccionar',
+        supportedFormats: 'Formatos soportados: PNG, JPG, GIF',
+        invalidFormat: 'Por favor selecciona un archivo de imagen válido (PNG, JPG o GIF)',
+        fileTooLarge: 'El tamaño del archivo debe ser menor a 5MB',
+        uploadFailed: 'Error al subir el logo'
+      },
+      address: {
+        edit: 'Editar dirección'
+      },
+      contact: {
+        edit: 'Editar nombre de contacto',
+        editEmail: 'Editar correo electrónico de contacto',
+        updatePhone: 'Actualizar número de teléfono'
+      },
+      website: {
+        edit: 'Editar URL del sitio web'
+      },
+      timezone: {
+        edit: 'Editar zona horaria',
+        label: 'Zona horaria',
+        required: 'La zona horaria es requerida'
+      },
+      notes: {
+        edit: 'Editar notas'
+      }
+    },
+    organization: 'Organización',
+    name: 'Nombre de la organización',
+    nameRequired: 'El nombre de la organización es requerido',
+    addedOn: 'Agregado el {date}',
+    noOrganizations: 'No se encontraron organizaciones',
+    failedToLoad: 'Error al cargar las organizaciones',
+    failedToCreate: 'Error al crear la organización',
+    failedToUpdate: 'Error al actualizar la organización',
+    failedToDelete: 'Error al eliminar la organización',
+    users: {
+      title: 'Usuarios de la organización',
+      noUsers: 'No se encontraron usuarios',
+      noUsersCaption: 'Agregue usuarios a su organización para comenzar a colaborar',
+      addUser: 'Agregar usuario',
+      editRole: 'Editar rol',
+      remove: 'Eliminar',
+      removeTitle: 'Eliminar usuario',
+      removeConfirm: '¿Está seguro que desea eliminar a {name} de esta organización?',
+      removeWarning: 'Esta acción no se puede deshacer.',
+      onlyAdminsCanAdd: 'Solo los administradores pueden agregar usuarios',
+      selectOrganization: 'Seleccionar organización',
+      roles: {
+        administrator: 'Administrador',
+        user: 'Usuario'
+      },
+      edit: {
+        title: 'Editar rol',
+        role: 'Rol',
+        roleRequired: 'El rol es requerido'
+      }
     }
   },
   time: {

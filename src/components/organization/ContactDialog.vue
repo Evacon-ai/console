@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogOpen" persistent>
     <q-card style="min-width: 400px">
       <q-card-section class="row items-center">
-        <div class="text-h6">Edit Contact Name</div>
+        <div class="text-h6">{{ $t('organizations.details.contact.edit') }}</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -11,15 +11,15 @@
         <q-card-section>
           <q-input
             v-model="form.name"
-            label="Contact Name"
+            :label="$t('organizations.details.contact.name')"
             outlined
-            :rules="[val => !!val || 'Contact name is required']"
+            :rules="[val => !!val || $t('organizations.contact.nameRequired')]"
           />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn type="submit" color="primary" label="Save" :loading="loading" />
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn type="submit" color="primary" :label="$t('common.save')" :loading="loading" />
         </q-card-actions>
       </q-form>
     </q-card>

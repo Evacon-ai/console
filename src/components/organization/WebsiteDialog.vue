@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogOpen" persistent>
     <q-card style="min-width: 400px">
       <q-card-section class="row items-center">
-        <div class="text-h6">Edit Website URL</div>
+        <div class="text-h6">{{ $t('organizations.details.website.edit') }}</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -12,18 +12,18 @@
           <q-input
             v-model="form.website"
             type="url"
-            label="Website URL"
+            :label="$t('organizations.details.website.url')"
             outlined
             :rules="[
-              val => !val || /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(val) || 'Please enter a valid URL starting with http:// or https://'
+              val => !val || /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(val) || $t('organizations.details.website.invalidUrl')
             ]"
-            hint="Leave empty if no website"
+            :hint="$t('organizations.details.website.emptyHint')"
           />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn type="submit" color="primary" label="Save" :loading="loading" />
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn type="submit" color="primary" :label="$t('common.save')" :loading="loading" />
         </q-card-actions>
       </q-form>
     </q-card>

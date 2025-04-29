@@ -17,10 +17,34 @@ export const useUserStore = defineStore('user', () => {
   const currentUser = ref<User | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const userMetadata = ref<Map<string, UserMetadata>>(new Map())
 
   const isAuthenticated = computed(() => currentUser.value !== null)
   const isEvaconAdmin = computed(() => currentUser.value?.level === 'evacon' && currentUser.value?.role === 'admin')
   const isEvaconStaff = computed(() => currentUser.value?.level === 'evacon' && currentUser.value?.role === 'user')
+
+  // Actions
+  async function fetchUserMetadata(userId: string) {
+    if (userMetadata.value.has(userId)) {
+      return userMetadata.value.get(userId)
+    }
+
+    try {
+      const response = await api.get(`/users/${userId}`)
+      const metadata = {
+        first_name: response.first_name,
+        last_name: response.last_name
+      }
+      userMetadata.value.set(userId, metadata)
+      return metadata
+    } catch (e) {
+      console.error('Failed to fetch user metadata:', e)
+      return {
+        first_name: '—',
+        last_name: ''
+      }
+    }
+  }
 
   async function signUp({ email, password }: SignUpCredentials) {
     loading.value = true
@@ -152,6 +176,7 @@ export const useUserStore = defineStore('user', () => {
     isEvaconAdmin,
     isEvaconStaff,
     signUp,
+    fetchUserMetadata,
     login,
     logout,
     resetPassword,

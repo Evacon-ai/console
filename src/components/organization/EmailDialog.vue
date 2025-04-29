@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogOpen" persistent>
     <q-card style="min-width: 400px">
       <q-card-section class="row items-center">
-        <div class="text-h6">Edit Contact Email</div>
+        <div class="text-h6">{{ $t('organizations.details.contact.editEmail') }}</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -12,19 +12,19 @@
           <q-input
             v-model="form.email"
             type="email"
-            label="Contact Email"
+            :label="$t('organizations.details.contact.email')"
             outlined
             :rules="[
-              val => !!val || 'Email is required',
-              val => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val) || 'Please enter a valid email address',
-              val => val.length <= 254 || 'Email address is too long'
+              val => !!val || $t('common.emailRequired'),
+              val => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val) || $t('users.invalidEmail'),
+              val => val.length <= 254 || $t('organizations.details.contact.emailTooLong')
             ]"
           />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn type="submit" color="primary" label="Save" :loading="loading" />
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn type="submit" color="primary" :label="$t('common.save')" :loading="loading" />
         </q-card-actions>
       </q-form>
     </q-card>

@@ -65,6 +65,34 @@
             :disable="loading"
           />
 
+          <q-select
+            v-if="form.level === 'customer'"
+            v-model="form.organization_id"
+            :options="organizationOptions"
+            :label="$t('organizations.organization')"
+            class="q-mt-md"
+            outlined
+            emit-value
+            map-options
+            :rules="[val => !!val || $t('organizations.nameRequired')]"
+          >
+            <template v-slot:selected>
+              <div class="row items-center" v-if="getSelectedOrg">
+                <q-avatar size="24px" class="q-mr-sm">
+                  <template v-if="getSelectedOrg.logo_url">
+                    <img :src="getSelectedOrg.logo_url" :alt="getSelectedOrg.name">
+                  </template>
+                  <template v-else>
+                    <div class="default-logo">
+                      <Building2 class="w-4 h-4 text-grey-6" />
+                    </div>
+                  </template>
+                </q-avatar>
+                {{ getSelectedOrg.name }}
+              </div>
+            </template>
+          </q-select>
+
           <div v-if="error" class="text-negative q-mt-sm">
             {{ error }}
           </div>
@@ -93,6 +121,8 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
+import { useOrganizationsStore } from '../stores/organizationsStore'
+import { Building2 } from 'lucide-vue-next'
 import { createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '../lib/firebase'
 import { generateRandomPassword } from '../utils/password'
@@ -109,6 +139,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const userStore = useUserStore()
+const organizationsStore = useOrganizationsStore()
 
 const dialogOpen = computed({
   get: () => props.modelValue,
@@ -123,7 +154,8 @@ const form = ref({
   last_name: '',
   email: '',
   level: '',
-  role: '' 
+  role: '',
+  organization_id: ''
 })
 
 const levelOptions = computed(() => {
@@ -142,6 +174,18 @@ const roleOptions = computed(() => {
   return options
 })
 
+const organizationOptions = computed(() => {
+  return organizationsStore.organizations.map(org => ({
+    label: org.name,
+    value: org.id,
+    logo_url: org.logo_url
+  }))
+})
+
+const getSelectedOrg = computed(() => {
+  return organizationsStore.organizations.find(org => org.id === form.value.organization_id)
+})
+
 const onSubmit = async () => {
   loading.value = true
   error.value = null
@@ -156,7 +200,8 @@ const onSubmit = async () => {
       last_name: form.value.last_name,
       email: form.value.email,
       level: form.value.level,
-      role: form.value.role
+      role: form.value.role,
+      organization_id: form.value.level === 'customer' ? form.value.organization_id : null
     })
 
     dialogOpen.value = false

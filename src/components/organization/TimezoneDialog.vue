@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogOpen" persistent>
     <q-card style="min-width: 400px">
       <q-card-section class="row items-center">
-        <div class="text-h6">Edit Timezone</div>
+        <div class="text-h6">{{ $t('organizations.details.timezone.edit') }}</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -12,7 +12,7 @@
           <q-select
             v-model="form.timezone"
             :options="timezoneOptions"
-            label="Timezone"
+            :label="$t('organizations.details.timezone.label')"
             use-input
             hide-selected
             fill-input
@@ -20,7 +20,7 @@
             outlined
             emit-value
             map-options
-            :rules="[val => !!val || 'Timezone is required']"
+            :rules="[val => !!val || $t('organizations.details.timezone.required')]"
             @filter="filterTimezones"
           >
             <template v-slot:option="{ opt, selected, toggleOption }">
@@ -44,8 +44,8 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn type="submit" color="primary" label="Save" :loading="loading" />
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn type="submit" color="primary" :label="$t('common.save')" :loading="loading" />
         </q-card-actions>
       </q-form>
     </q-card>
