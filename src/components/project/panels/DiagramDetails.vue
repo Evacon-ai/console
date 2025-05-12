@@ -17,9 +17,9 @@
         />
       </q-card-section>
 
-      <q-card-section class="col q-pa-md">
+      <q-card-section class="q-pa-md">
         <div class="row q-col-gutter-md">
-          <div class="col-12 col-md-8">
+          <div class="col-12 col-md-6">
             <!-- Preview Area -->
             <template v-if="diagram.url && isImageFile(diagram.url)">
               <a :href="diagram.url" target="_blank" rel="noopener noreferrer">
@@ -108,42 +108,29 @@
                 </div>
               </div>
             </template>
+            <div class="text-caption row justify-between">
+              <div>{{ $t('projects.diagrams.added') }} {{ formatTime(diagram.created_at) }}</div>
+              <div>{{ $t('projects.diagrams.lastModified') }} {{ formatTime(diagram.updated_at) }}</div>
+            </div>
           </div>
 
-          <div class="col-12 col-md-4">
-            <div class="text-h6 cursor-pointer q-mb-sm" @click="showNameEdit = true">{{ diagram.name }}</div>
-            <q-list bordered separator>
-              <q-item>
-                <q-item-section>
-                  <q-item-label caption>{{ $t('projects.diagrams.description') }}</q-item-label>
-                  <q-item-label class="cursor-pointer" @click="showDescriptionEdit = true">
-                    {{ diagram.description || $t('projects.diagrams.addDescription') }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item>
-                <q-item-section>
-                  <q-item-label caption>{{ $t('projects.diagrams.added') }}</q-item-label>
-                  <q-item-label>{{ formatTime(diagram.created_at) }}</q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item v-if="diagram.updated_at !== diagram.created_at">
-                <q-item-section>
-                  <q-item-label caption>{{ $t('projects.diagrams.lastModified') }}</q-item-label>
-                  <q-item-label>{{ formatTime(diagram.updated_at) }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-
-            <q-btn
-              color="negative"
-              class="full-width q-mt-md"
-              icon="delete"
-              :label="$t('common.delete')"
-              @click="showDeleteConfirm = true"
-            />
+          <div class="col-12 col-md-6">
+            <div class="row items-center justify-between">
+              <div class="text-h6 cursor-pointer" @click="showNameEdit = true">{{ diagram.name }}</div>
+              <q-btn
+                flat
+                round
+                dense
+                color="negative"
+                icon="delete"
+                @click="showDeleteConfirm = true"
+              >
+                <q-tooltip>{{ $t('common.delete') }}</q-tooltip>
+              </q-btn>
+            </div>
+            <div class="cursor-pointer text-grey" @click="showDescriptionEdit = true">
+              {{ diagram.description || $t('projects.diagrams.addDescription') }}
+            </div>
           </div>
         </div>
       </q-card-section>
@@ -268,12 +255,6 @@ const isPdfFile = (url: string | undefined): boolean => {
   return url.toLowerCase().includes('.pdf')
 }
 
-// Configure PDF.js worker
-// pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-//   'pdfjs-dist/build/pdf.worker.min.js',
-//   import.meta.url
-// ).href
-
 const renderPage = async () => {
   if (!pdfDoc.value || !canvas.value) return
   
@@ -346,6 +327,24 @@ const onDescriptionSubmit = async (data: { description: string }) => {
       message: 'Failed to update diagram description',
       position: 'top'
     })
+  }
+}
+
+const openInNewTab = (url?: string) => {
+  if (url) {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+}
+
+const downloadDiagram = (diagram: Diagram) => {
+  if (diagram.url) {
+    // Create a temporary anchor element
+    const a = document.createElement('a')
+    a.href = diagram.url
+    a.download = diagram.name
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
 }
 
@@ -427,5 +426,14 @@ onMounted(() => {
 .pdf-icon {
   width: 96px;
   height: 96px;
+}
+
+.preview-area {
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.03);
+  transition: background-color 0.2s ease;
+  display: flex;
 }
 </style>

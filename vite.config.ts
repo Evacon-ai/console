@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 import { fileURLToPath, URL } from 'node:url'
-import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   assetsInclude: ['**/*.worker.js'],
@@ -37,7 +36,6 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      plugins: [visualizer({ open: true })], // <-- opens interactive report
       output: {
         manualChunks: {
           pdfjs: ['pdfjs-dist']
