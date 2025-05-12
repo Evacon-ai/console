@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'Melden Sie sich bei Ihrem Konto an',
+  signUpTitle: 'Konto erstellen',
+  signUp: 'Registrieren',
+  needAccount: 'Noch kein Konto? Registrieren',
+  haveAccount: 'Bereits ein Konto? Anmelden',
+  emailRequired: 'E-Mail ist erforderlich',
+  passwordRequired: 'Passwort ist erforderlich',
+  resetPassword: 'Passwort zurücksetzen',
+  resetPasswordInstructions: 'Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen Anweisungen zum Zurücksetzen Ihres Passworts.',
+  sendResetLink: 'Link zum Zurücksetzen senden',
+  resetPasswordSuccess: 'Prüfen Sie Ihre E-Mail für Anweisungen zum Zurücksetzen des Passworts.',
+  invalidResetLink: 'Ungültiger oder abgelaufener Link zum Zurücksetzen des Passworts.',
+  passwordResetSuccess: 'Ihr Passwort wurde erfolgreich zurückgesetzt.',
+  rateLimitExceeded: 'Zu viele Versuche. Bitte versuchen Sie es in einigen Minuten erneut.',
+  setNewPassword: 'Neues Passwort festlegen',
+  setNewPasswordInstructions: 'Bitte geben Sie unten Ihr neues Passwort ein.',
+  newPassword: 'Neues Passwort',
+  confirmPassword: 'Passwort bestätigen',
+  confirmPasswordRequired: 'Bitte bestätigen Sie Ihr Passwort',
+  passwordTooShort: 'Das Passwort muss mindestens 8 Zeichen lang sein',
+  passwordsDoNotMatch: 'Die Passwörter stimmen nicht überein'
+}

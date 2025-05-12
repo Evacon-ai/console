@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Quasar } from 'quasar'
+import { Quasar, Dialog, Notify, Loading } from 'quasar'
 import i18n from './i18n'
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 import { useThemeHandler } from 'maz-ui';
@@ -115,7 +115,11 @@ i18n.global.locale.value = savedLanguage
 
 app.use(router)
 app.use(Quasar, {
-  plugins: {},
+  plugins: {
+    Dialog, 
+    Notify,
+    Loading
+  },
   config: {
     dark: true,
     brand: {

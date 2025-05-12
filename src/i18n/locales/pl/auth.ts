@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'Zaloguj się na swoje konto',
+  signUpTitle: 'Utwórz konto',
+  signUp: 'Zarejestruj się',
+  needAccount: 'Nie masz konta? Zarejestruj się',
+  haveAccount: 'Masz już konto? Zaloguj się',
+  emailRequired: 'Email jest wymagany',
+  passwordRequired: 'Hasło jest wymagane',
+  resetPassword: 'Zresetuj hasło',
+  resetPasswordInstructions: 'Wprowadź swój adres email, a wyślemy Ci instrukcje resetowania hasła.',
+  sendResetLink: 'Wyślij link do resetowania',
+  resetPasswordSuccess: 'Sprawdź swoją skrzynkę email, aby uzyskać instrukcje resetowania hasła.',
+  invalidResetLink: 'Nieprawidłowy lub wygasły link do resetowania hasła.',
+  passwordResetSuccess: 'Twoje hasło zostało pomyślnie zresetowane.',
+  rateLimitExceeded: 'Zbyt wiele prób. Spróbuj ponownie za kilka minut.',
+  setNewPassword: 'Ustaw nowe hasło',
+  setNewPasswordInstructions: 'Wprowadź poniżej swoje nowe hasło.',
+  newPassword: 'Nowe hasło',
+  confirmPassword: 'Potwierdź hasło',
+  confirmPasswordRequired: 'Proszę potwierdzić hasło',
+  passwordTooShort: 'Hasło musi mieć co najmniej 8 znaków',
+  passwordsDoNotMatch: 'Hasła nie są zgodne'
+}

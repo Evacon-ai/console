@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'התחבר לחשבון שלך',
+  signUpTitle: 'צור חשבון חדש',
+  signUp: 'הרשמה',
+  needAccount: 'צריך חשבון? הירשם',
+  haveAccount: 'כבר יש לך חשבון? התחבר',
+  emailRequired: 'דוא"ל נדרש',
+  passwordRequired: 'סיסמה נדרשת',
+  resetPassword: 'איפוס סיסמה',
+  resetPasswordInstructions: 'הזן את כתובת הדוא"ל שלך ונשלח לך הוראות לאיפוס הסיסמה.',
+  sendResetLink: 'שלח קישור לאיפוס',
+  resetPasswordSuccess: 'בדוק את הדוא"ל שלך להוראות איפוס הסיסמה.',
+  invalidResetLink: 'קישור איפוס הסיסמה לא תקין או פג תוקף.',
+  passwordResetSuccess: 'הסיסמה שלך אופסה בהצלחה.',
+  rateLimitExceeded: 'יותר מדי ניסיונות. אנא נסה שוב בעוד מספר דקות.',
+  setNewPassword: 'הגדר סיסמה חדשה',
+  setNewPasswordInstructions: 'אנא הזן את הסיסמה החדשה שלך למטה.',
+  newPassword: 'סיסמה חדשה',
+  confirmPassword: 'אימות סיסמה',
+  confirmPasswordRequired: 'אנא אמת את הסיסמה',
+  passwordTooShort: 'הסיסמה חייבת להכיל לפחות 8 תווים',
+  passwordsDoNotMatch: 'הסיסמאות אינן תואמות'
+}

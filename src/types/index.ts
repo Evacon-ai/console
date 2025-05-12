@@ -5,6 +5,7 @@ export interface User {
   last_name?: string
   level: 'customer' | 'evacon'
   role: 'evacon_admin' | 'evacon_staff' | 'customer_admin' | 'customer_user'
+  organization_id: string
   created_at: string
   updated_at: string
 }
@@ -52,4 +53,34 @@ export interface Organization {
   created_by: string
   updated_at: string
   updated_by: string
+}
+
+export interface Project {
+  id: string
+  name: string
+  description: string
+  location: {
+    city: string
+    state: string
+    country: string
+  }
+  organization_id: string
+  status: 'active' | 'completed' | 'on_hold' | 'canceled'
+  created_at: string
+  updated_at: string
+  fds_url?: string
+  setpoint_url?: string
+  design_url?: string
+  io_url?: string
+  diagrams?: Diagram[]
+}
+
+export interface Diagram {
+  id: string
+  project_id: string
+  name: string
+  description: string
+  url?: string
+  created_at: string
+  updated_at: string
 }

@@ -1,41 +1,93 @@
 <template>
   <q-page padding>
-    <div class="row items-center justify-between q-mb-lg">
-      <div class="text-h4">{{ $t('projects.title') }}</div>
-      <q-btn color="primary" icon="add" :label="$t('common.newProject')" @click="showWizard = true" />
+    <div class="column q-mb-lg">
+      <div class="row items-center justify-between">
+        <div class="text-h4">{{ $t('projects.title') }}</div>
+        <div class="row items-center q-gutter-sm">
+          <q-btn
+            flat
+            round
+            color="primary"
+            icon="refresh"
+            :loading="projectsStore.loading"
+            @click="projectsStore.fetchProjects"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            color="primary"
+            icon="add"
+            :label="$t('common.newProject')"
+            @click="showNewProject = true"
+          />
+        </div>
+      </div>
+      
+      <!-- Organization Filter Header -->
+      <div v-if="selectedOrganization" class="row items-center q-mt-md">
+        <q-chip
+          class="bg-primary text-white"
+          removable
+          @remove="clearOrganizationFilter"
+        >
+          {{ $t('projects.showingProjectsFor', { name: selectedOrganization.name }) }}
+        </q-chip>
+      </div>
     </div>
 
-    <div class="row q-col-gutter-md">
+    <div class="row q-col-gutter-md" v-if="!projectsStore.loading">
+      <template v-if="projects.length">
       <div class="col-12" v-for="project in projects" :key="project.id">
-        <q-card flat bordered>
+        <q-card flat bordered class="cursor-pointer" @click="showProject(project)">
           <q-card-section>
             <div class="row items-start justify-between">
               <div class="row items-center">
-                <q-avatar size="48px" color="primary" text-color="white" :class="isRTL ? 'q-ml-md' : 'q-mr-md'">
-                  <FolderGit2 class="w-6 h-6" />
-                </q-avatar>
+                <div class="project-logo" :class="isRTL ? 'q-ml-md' : 'q-mr-md'">
+                  <template v-if="getOrganizationLogo(project.organization_id)">
+                    <img 
+                      :src="getOrganizationLogo(project.organization_id)" 
+                      :alt="project.name"
+                      class="project-logo-image"
+                    >
+                  </template>
+                  <template v-else>
+                    <div class="project-logo-fallback">
+                      <FolderGit2 class="w-6 h-6" />
+                    </div>
+                  </template>
+                </div>
                 <div>
-                  <div class="text-h6">{{ project.name }}</div>
-                  <div class="text-grey-7">{{ project.description }}</div>
+                  <div class="text-h6 q-mb-xs">{{ project.name }}</div>
+                  <div class="text-grey-7">{{ project.description }}</div>                  
                 </div>
               </div>
-              <q-chip
-                :color="getStatusColor(project.status)"
-                text-color="white"
-                size="sm"
-              >
-                {{ project.status }}
-              </q-chip>
+              <div class="column items-end">
+                <q-chip
+                  :color="getStatusColor(project.status)"
+                  text-color="white" 
+                  class="status-btn q-mb-sm"
+                  size="sm" 
+                >
+                  
+                  {{ $t(`organizations.status.${project.status}`) }}
+                </q-chip>
+                <div v-if="project.location" class="text-caption text-grey-7 row items-center">
+                  <LocationDisplay
+                    :city="project.location.city"
+                    :state="project.location.state"
+                    :country="project.location.country"
+                  />
+                </div>
+              </div>
             </div>
           </q-card-section>
 
           <q-card-section>
             <div class="row items-center justify-between">
-              <div class="row items-center">
-                <Calendar class="w-4 h-4" :class="isRTL ? 'q-ml-xs' : 'q-mr-xs'" />
-                {{ $t('projects.generated', { time: formatTime(project.generatedAt) }) }}
+              <div class="row items-center text-grey-7">
+                {{ $t('projects.generated', { time: formatTime(project.created_at) }) }}
               </div>
-              <div class="row items-center">
+              <!--<div class="row items-center">
                 <span class="text-grey-7 q-mr-sm"> {{ $t('common.download')}}:</span>
                 <q-btn flat round size="sm" color="primary" icon="description">
                   <q-tooltip class="large-tooltip">{{ $t('projects.wizard.fdsTitle') }}</q-tooltip>
@@ -49,63 +101,173 @@
                 <q-btn flat round size="sm" color="primary" icon="data_object">
                   <q-tooltip class="large-tooltip">{{ $t('projects.wizard.ioTitle') }}</q-tooltip>
                 </q-btn>
-              </div>
+              </div>-->
             </div>
           </q-card-section>
         </q-card>
       </div>
+      </template>
+      <template v-else>
+        <div class="col-12 text-center q-pa-xl">
+          <FolderGit2 class="text-grey-5 q-mb-md" style="width: 64px; height: 64px;" />
+          <div class="text-h6 text-grey-7">
+            {{ selectedOrganization 
+              ? $t('projects.noProjectsForOrganization', { name: selectedOrganization.name })
+              : $t('projects.noProjects') }}
+          </div>
+        </div>
+      </template>
     </div>
 
-    <ProjectWizard v-model="showWizard" />
+    <NewProject
+      v-model="showNewProject"
+      @project-created="onProjectCreated"
+    />
+    <ProjectDetails
+      v-if="showDetails && selectedProject"
+      v-model="showDetails"
+      :project="selectedProject"
+      @project-updated="onProjectUpdated"
+    />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useProjectsStore } from '../stores/projectsStore'
+import { useOrganizationsStore } from '../stores/organizationsStore'
 import { FolderGit2, Calendar } from 'lucide-vue-next'
-import ProjectWizard from '../components/ProjectWizard.vue'
+import NewProject from '../components/project/NewProject.vue'
+import ProjectDetails from '../components/project/ProjectDetails.vue'
+import LocationDisplay from '../components/LocationDisplay.vue'
 import { useTimeFormatter } from '../utils/formatTime'
+import { useRoute, useRouter } from 'vue-router'
+import type { Project } from '../types'
 
 const { locale } = useI18n()
-const { formatTime } = useTimeFormatter()
-const showWizard = ref(false)
+const projectsStore = useProjectsStore()
+const organizationsStore = useOrganizationsStore()
+const route = useRoute()
+const router = useRouter()
+const showNewProject = ref(false)
+const showDetails = ref(false)
+const selectedProject = ref<Project | null>(null)
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 
-const projects = [
-  {
-    id: 1,
-    name: 'Tizen Water Works',
-    description: 'Desalination plant in Tizen Abe',
-    generatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    status: 'Completed'
-  },
-  {
-    id: 2,
-    name: 'Project Zhopa Nasrala',
-    description: 'Gas rig off the coast of Israel',
-    generatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    status: 'Error'
-  },
-  {
-    id: 3,
-    name: 'Ivanpah Reconfiguration', 
-    description: 'Solar plant conversion to coal',
-    generatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    status: 'Completed'
+const selectedOrganization = computed(() => {
+  const orgId = route.query.organization as string
+  return orgId ? organizationsStore.organizations.find(org => org.id === orgId) : null
+})
+
+const clearOrganizationFilter = () => {
+  router.push({ query: {} })
+}
+
+const { formatTime } = useTimeFormatter()
+
+const getCountryCode = (countryName: string) => {
+  if (!countryName) return 'US'
+  const country = countries.find(c => c.value === countryName)
+  return country?.code || 'US'
+}
+
+// Ensure projects is always an array
+const projects = computed(() => {
+  const allProjects = Array.isArray(projectsStore.projects) ? projectsStore.projects : []
+  
+  if (selectedOrganization.value) {
+    return allProjects.filter(project => project.organization_id === selectedOrganization.value.id)
   }
-]
+  
+  return allProjects
+})
+
+const getOrganizationLogo = (organizationId: string) => {
+  const organization = organizationsStore.organizations.find(org => org.id === organizationId)
+  return organization?.logo_url
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'Completed': return 'teal'
-    case 'Error': return 'negative'
+    case 'active': return 'light-blue'
+    case 'completed': return 'teal'
+    case 'on_hold': return 'warning'
+    case 'canceled': return 'negative'
     default: return 'grey'
   }
 }
+
+const showProject = (project: Project) => {
+  if (!project) return
+  selectedProject.value = { ...project }
+  showDetails.value = true
+}
+
+const onProjectUpdated = async () => {
+  await projectsStore.fetchProjects()
+  const updatedProject = projectsStore.projects.find(p => p.id === selectedProject.value?.id)
+  if (updatedProject) {
+    selectedProject.value = { ...updatedProject }
+  }
+}
+
+const onProjectCreated = async (id: string) => {
+  await projectsStore.fetchProjects()
+  const newProject = projectsStore.projects.find(p => p.id === id)
+  if (newProject) {
+    selectedProject.value = { ...newProject }
+    showDetails.value = true
+  }
+}
+
+onMounted(async () => {
+  try {
+    await projectsStore.fetchProjects()
+    await organizationsStore.fetchOrganizations()
+  } catch (error) {
+    console.error('Failed to fetch projects:', error)
+  }
+})
 </script>
+
 <style>
 .large-tooltip {
   font-size: 14px !important;
+}
+
+.project-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--q-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-logo-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.status-btn {
+  text-transform: uppercase !important;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 12px;
+  padding: 4px 12px;
 }
 </style>

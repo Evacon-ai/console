@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'Inicie sesión en su cuenta',
+  signUpTitle: 'Cree su cuenta',
+  signUp: 'Registrarse',
+  needAccount: '¿Necesita una cuenta? Regístrese',
+  haveAccount: '¿Ya tiene una cuenta? Inicie sesión',
+  emailRequired: 'El correo electrónico es requerido',
+  passwordRequired: 'La contraseña es requerida',
+  resetPassword: 'Restablecer contraseña',
+  resetPasswordInstructions: 'Ingrese su correo electrónico y le enviaremos instrucciones para restablecer su contraseña.',
+  sendResetLink: 'Enviar enlace de restablecimiento',
+  resetPasswordSuccess: 'Revise su correo electrónico para obtener instrucciones de restablecimiento de contraseña.',
+  invalidResetLink: 'Enlace de restablecimiento de contraseña inválido o expirado.',
+  passwordResetSuccess: 'Su contraseña ha sido restablecida exitosamente.',
+  rateLimitExceeded: 'Demasiados intentos. Por favor, inténtelo de nuevo en unos minutos.',
+  setNewPassword: 'Establecer nueva contraseña',
+  setNewPasswordInstructions: 'Por favor, ingrese su nueva contraseña abajo.',
+  newPassword: 'Nueva contraseña',
+  confirmPassword: 'Confirmar contraseña',
+  confirmPasswordRequired: 'Por favor confirme su contraseña',
+  passwordTooShort: 'La contraseña debe tener al menos 8 caracteres',
+  passwordsDoNotMatch: 'Las contraseñas no coinciden'
+}

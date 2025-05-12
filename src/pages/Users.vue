@@ -65,7 +65,7 @@
         <q-tab-panel name="customers">
           <q-table
             :rows="usersStore.customerUsers"
-            :columns="columns"
+            :columns="customerColumns"
             row-key="id"
             :loading="usersStore.loading"
             :pagination="{ rowsPerPage: 10 }"
@@ -137,7 +137,7 @@
         <q-tab-panel name="evacon">
           <q-table
             :rows="usersStore.evaconUsers"
-            :columns="columns"
+            :columns="evaconColumns"
             row-key="id"
             :loading="usersStore.loading"
             :pagination="{ rowsPerPage: 10 }"
@@ -245,7 +245,8 @@ const showUserDetails = ref(false)
 const showError = ref(false)
 const selectedUser = ref(null)
 
-const columns = [
+
+const customerColumns = [
   {
     name: 'fullName',
     required: true,
@@ -291,6 +292,8 @@ const columns = [
     sortable: true
   }
 ]
+
+const evaconColumns = customerColumns.filter(col => col.name !== 'organization')
 
 const getRoleColor = (role: string) => {
   switch (role) {

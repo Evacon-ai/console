@@ -45,22 +45,42 @@
                   </q-avatar>
                   <div>
                     <div class="text-h6">{{ org.name }}</div>
-                    <div class="text-grey-7">{{ org?.contact?.name || '—' }}</div>
+                    <div class="text-grey-7">
+                      <LocationDisplay
+                        :city="org.address?.city"
+                        :state="org.address?.state"
+                        :country="org.address?.country"
+                      />
+                    </div>
                   </div>
                 </div>
-                <q-btn
-                  :color="org.account_status === 'active' ? 'positive' : 'grey'"
-                  :label="$t(`organizations.status.${org.account_status}`)"
-                  class="status-btn"
-                  size="sm"
-                  @click.stop="toggleOrgStatus(org)"
-                  :loading="isUpdating(org.id)"
-                  :disable="!canEdit"
-                >
-                  <q-tooltip v-if="!canEdit">
-                    Only administrators can change organization status
-                  </q-tooltip>
-                </q-btn>
+                <div class="row items-center q-gutter-sm">
+
+                  <q-btn
+                    color="primary"
+                    class="project-count-btn"
+                    size="sm"
+                    :label="$t('organizations.projectCount', { count: projectsStore.projectsByOrganizationId(org.id).value.length })"
+                    @click.stop="router.push({ name: 'projects', query: { organization: org.id }})"
+                  >
+                    <q-tooltip>
+                      {{ $t('organizations.viewProjects') }}
+                    </q-tooltip>
+                  </q-btn>
+                  <q-btn
+                    :color="org.account_status === 'active' ? 'positive' : 'grey'"
+                    :label="$t(`organizations.status.${org.account_status}`)"
+                    class="status-btn"
+                    size="sm"
+                    @click.stop="toggleOrgStatus(org)"
+                    :loading="isUpdating(org.id)"
+                    :disable="!canEdit"
+                  >
+                    <q-tooltip v-if="!canEdit">
+                      {{ $t('organizations.users.onlyAdminsCanChangeStatus') }}
+                    </q-tooltip>
+                  </q-btn>
+                </div>
               </div>
             </q-card-section>
 
@@ -96,17 +116,22 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Building2 } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 import { useTimeFormatter } from '../utils/formatTime'
 import { useOrganizationsStore } from '../stores/organizationsStore'
+import { useProjectsStore } from '../stores/projectsStore'
 import { useUserStore } from '../stores/userStore'
 import CreateDialog from '../components/organization/CreateDialog.vue'
 import OrganizationDetails from '../components/OrganizationDetails.vue'
+import LocationDisplay from '../components/LocationDisplay.vue'
 import type { Organization } from '../types'
 
 const { locale } = useI18n()
 const { formatTime } = useTimeFormatter()
 const organizationsStore = useOrganizationsStore()
+const projectsStore = useProjectsStore()
 const userStore = useUserStore()
+const router = useRouter()
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 const showDetails = ref(false)
 const selectedOrg = ref<Organization | null>(null)
@@ -149,6 +174,7 @@ const toggleOrgStatus = async (org: Organization) => {
 // Load organizations when component mounts
 onMounted(async () => {
   try {
+    await projectsStore.fetchProjects()
     await organizationsStore.fetchOrganizations()
   } catch (error) {
     console.error('Failed to fetch organizations:', error)
@@ -217,6 +243,17 @@ const organizations = computed(() => {
 .status-btn {
   text-transform: uppercase !important;
   font-size: 14px;
+  min-width: 100px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 12px;
+  padding: 4px 12px;
+}
+
+.project-count-btn {
+  text-transform: none !important;
+  font-size: 14px;
+  min-width: 100px;
   font-weight: 500;
   letter-spacing: 0.5px;
   border-radius: 12px;

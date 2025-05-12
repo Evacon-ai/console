@@ -1,12 +1,12 @@
 import { createI18n } from 'vue-i18n'
 import { watch } from 'vue'
-import en from './locales/en'
-import de from './locales/de'
-import es from './locales/es'
-import he from './locales/he'
-import ru from './locales/ru'
-import pl from './locales/pl'
-import ar from './locales/ar'
+import en from './locales/en/index.ts'
+import de from './locales/de/index.ts'
+import es from './locales/es/index.ts'
+import he from './locales/he/index.ts'
+import ru from './locales/ru/index.ts'
+import pl from './locales/pl/index.ts'
+import ar from './locales/ar/index.ts'
 
 // RTL languages
 const rtlLanguages = ['he', 'ar']

@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'Войдите в свой аккаунт',
+  signUpTitle: 'Создайте аккаунт',
+  signUp: 'Регистрация',
+  needAccount: 'Нужен аккаунт? Зарегистрируйтесь',
+  haveAccount: 'Уже есть аккаунт? Войдите',
+  emailRequired: 'Требуется эл. почта',
+  passwordRequired: 'Требуется пароль',
+  resetPassword: 'Сброс пароля',
+  resetPasswordInstructions: 'Введите свой адрес электронной почты, и мы отправим вам инструкции по сбросу пароля.',
+  sendResetLink: 'Отправить ссылку для сброса',
+  resetPasswordSuccess: 'Проверьте свою электронную почту для получения инструкций по сбросу пароля.',
+  invalidResetLink: 'Недействительная или просроченная ссылка для сброса пароля.',
+  passwordResetSuccess: 'Ваш пароль был успешно сброшен.',
+  rateLimitExceeded: 'Слишком много попыток. Пожалуйста, попробуйте снова через несколько минут.',
+  setNewPassword: 'Установить новый пароль',
+  setNewPasswordInstructions: 'Пожалуйста, введите новый пароль ниже.',
+  newPassword: 'Новый пароль',
+  confirmPassword: 'Подтвердите пароль',
+  confirmPasswordRequired: 'Пожалуйста, подтвердите пароль',
+  passwordTooShort: 'Пароль должен содержать не менее 8 символов',
+  passwordsDoNotMatch: 'Пароли не совпадают'
+}

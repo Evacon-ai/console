@@ -24,21 +24,34 @@
             </template>
           </q-avatar>
           <div class="column">
-            <div class="text-h5 cursor-pointer" @click="showNameEdit = true">{{ organization.name }}</div>
+            <div class="text-h5 cursor-pointer q-pb-sm" @click="showNameEdit = true">{{ organization.name }}</div>
             <div class="text-subtitle1 text-grey-7">
-              <q-btn
-                :color="organization.account_status === 'active' ? 'positive' : 'grey'"
-                :label="$t(`organizations.status.${organization.account_status}`)"
-                class="q-mt-sm status-btn"
-                size="sm"
-                @click="toggleStatus"
-                :loading="updating"
-                :disable="!canEdit"
-              >
-                <q-tooltip v-if="!canEdit">
-                  Only administrators can change organization status
-                </q-tooltip>
-              </q-btn>
+              <div class="row items-center q-gutter-sm">
+                <q-btn
+                  :color="organization.account_status === 'active' ? 'positive' : 'grey'"
+                  :label="$t(`organizations.status.${organization.account_status}`)"
+                  class="status-btn"
+                  size="sm"
+                  @click="toggleStatus"
+                  :loading="updating"
+                  :disable="!canEdit"
+                >
+                  <q-tooltip v-if="!canEdit">
+                    Only administrators can change organization status
+                  </q-tooltip>
+                </q-btn>
+                <q-btn
+                  color="primary"
+                  class="project-count-btn"
+                  size="sm"
+                  :label="$t('organizations.projectCount', { count: projectsStore.projectsByOrganizationId(organization.id).value.length })"
+                  @click="router.push({ name: 'projects', query: { organization: organization.id }})"
+                >
+                  <q-tooltip>
+                    {{ $t('organizations.viewProjects') }}
+                  </q-tooltip>
+                </q-btn>
+              </div>
             </div>
           </div>
           <q-space />
@@ -193,11 +206,14 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useOrganizationsStore } from '../stores/organizationsStore'
-import { useUserStore } from '../stores/userStore'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { Building2, Users, FileText, CreditCard, Plug } from 'lucide-vue-next'
 import { useTimeFormatter } from '../utils/formatTime'
 import { useQuasar } from 'quasar'
+import { useOrganizationsStore } from '../stores/organizationsStore'
+import { useProjectsStore } from '../stores/projectsStore'
+import { useUserStore } from '../stores/userStore'
 import type { Organization } from '../types'
 import PhoneNumberDialog from './organization/PhoneNumberDialog.vue'
 import AddressDialog from './organization/AddressDialog.vue'
@@ -230,9 +246,12 @@ const emit = defineEmits<{
 }>()
 
 const $q = useQuasar()
+const { t } = useI18n()
 const { formatTime } = useTimeFormatter()
 const organizationsStore = useOrganizationsStore()
+const projectsStore = useProjectsStore()
 const userStore = useUserStore()
+const router = useRouter()
 const showAddressEdit = ref(false)
 const showContactEdit = ref(false)
 const showEmailEdit = ref(false)
@@ -621,6 +640,16 @@ const getTimezoneLabel = (timezone?: string) => {
 .status-btn {
   text-transform: uppercase !important;
   font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 12px;
+  padding: 4px 12px;
+}
+
+.project-count-btn {
+  text-transform: none !important;
+  font-size: 16px;
+  min-width: 100px;
   font-weight: 500;
   letter-spacing: 0.5px;
   border-radius: 12px;

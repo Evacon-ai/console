@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'Sign in to your account',
+  signUpTitle: 'Create your account',
+  signUp: 'Sign up',
+  needAccount: 'Need an account? Sign up',
+  haveAccount: 'Already have an account? Sign in',
+  emailRequired: 'Email is required',
+  passwordRequired: 'Password is required',
+  resetPassword: 'Reset Password',
+  resetPasswordInstructions: 'Enter your email address and we will send you instructions to reset your password.',
+  sendResetLink: 'Send Reset Link',
+  resetPasswordSuccess: 'Check your email for password reset instructions.',
+  invalidResetLink: 'Invalid or expired password reset link.',
+  passwordResetSuccess: 'Your password has been successfully reset.',
+  rateLimitExceeded: 'Too many attempts. Please try again in a few minutes.',
+  setNewPassword: 'Set New Password',
+  setNewPasswordInstructions: 'Please enter your new password below.',
+  newPassword: 'New Password',
+  confirmPassword: 'Confirm Password',
+  confirmPasswordRequired: 'Please confirm your password',
+  passwordTooShort: 'Password must be at least 8 characters long',
+  passwordsDoNotMatch: 'Passwords do not match'
+}

@@ -1,0 +1,23 @@
+export default {
+  signInTitle: 'تسجيل الدخول إلى حسابك',
+  signUpTitle: 'إنشاء حساب جديد',
+  signUp: 'تسجيل',
+  needAccount: 'تحتاج حساب؟ سجل الآن',
+  haveAccount: 'لديك حساب بالفعل؟ تسجيل الدخول',
+  emailRequired: 'البريد الإلكتروني مطلوب',
+  passwordRequired: 'كلمة المرور مطلوبة',
+  resetPassword: 'إعادة تعيين كلمة المرور',
+  resetPasswordInstructions: 'أدخل بريدك الإلكتروني وسنرسل لك تعليمات إعادة تعيين كلمة المرور.',
+  sendResetLink: 'إرسال رابط إعادة التعيين',
+  resetPasswordSuccess: 'تم إرسال تعليمات إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.',
+  invalidResetLink: 'رابط إعادة تعيين كلمة المرور غير صالح أو منتهي الصلاحية.',
+  passwordResetSuccess: 'تم إعادة تعيين كلمة المرور بنجاح.',
+  rateLimitExceeded: 'محاولات كثيرة جداً. يرجى المحاولة مرة أخرى بعد بضع دقائق.',
+  setNewPassword: 'تعيين كلمة مرور جديدة',
+  setNewPasswordInstructions: 'الرجاء إدخال كلمة المرور الجديدة أدناه.',
+  newPassword: 'كلمة المرور الجديدة',
+  confirmPassword: 'تأكيد كلمة المرور',
+  confirmPasswordRequired: 'يرجى تأكيد كلمة المرور',
+  passwordTooShort: 'يجب أن تكون كلمة المرور 8 أحرف على الأقل',
+  passwordsDoNotMatch: 'كلمات المرور غير متطابقة'
+}
