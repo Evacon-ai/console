@@ -1,0 +1,431 @@
+<template>
+  <q-dialog
+    :model-value="modelValue"
+    @update:model-value="$emit('update:modelValue', $event)"
+    maximized
+    persistent
+  >
+    <q-card class="column">
+      <q-card-section class="row items-center q-pb-none">
+        <q-space />
+        <q-btn
+          icon="close"
+          flat
+          round
+          dense
+          v-close-popup
+        />
+      </q-card-section>
+
+      <q-card-section class="col q-pa-md">
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-8">
+            <!-- Preview Area -->
+            <template v-if="diagram.url && isImageFile(diagram.url)">
+              <a :href="diagram.url" target="_blank" rel="noopener noreferrer">
+                <img 
+                  :src="diagram.url" 
+                  :alt="diagram.name"
+                  class="diagram-preview cursor-pointer"
+                />
+              </a>
+            </template>
+            <template v-else-if="diagram.url && isPdfFile(diagram.url)">
+              <div class="pdf-preview">
+                <div class="pdf-controls q-mb-md" v-if="numPages > 0">
+                  <div class="row items-center justify-between">
+                    <q-btn-group flat>
+                      <q-btn
+                        icon="navigate_before"
+                        :disable="currentPage <= 1"
+                        @click="currentPage--; renderPage()"
+                      >
+                        <q-tooltip>{{ $t('projects.diagrams.previousPage') }}</q-tooltip>
+                      </q-btn>
+                      <q-btn flat no-caps>
+                        {{ $t('projects.diagrams.pageCount', { current: currentPage, total: numPages }) }}
+                      </q-btn>
+                      <q-btn
+                        icon="navigate_next"
+                        :disable="currentPage >= numPages"
+                        @click="currentPage++; renderPage()"
+                      >
+                        <q-tooltip>{{ $t('projects.diagrams.nextPage') }}</q-tooltip>
+                      </q-btn>
+                    </q-btn-group>
+                    <div>
+                      <q-btn-group flat class="q-mr-md">
+                        <q-btn
+                          icon="zoom_out"
+                          :disable="scale <= 0.5"
+                          @click="scale = Math.max(0.5, scale - 0.25); renderPage()"
+                        >
+                          <q-tooltip>{{ $t('projects.diagrams.zoomOut') }}</q-tooltip>
+                        </q-btn>
+                        <q-btn flat no-caps>
+                          {{ Math.round(scale * 100) }}%
+                        </q-btn>
+                        <q-btn
+                          icon="zoom_in"
+                          :disable="scale >= 3"
+                          @click="scale = Math.min(3, scale + 0.25); renderPage()"
+                        >
+                          <q-tooltip>{{ $t('projects.diagrams.zoomIn') }}</q-tooltip>
+                        </q-btn>
+                      </q-btn-group>
+                      <q-btn
+                        flat
+                        icon="open_in_new"
+                        :href="diagram.url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <q-tooltip>{{ $t('projects.diagrams.openInNewTab') }}</q-tooltip>
+                      </q-btn>
+                    </div>
+                  </div>
+                </div>
+                <a 
+                  :href="diagram.url" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="canvas-container cursor-pointer" 
+                  :class="{ 'q-pa-md': loading }"
+                  :title="$t('projects.diagrams.clickToOpen')"
+                >
+                  <canvas ref="canvas"></canvas>
+                  <q-inner-loading :showing="loading">
+                    <q-spinner-dots size="50px" color="primary" />
+                  </q-inner-loading>
+                </a>
+              </div>
+            </template>
+            <template v-else>
+              <div class="empty-preview">
+                <FileText class="preview-icon text-grey-5" />
+                <div class="text-caption text-grey-7 q-mt-sm">
+                  {{ $t('projects.diagrams.noPreview') }}
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="text-h6 cursor-pointer q-mb-sm" @click="showNameEdit = true">{{ diagram.name }}</div>
+            <q-list bordered separator>
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption>{{ $t('projects.diagrams.description') }}</q-item-label>
+                  <q-item-label class="cursor-pointer" @click="showDescriptionEdit = true">
+                    {{ diagram.description || $t('projects.diagrams.addDescription') }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption>{{ $t('projects.diagrams.added') }}</q-item-label>
+                  <q-item-label>{{ formatTime(diagram.created_at) }}</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item v-if="diagram.updated_at !== diagram.created_at">
+                <q-item-section>
+                  <q-item-label caption>{{ $t('projects.diagrams.lastModified') }}</q-item-label>
+                  <q-item-label>{{ formatTime(diagram.updated_at) }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+
+            <q-btn
+              color="negative"
+              class="full-width q-mt-md"
+              icon="delete"
+              :label="$t('common.delete')"
+              @click="showDeleteConfirm = true"
+            />
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
+  <!-- Delete Confirmation Dialog -->
+  <q-dialog v-model="showDeleteConfirm" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <div class="text-h6">{{ $t('projects.diagrams.deleteTitle') }}</div>
+      </q-card-section>
+
+      <q-card-section>
+        <p>{{ $t('projects.diagrams.deleteConfirm', { name: diagram.name }) }}</p>
+        <p class="text-negative text-caption">{{ $t('common.actionCannotBeUndone') }}</p>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat :label="$t('common.cancel')" v-close-popup />
+        <q-btn
+          flat
+          color="negative"
+          :label="$t('common.delete')"
+          @click="handleDelete"
+          :loading="loading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <DiagramNameDialog
+    v-if="diagram"
+    v-model="showNameEdit"
+    :diagram="diagram"
+    @submit="onNameSubmit"
+  />
+
+  <DiagramDescriptionDialog
+    v-if="diagram"
+    v-model="showDescriptionEdit"
+    :diagram="diagram"
+    @submit="onDescriptionSubmit"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { FileText } from 'lucide-vue-next'
+import { useTimeFormatter } from '../../../utils/formatTime'
+import { useUserStore } from '../../../stores/userStore'
+import { useDiagramsStore } from '../../../stores/diagramsStore'
+import { useQuasar } from 'quasar'
+import DiagramNameDialog from './DiagramNameDialog.vue'
+import DiagramDescriptionDialog from './DiagramDescriptionDialog.vue'
+import type { Diagram } from '../../../types'
+import * as pdfjsLib from 'pdfjs-dist'
+import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl
+  
+const props = defineProps<{
+  modelValue: boolean
+  diagram: Diagram
+  projectId: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void
+  (e: 'diagram-updated', diagram: Diagram): void
+}>()
+
+const { formatTime } = useTimeFormatter()
+const userStore = useUserStore()
+const diagramsStore = useDiagramsStore()
+const $q = useQuasar()
+
+const showNameEdit = ref(false)
+const showDescriptionEdit = ref(false)
+const showDeleteConfirm = ref(false)
+const createdByUser = ref<{ first_name: string; last_name: string } | null>(null)
+const updatedByUser = ref<{ first_name: string; last_name: string } | null>(null)
+const canvas = ref<HTMLCanvasElement | null>(null)
+const pdfDoc = ref<any>(null)
+const currentPage = ref(1)
+const numPages = ref(0)
+const scale = ref(1.5)
+const loading = ref(false)
+
+const handleDelete = async () => {
+  try {
+    await diagramsStore.deleteDiagram(props.projectId, props.diagram.id)
+    showDeleteConfirm.value = false
+    emit('update:modelValue', false)
+    $q.notify({
+      color: 'positive',
+      message: $t('projects.diagrams.deleteSuccess'),
+      position: 'top'
+    })
+  } catch (error) {
+    console.error('Failed to delete diagram:', error)
+    $q.notify({
+      color: 'negative',
+      message: $t('projects.diagrams.deleteFailed'),
+      position: 'top'
+    })
+  }
+}
+
+const isImageFile = (url: string | undefined): boolean => {
+  if (!url) return false
+  try {
+    const pathname = new URL(url).pathname
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(pathname)
+  } catch {
+    return false
+  }
+}
+
+const isPdfFile = (url: string | undefined): boolean => {
+  if (!url) return false
+  return url.toLowerCase().includes('.pdf')
+}
+
+// Configure PDF.js worker
+// pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+//   'pdfjs-dist/build/pdf.worker.min.js',
+//   import.meta.url
+// ).href
+
+const renderPage = async () => {
+  if (!pdfDoc.value || !canvas.value) return
+  
+  loading.value = true
+  try {
+    const page = await pdfDoc.value.getPage(currentPage.value)
+    const viewport = page.getViewport({ scale: scale.value })
+    const context = canvas.value.getContext('2d')
+    
+    canvas.value.height = viewport.height
+    canvas.value.width = viewport.width
+    
+    await page.render({
+      canvasContext: context,
+      viewport
+    }).promise
+  } catch (error) {
+    console.error('Error rendering PDF page:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const loadPDF = async () => {
+  if (!props.diagram.url || !isPdfFile(props.diagram.url)) return
+  console.log('Fetching PDF from:', props.diagram.url)
+  loading.value = true
+  try {
+    pdfDoc.value = await pdfjsLib.getDocument({
+      url: props.diagram.url,
+      withCredentials: false                                                          
+    }).promise
+    numPages.value = pdfDoc.value.numPages
+    await renderPage()
+  } catch (error) {
+    console.error('Error loading PDF:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const onNameSubmit = async (data: { name: string }) => {
+  try {
+    const updatedDiagram = await diagramsStore.updateDiagram(props.projectId, props.diagram.id, {
+      ...props.diagram,
+      name: data.name
+    })
+    emit('diagram-updated', updatedDiagram)
+  } catch (error) {
+    console.error('Failed to update name:', error)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to update diagram name',
+      position: 'top'
+    })
+  }
+}
+
+const onDescriptionSubmit = async (data: { description: string }) => {
+  try {
+    const updatedDiagram = await diagramsStore.updateDiagram(props.projectId, props.diagram.id, {
+      ...props.diagram,
+      description: data.description
+    })
+    emit('diagram-updated', updatedDiagram)
+  } catch (error) {
+    console.error('Failed to update description:', error)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to update diagram description',
+      position: 'top'
+    })
+  }
+}
+
+onMounted(() => {
+  loadPDF()
+})
+</script>
+
+<style scoped>
+.diagram-preview {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.diagram-preview:hover {
+  transform: scale(1.02);
+}
+
+.pdf-preview {
+  padding: 2rem;
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.canvas-container:hover {
+  transform: scale(1.02);
+}
+
+.canvas-container:hover::after {
+  content: 'Click to open PDF';
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.canvas-container canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.empty-preview {
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+}
+
+.body--dark .empty-preview {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.preview-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.pdf-icon {
+  width: 96px;
+  height: 96px;
+}
+</style>

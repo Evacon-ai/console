@@ -39,7 +39,7 @@
           :to="link.path"
           clickable
           v-ripple
-          :active="route.path === link.path"
+          :active="route?.path === link.path"
           active-class="menu-item-active"
         >
           <q-item-section avatar>
@@ -81,7 +81,10 @@ const $q = useQuasar()
 const leftDrawerOpen = ref($q.screen.gt.sm)
 
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
-const isGuestPage = computed(() => ['/login', '/forgot-password', '/new-password'].includes(route.path))
+const isGuestPage = computed(() => {
+  const guestPages = ['/login', '/forgot-password', '/new-password']
+  return route?.path ? guestPages.includes(route.path) : false
+})
 
 const links = [
   { icon: Home, label: 'common.home', path: '/dashboard' },

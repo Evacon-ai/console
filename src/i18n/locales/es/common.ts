@@ -32,5 +32,7 @@ export default {
   save: 'Guardar',
   theme: 'Tema',
   lightMode: 'Modo Claro',
-  darkMode: 'Modo Oscuro'
+  darkMode: 'Modo Oscuro',
+  delete: 'Eliminar',
+  actionCannotBeUndone: 'Esta acción no se puede deshacer.'
 }

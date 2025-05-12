@@ -32,5 +32,7 @@ export default {
   save: 'Сохранить',
   theme: 'Тема',
   lightMode: 'Светлая тема',
-  darkMode: 'Тёмная тема'
+  darkMode: 'Тёмная тема',
+  delete: 'Удалить',
+  actionCannotBeUndone: 'Это действие нельзя отменить.'
 }

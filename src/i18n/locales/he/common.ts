@@ -32,5 +32,7 @@ export default {
   save: 'שמור',
   theme: 'ערכת נושא',
   lightMode: 'מצב בהיר',
-  darkMode: 'מצב כהה'
+  darkMode: 'מצב כהה',
+  delete: 'מחק',
+  actionCannotBeUndone: 'לא ניתן לבטל פעולה זו.'
 }

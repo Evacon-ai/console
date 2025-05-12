@@ -32,5 +32,7 @@ export default {
   save: 'حفظ',
   theme: 'المظهر',
   lightMode: 'الوضع الفاتح',
-  darkMode: 'الوضع الداكن'
+  darkMode: 'الوضع الداكن',
+  delete: 'حذف',
+  actionCannotBeUndone: 'لا يمكن التراجع عن هذا الإجراء.'
 }

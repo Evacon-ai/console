@@ -32,5 +32,7 @@ export default {
   save: 'Speichern',
   theme: 'Design',
   lightMode: 'Heller Modus',
-  darkMode: 'Dunkler Modus'
+  darkMode: 'Dunkler Modus',
+  delete: 'Löschen',
+  actionCannotBeUndone: 'Diese Aktion kann nicht rückgängig gemacht werden.'
 }

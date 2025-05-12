@@ -32,5 +32,7 @@ export default {
   save: 'Save',
   theme: 'Theme',
   lightMode: 'Light Mode',
-  darkMode: 'Dark Mode'
+  darkMode: 'Dark Mode',
+  delete: 'Delete',
+  actionCannotBeUndone: 'This action cannot be undone.'
 }

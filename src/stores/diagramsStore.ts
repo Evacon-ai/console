@@ -1,18 +1,41 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Diagram } from '../types'
+import { DateTime } from 'luxon'
 import api from '../lib/axios'
+import { useQuasar } from 'quasar'
 
 export const useDiagramsStore = defineStore('diagrams', () => {
   // Map of project ID to array of diagrams
   const diagramsByProject = ref<Map<string, Diagram[]>>(new Map())
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const $q = useQuasar()
 
   // Getters
-  const getDiagramsByProjectId = (projectId: string) => computed(() => 
-    diagramsByProject.value.get(projectId) || []
-  )
+
+  const parseDate = (input: any): number => {
+    // Firestore Timestamp instance (from Firestore SDK)
+    if (input?.toDate instanceof Function) {
+      return input.toDate().getTime()
+    }
+  
+    // Manually detect and convert _seconds / _nanoseconds (if not full Timestamp)
+    if (typeof input?._seconds === 'number') {
+      return input._seconds * 1000 + Math.floor((input._nanoseconds || 0) / 1e6)
+    }
+  
+    return 0
+  }
+  
+  const getDiagramsByProjectId = (projectId: string) => computed(() => {
+    const diagrams = diagramsByProject.value.get(projectId) || []
+    return [...diagrams].sort((a, b) => {
+      const dateA = parseDate(a.created_at)
+      const dateB = parseDate(b.created_at)
+      return dateB - dateA // Newest first
+    })
+  })
 
   const getDiagramById = (projectId: string, diagramId: string) => computed(() => 
     diagramsByProject.value.get(projectId)?.find(diagram => diagram.id === diagramId)
@@ -61,6 +84,7 @@ export const useDiagramsStore = defineStore('diagrams', () => {
   async function createDiagram(projectId: string, data: Omit<Diagram, 'id' | 'project_id' | 'created_at' | 'updated_at'>) {
     loading.value = true
     error.value = null
+    
     try {
       const response = await api.post(`/projects/${projectId}/diagrams`, data)
       const projectDiagrams = diagramsByProject.value.get(projectId) || []
@@ -113,10 +137,21 @@ export const useDiagramsStore = defineStore('diagrams', () => {
     }
   }
 
+  // Helper function to parse file name into name and description
+  const parseDiagramFileName = (fileName: string): { name: string, description: string } => {
+    // Remove file extension
+    const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, "")
+    return {
+      name: nameWithoutExtension,
+      description: ''
+    }
+  }
+
   return {
     diagramsByProject,
     loading,
     error,
+    parseDiagramFileName,
     getDiagramsByProjectId,
     getDiagramById,
     fetchProjectDiagrams,

@@ -32,5 +32,7 @@ export default {
   save: 'Zapisz',
   theme: 'Motyw',
   lightMode: 'Jasny motyw',
-  darkMode: 'Ciemny motyw'
+  darkMode: 'Ciemny motyw',
+  delete: 'Usuń',
+  actionCannotBeUndone: 'Tej akcji nie można cofnąć.'
 }

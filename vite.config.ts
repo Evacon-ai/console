@@ -4,6 +4,7 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
+  assetsInclude: ['**/*.worker.js'],
   plugins: [
     vue({
       template: { transformAssetUrls }
@@ -28,6 +29,18 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+  optimizeDeps: {
+    include: ['pdfjs-dist', 'pdfjs-dist/build/pdf.worker.min.js']
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          pdfjs: ['pdfjs-dist']
+        }
+      }
     }
   }
 })
