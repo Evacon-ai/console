@@ -40,15 +40,12 @@
                   />
                 </template>
                 <template v-else-if="diagram.url && isPdfFile(diagram.url)">
-                  <div>
-                    <!--<FilePdf class="pdf-icon" />
-                    <div class="text-caption q-mt-sm">
-                      {{ $t('projects.diagrams.pdfDocument') }}
-                    </div>-->
+                  <div class="cursor-pointer">
                     <embed
                       :src="diagram.url"
                       type="application/pdf"
-                      class="diagram-preview"
+                      class="diagram-preview cursor-pointer"
+                      @click="handleDiagramClick(diagram)"
                     />
                   </div>
                 </template>

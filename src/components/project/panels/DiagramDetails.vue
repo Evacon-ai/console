@@ -36,7 +36,7 @@
                   :src="diagram.url"
                   type="application/pdf"
                   width="100%"
-                  height="650px"
+                  height="680px"
                 />
               </a>
             </template>
@@ -70,6 +70,17 @@
             </div>
             <div class="cursor-pointer text-grey" @click="showDescriptionEdit = true">
               {{ diagram.description || $t('projects.diagrams.addDescription') }}
+            </div>
+            
+            <!-- Extract Elements Button -->
+            <div class="q-mt-md">
+              <q-btn
+                color="primary"
+                icon="code"
+                :label="'Extract elements'"
+                @click="handleExtractElements"
+                :loading="extracting"
+              />
             </div>
             
             <!-- Elements List -->
@@ -189,8 +200,30 @@ const $q = useQuasar()
 const showNameEdit = ref(false)
 const showDescriptionEdit = ref(false)
 const showDeleteConfirm = ref(false)
+const extracting = ref(false)
 const loading = ref(false)
 
+const handleExtractElements = async () => {
+  extracting.value = true
+  try {
+    // TODO: Implement element extraction
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    $q.notify({
+      color: 'positive',
+      message: 'Elements extracted successfully',
+      position: 'top'
+    })
+  } catch (error) {
+    console.error('Failed to extract elements:', error)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to extract elements',
+      position: 'top'
+    })
+  } finally {
+    extracting.value = false
+  }
+}
 const handleDelete = async () => {
   try {
     await diagramsStore.deleteDiagram(props.projectId, props.diagram.id)
