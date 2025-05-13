@@ -32,7 +32,7 @@
             </template>
             <template v-else-if="diagram.url && isPdfFile(diagram.url)">
               <div class="pdf-preview">
-                <div class="pdf-controls q-mb-md" v-if="numPages > 0">
+                <!-- <div class="pdf-controls q-mb-md" v-if="numPages > 0">
                   <div class="row items-center justify-between">
                     <q-btn-group flat>
                       <q-btn
@@ -97,7 +97,13 @@
                   <q-inner-loading :showing="loading">
                     <q-spinner-dots size="50px" color="primary" />
                   </q-inner-loading>
-                </a>
+                </a> -->
+                <embed
+                  :src="props.diagram.url"
+                  type="application/pdf"
+                  width="100%"
+                  height="600px"
+                />
               </div>
             </template>
             <template v-else>
@@ -333,18 +339,6 @@ const onDescriptionSubmit = async (data: { description: string }) => {
 const openInNewTab = (url?: string) => {
   if (url) {
     window.open(url, '_blank', 'noopener,noreferrer')
-  }
-}
-
-const downloadDiagram = (diagram: Diagram) => {
-  if (diagram.url) {
-    // Create a temporary anchor element
-    const a = document.createElement('a')
-    a.href = diagram.url
-    a.download = diagram.name
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
   }
 }
 
