@@ -5,7 +5,7 @@
     maximized
     persistent
   >
-    <q-card class="column">
+    <q-card class="column overflow-hidden-y">
       <q-card-section class="row items-center q-pb-none">
         <q-space />
         <q-btn
@@ -36,7 +36,7 @@
                   :src="diagram.url"
                   type="application/pdf"
                   width="100%"
-                  height="680px"
+                  height="675px"
                 />
               </a>
             </template>
