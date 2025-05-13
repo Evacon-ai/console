@@ -35,7 +35,8 @@
                 <embed
                   :src="diagram.url"
                   type="application/pdf"
-                  class="diagram-preview cursor-pointer"
+                  width="100%"
+                  height="650px"
                 />
               </a>
             </template>
@@ -69,6 +70,48 @@
             </div>
             <div class="cursor-pointer text-grey" @click="showDescriptionEdit = true">
               {{ diagram.description || $t('projects.diagrams.addDescription') }}
+            </div>
+            
+            <!-- Elements List -->
+            <div v-if="diagram.elements?.length" class="q-mt-lg">
+              <div class="text-subtitle2 q-mb-sm">Elements</div>
+              <q-list bordered separator>
+                <q-item v-for="element in diagram.elements" :key="element.identifier_text">
+                  <q-item-section>
+                    <q-item-label>{{ element.identifier_text }}</q-item-label>
+                    <q-item-label caption>
+                      <div class="row items-center q-gutter-x-sm">
+                        <q-chip
+                          dense
+                          size="sm"
+                          :color="element.type_category ? 'primary' : 'grey'"
+                          text-color="white"
+                        >
+                          {{ element.type_category || 'No Category' }}
+                        </q-chip>
+                        <q-chip
+                          dense
+                          size="sm"
+                          :color="element.type ? 'secondary' : 'grey'"
+                          text-color="white"
+                        >
+                          {{ element.type || 'No Type' }}
+                        </q-chip>
+                        <q-chip
+                          v-if="element.contains_text"
+                          dense
+                          size="sm"
+                          color="accent"
+                          text-color="white"
+                        >
+                          Contains Text
+                        </q-chip>
+                      </div>
+                      <div class="q-mt-xs text-grey-8">{{ element.element_desc }}</div>
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
             </div>
           </div>
         </div>
