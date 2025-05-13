@@ -9,7 +9,7 @@
     transition-hide="slide-right"
     @hide="onDialogHide"
   >
-    <q-card v-if="project" class="full-height" style="width: 100%; min-width: 1100px;">
+    <q-card v-if="project" class="full-height overflow-hidden-y" style="width: 100%; min-width: 1100px;">
       <!-- Header -->
       <div class="project-header q-px-lg q-py-md">
         <div class="row items-center full-width">

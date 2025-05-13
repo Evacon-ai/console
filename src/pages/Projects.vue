@@ -71,37 +71,22 @@
                   
                   {{ $t(`organizations.status.${project.status}`) }}
                 </q-chip>
-                <div v-if="project.location" class="text-caption text-grey-7 row items-center">
-                  <LocationDisplay
-                    :city="project.location.city"
-                    :state="project.location.state"
-                    :country="project.location.country"
-                  />
-                </div>
               </div>
             </div>
           </q-card-section>
 
-          <q-card-section>
-            <div class="row items-center justify-between">
+          <q-card-section class="q-pt-none">
+            <div class="row items-center justify-between q-pl-xs">
+              <div v-if="project.location" class="text-caption text-grey-7 row items-center">
+                <LocationDisplay
+                  :city="project.location.city"
+                  :state="project.location.state"
+                  :country="project.location.country"
+                />
+              </div>
               <div class="row items-center text-grey-7">
                 {{ $t('projects.generated', { time: formatTime(project.created_at) }) }}
               </div>
-              <!--<div class="row items-center">
-                <span class="text-grey-7 q-mr-sm"> {{ $t('common.download')}}:</span>
-                <q-btn flat round size="sm" color="primary" icon="description">
-                  <q-tooltip class="large-tooltip">{{ $t('projects.wizard.fdsTitle') }}</q-tooltip>
-                </q-btn>
-                <q-btn flat round size="sm" color="primary" icon="list">
-                  <q-tooltip class="large-tooltip">{{ $t('projects.wizard.setPointTitle') }}</q-tooltip>
-                </q-btn>
-                <q-btn flat round size="sm" color="primary" icon="architecture">
-                  <q-tooltip class="large-tooltip">{{ $t('projects.wizard.designTitle') }}</q-tooltip>
-                </q-btn>
-                <q-btn flat round size="sm" color="primary" icon="data_object">
-                  <q-tooltip class="large-tooltip">{{ $t('projects.wizard.ioTitle') }}</q-tooltip>
-                </q-btn>
-              </div>-->
             </div>
           </q-card-section>
         </q-card>
