@@ -5,7 +5,7 @@
     maximized
     persistent
   >
-    <q-card class="column overflow-hidden-y">
+    <q-card class="column overflow-hidden-y" style="max-height: 100vh;">
       <q-card-section class="row items-center q-pb-none">
         <q-space />
         <q-btn
