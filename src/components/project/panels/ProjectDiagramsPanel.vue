@@ -40,11 +40,16 @@
                   />
                 </template>
                 <template v-else-if="diagram.url && isPdfFile(diagram.url)">
-                  <div class="pdf-preview">
-                    <FilePdf class="pdf-icon" />
+                  <div>
+                    <!--<FilePdf class="pdf-icon" />
                     <div class="text-caption q-mt-sm">
                       {{ $t('projects.diagrams.pdfDocument') }}
-                    </div>
+                    </div>-->
+                    <embed
+                      :src="diagram.url"
+                      type="application/pdf"
+                      class="diagram-preview"
+                    />
                   </div>
                 </template>
                 <template v-else>

@@ -31,80 +31,13 @@
               </a>
             </template>
             <template v-else-if="diagram.url && isPdfFile(diagram.url)">
-              <div class="pdf-preview">
-                <!-- <div class="pdf-controls q-mb-md" v-if="numPages > 0">
-                  <div class="row items-center justify-between">
-                    <q-btn-group flat>
-                      <q-btn
-                        icon="navigate_before"
-                        :disable="currentPage <= 1"
-                        @click="currentPage--; renderPage()"
-                      >
-                        <q-tooltip>{{ $t('projects.diagrams.previousPage') }}</q-tooltip>
-                      </q-btn>
-                      <q-btn flat no-caps>
-                        {{ $t('projects.diagrams.pageCount', { current: currentPage, total: numPages }) }}
-                      </q-btn>
-                      <q-btn
-                        icon="navigate_next"
-                        :disable="currentPage >= numPages"
-                        @click="currentPage++; renderPage()"
-                      >
-                        <q-tooltip>{{ $t('projects.diagrams.nextPage') }}</q-tooltip>
-                      </q-btn>
-                    </q-btn-group>
-                    <div>
-                      <q-btn-group flat class="q-mr-md">
-                        <q-btn
-                          icon="zoom_out"
-                          :disable="scale <= 0.5"
-                          @click="scale = Math.max(0.5, scale - 0.25); renderPage()"
-                        >
-                          <q-tooltip>{{ $t('projects.diagrams.zoomOut') }}</q-tooltip>
-                        </q-btn>
-                        <q-btn flat no-caps>
-                          {{ Math.round(scale * 100) }}%
-                        </q-btn>
-                        <q-btn
-                          icon="zoom_in"
-                          :disable="scale >= 3"
-                          @click="scale = Math.min(3, scale + 0.25); renderPage()"
-                        >
-                          <q-tooltip>{{ $t('projects.diagrams.zoomIn') }}</q-tooltip>
-                        </q-btn>
-                      </q-btn-group>
-                      <q-btn
-                        flat
-                        icon="open_in_new"
-                        :href="diagram.url"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <q-tooltip>{{ $t('projects.diagrams.openInNewTab') }}</q-tooltip>
-                      </q-btn>
-                    </div>
-                  </div>
-                </div>
-                <a 
-                  :href="diagram.url" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  class="canvas-container cursor-pointer" 
-                  :class="{ 'q-pa-md': loading }"
-                  :title="$t('projects.diagrams.clickToOpen')"
-                >
-                  <canvas ref="canvas"></canvas>
-                  <q-inner-loading :showing="loading">
-                    <q-spinner-dots size="50px" color="primary" />
-                  </q-inner-loading>
-                </a> -->
+              <a :href="diagram.url" target="_blank" rel="noopener noreferrer">
                 <embed
-                  :src="props.diagram.url"
+                  :src="diagram.url"
                   type="application/pdf"
-                  width="100%"
-                  height="600px"
+                  class="diagram-preview cursor-pointer"
                 />
-              </div>
+              </a>
             </template>
             <template v-else>
               <div class="empty-preview">
@@ -184,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { FileText } from 'lucide-vue-next'
 import { useTimeFormatter } from '../../../utils/formatTime'
 import { useUserStore } from '../../../stores/userStore'
@@ -193,10 +126,6 @@ import { useQuasar } from 'quasar'
 import DiagramNameDialog from './DiagramNameDialog.vue'
 import DiagramDescriptionDialog from './DiagramDescriptionDialog.vue'
 import type { Diagram } from '../../../types'
-import * as pdfjsLib from 'pdfjs-dist'
-import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl
   
 const props = defineProps<{
   modelValue: boolean
@@ -217,13 +146,6 @@ const $q = useQuasar()
 const showNameEdit = ref(false)
 const showDescriptionEdit = ref(false)
 const showDeleteConfirm = ref(false)
-const createdByUser = ref<{ first_name: string; last_name: string } | null>(null)
-const updatedByUser = ref<{ first_name: string; last_name: string } | null>(null)
-const canvas = ref<HTMLCanvasElement | null>(null)
-const pdfDoc = ref<any>(null)
-const currentPage = ref(1)
-const numPages = ref(0)
-const scale = ref(1.5)
 const loading = ref(false)
 
 const handleDelete = async () => {
@@ -259,47 +181,6 @@ const isImageFile = (url: string | undefined): boolean => {
 const isPdfFile = (url: string | undefined): boolean => {
   if (!url) return false
   return url.toLowerCase().includes('.pdf')
-}
-
-const renderPage = async () => {
-  if (!pdfDoc.value || !canvas.value) return
-  
-  loading.value = true
-  try {
-    const page = await pdfDoc.value.getPage(currentPage.value)
-    const viewport = page.getViewport({ scale: scale.value })
-    const context = canvas.value.getContext('2d')
-    
-    canvas.value.height = viewport.height
-    canvas.value.width = viewport.width
-    
-    await page.render({
-      canvasContext: context,
-      viewport
-    }).promise
-  } catch (error) {
-    console.error('Error rendering PDF page:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-const loadPDF = async () => {
-  if (!props.diagram.url || !isPdfFile(props.diagram.url)) return
-  console.log('Fetching PDF from:', props.diagram.url)
-  loading.value = true
-  try {
-    pdfDoc.value = await pdfjsLib.getDocument({
-      url: props.diagram.url,
-      withCredentials: false                                                          
-    }).promise
-    numPages.value = pdfDoc.value.numPages
-    await renderPage()
-  } catch (error) {
-    console.error('Error loading PDF:', error)
-  } finally {
-    loading.value = false
-  }
 }
 
 const onNameSubmit = async (data: { name: string }) => {
@@ -341,10 +222,6 @@ const openInNewTab = (url?: string) => {
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 }
-
-onMounted(() => {
-  loadPDF()
-})
 </script>
 
 <style scoped>
