@@ -1,91 +1,70 @@
 ```vue
 <template>
-  <div class="preview-wrapper">
-    <q-btn
-      flat
-      color="negative"
-      icon="delete"
-      :label="$t('common.delete')"
-      @click="$emit('delete')"
-      class="delete-btn"
-    />
-    <div class="diagram-preview-container q-mt-md">
+  <div class="row no-wrap">
+    <div class="diagram-preview-container">
       <template v-if="url && isImageFile(url)">
         <a :href="url" target="_blank" rel="noopener noreferrer">
-          <img 
-            :src="url" 
-            :alt="name"
-            class="diagram-preview"
-          />
+          <img :src="url" :alt="name" class="diagram-preview" />
         </a>
       </template>
       <template v-else-if="url && isPdfFile(url)">
         <a :href="url" target="_blank" rel="noopener noreferrer">
-          <img 
-            :src="previewUrl" 
-            :alt="name"
-            class="diagram-preview"
-          />
+          <img :src="previewUrl" :alt="name" class="diagram-preview" />
         </a>
       </template>
       <template v-else>
         <div class="empty-preview">
           <FileText class="preview-icon text-grey-5" />
           <div class="text-caption text-grey-7 q-mt-sm">
-            {{ $t('projects.diagrams.noPreview') }}
+            {{ $t("projects.diagrams.noPreview") }}
           </div>
         </div>
       </template>
+    </div>
+    <div class="q-ml-md">
+      <q-btn
+        flat
+        color="negative"
+        icon="delete"
+        :label="$t('common.delete')"
+        @click="$emit('delete')"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { FileText } from 'lucide-vue-next'
+import { FileText } from "lucide-vue-next";
 
 const props = defineProps<{
-  url?: string
-  name: string
-}>()
+  url?: string;
+  name: string;
+}>();
 
 const emit = defineEmits<{
-  (e: 'delete'): void
-}>()
-  
+  (e: "delete"): void;
+}>();
+
 const isImageFile = (url: string | undefined): boolean => {
-  if (!url) return false
+  if (!url) return false;
   try {
-    const pathname = new URL(url).pathname
-    return /\.(jpg|jpeg|png|gif|webp)$/i.test(pathname)
+    const pathname = new URL(url).pathname;
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(pathname);
   } catch {
-    return false
+    return false;
   }
-}
+};
 
 const isPdfFile = (url: string | undefined): boolean => {
-  if (!url) return false
-  return url.toLowerCase().includes('.pdf')
-}
+  if (!url) return false;
+  return url.toLowerCase().includes(".pdf");
+};
 </script>
 
 <style scoped>
-.preview-wrapper {
-  position: relative;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.delete-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
-}
-
 .diagram-preview-container {
-  width: 100%;
-  flex: 1;
+  flex-grow: 1;
+  height: calc(100vh - 300px);
   overflow: hidden;
   background: rgba(0, 0, 0, 0.02);
   display: flex;
