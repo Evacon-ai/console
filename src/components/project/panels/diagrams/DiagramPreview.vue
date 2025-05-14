@@ -20,7 +20,7 @@
         </div>
       </template>
     </div>
-    <div class="q-ml-md">
+    <div class="q-ml-md delete-button-container">
       <q-btn
         flat
         color="negative"
@@ -114,5 +114,9 @@ const isPdfFile = (url: string | undefined): boolean => {
 .preview-icon {
   width: 48px;
   height: 48px;
+}
+
+.delete-button-container {
+  flex-shrink: 0; /* prevent shrinking */
 }
 </style>
