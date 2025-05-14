@@ -32,22 +32,12 @@
             <q-card-section>
               <!-- Preview Area -->
               <div class="preview-area">
-                <template v-if="diagram.url && isImageFile(diagram.url)">
+                <template v-if="diagram.thumbnailUrl">
                   <img 
-                    :src="diagram.url" 
+                    :src="diagram.thumbnailUrl" 
                     :alt="diagram.name"
                     class="diagram-preview"
                   />
-                </template>
-                <template v-else-if="diagram.url && isPdfFile(diagram.url)">
-                  <div class="cursor-pointer">
-                    <embed
-                      :src="diagram.url"
-                      type="application/pdf"
-                      class="diagram-preview cursor-pointer"
-                      @click="handleDiagramClick(diagram)"
-                    />
-                  </div>
                 </template>
                 <template v-else>
                   <div class="empty-preview">

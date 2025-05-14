@@ -1,23 +1,30 @@
 ```vue
 <template>
-  <div>
-    <div class="diagram-preview-container">
+  <div class="preview-wrapper">
+    <q-btn
+      flat
+      color="negative"
+      icon="delete"
+      :label="$t('common.delete')"
+      @click="$emit('delete')"
+      class="delete-btn"
+    />
+    <div class="diagram-preview-container q-mt-md">
       <template v-if="url && isImageFile(url)">
         <a :href="url" target="_blank" rel="noopener noreferrer">
           <img 
             :src="url" 
             :alt="name"
-            class="diagram-preview cursor-pointer"
+            class="diagram-preview"
           />
         </a>
       </template>
       <template v-else-if="url && isPdfFile(url)">
         <a :href="url" target="_blank" rel="noopener noreferrer">
-          <embed
-            :src="url"
-            type="application/pdf"
-            width="100%"
-            height="475px"
+          <img 
+            :src="previewUrl" 
+            :alt="name"
+            class="diagram-preview"
           />
         </a>
       </template>
@@ -30,13 +37,6 @@
         </div>
       </template>
     </div>
-            <q-btn
-          flat
-          color="negative"
-          icon="delete"
-          :label="$t('common.delete')"
-          @click="$emit('delete')"
-        />
   </div>
 </template>
 
@@ -69,11 +69,28 @@ const isPdfFile = (url: string | undefined): boolean => {
 </script>
 
 <style scoped>
+.preview-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
 .diagram-preview-container {
   width: 100%;
-  border-radius: 8px;
+  flex: 1;
+  overflow: hidden;
   background: rgba(0, 0, 0, 0.02);
-  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .body--dark .diagram-preview-container {
@@ -81,11 +98,13 @@ const isPdfFile = (url: string | undefined): boolean => {
 }
 
 .diagram-preview {
-  width: auto;
-  height: 475px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .diagram-preview:hover {
@@ -103,13 +122,11 @@ const isPdfFile = (url: string | undefined): boolean => {
 
 .empty-preview {
   width: 100%;
-  min-height: 400px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 8px;
 }
 
 .body--dark .empty-preview {
