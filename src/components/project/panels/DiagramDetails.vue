@@ -5,128 +5,43 @@
     maximized
     persistent
   >
-    <q-card class="column">
-      <q-card-section class="row items-center q-pb-none">
-        <q-space />
-        <q-btn
-          icon="close"
-          flat
-          round
-          dense
-          v-close-popup
-        />
-      </q-card-section>
+    <q-card class="column full-height" style="max-height: 100vh;">
+      <DiagramHeader
+        :diagram="diagram"
+        :extracting="extracting"
+        @edit-name="showNameEdit = true"
+        @edit-description="showDescriptionEdit = true"
+      />
 
-      <q-card-section class="q-pa-md">
-        <div class="row q-col-gutter-md">
-          <div class="col-12 col-md-6">
-            <!-- Preview Area -->
-            <template v-if="diagram.url && isImageFile(diagram.url)">
-              <a :href="diagram.url" target="_blank" rel="noopener noreferrer">
-                <img 
-                  :src="diagram.url" 
-                  :alt="diagram.name"
-                  class="diagram-preview cursor-pointer"
-                />
-              </a>
-            </template>
-            <template v-else-if="diagram.url && isPdfFile(diagram.url)">
-              <a :href="diagram.url" target="_blank" rel="noopener noreferrer">
-                <embed
-                  :src="diagram.url"
-                  type="application/pdf"
-                  width="100%"
-                  height="675px"
-                />
-              </a>
-            </template>
-            <template v-else>
-              <div class="empty-preview">
-                <FileText class="preview-icon text-grey-5" />
-                <div class="text-caption text-grey-7 q-mt-sm">
-                  {{ $t('projects.diagrams.noPreview') }}
-                </div>
-              </div>
-            </template>
-            <div class="text-caption row justify-between">
-              <div>{{ $t('projects.diagrams.added') }} {{ formatTime(diagram.created_at) }}</div>
-              <div>{{ $t('projects.diagrams.lastModified') }} {{ formatTime(diagram.updated_at) }}</div>
-            </div>
-          </div>
+      <div class="row no-wrap" style="flex: 1; min-height: 0;">
+        <!-- Left Menu -->
+        <div class="col-auto menu-container" style="width: 200px;">
+          <q-list class="q-pa-md">
+            <q-item
+              v-for="tab in tabs"
+              :key="tab.value"
+              clickable
+              :active="activeTab === tab.value"
+              @click="activeTab = tab.value"
+              active-class="menu-item-active"
+            >
+              <q-item-section>{{ tab.label }}</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
 
-          <div class="col-12 col-md-6">
-            <div class="row items-center justify-between">
-              <div class="text-h6 cursor-pointer" @click="showNameEdit = true">{{ diagram.name }}</div>
-              <q-btn
-                flat
-                round
-                dense
-                color="negative"
-                icon="delete"
-                @click="showDeleteConfirm = true"
-              >
-                <q-tooltip>{{ $t('common.delete') }}</q-tooltip>
-              </q-btn>
-            </div>
-            <div class="cursor-pointer text-grey" @click="showDescriptionEdit = true">
-              {{ diagram.description || $t('projects.diagrams.addDescription') }}
-            </div>
-            
-            <!-- Extract Elements Button -->
-            <div class="q-mt-md">
-              <q-btn
-                color="primary"
-                icon="code"
-                :label="'Extract elements'"
-                @click="handleExtractElements"
-                :loading="extracting"
-              />
-            </div>
-            
-            <!-- Elements List -->
-            <div v-if="diagram.elements?.length" class="q-mt-lg">
-              <div class="text-subtitle2 q-mb-sm">Elements</div>
-              <q-list bordered separator>
-                <q-item v-for="element in diagram.elements" :key="element.identifier_text">
-                  <q-item-section>
-                    <q-item-label>{{ element.identifier_text }}</q-item-label>
-                    <q-item-label caption>
-                      <div class="row items-center q-gutter-x-sm">
-                        <q-chip
-                          dense
-                          size="sm"
-                          :color="element.type_category ? 'primary' : 'grey'"
-                          text-color="white"
-                        >
-                          {{ element.type_category || 'No Category' }}
-                        </q-chip>
-                        <q-chip
-                          dense
-                          size="sm"
-                          :color="element.type ? 'secondary' : 'grey'"
-                          text-color="white"
-                        >
-                          {{ element.type || 'No Type' }}
-                        </q-chip>
-                        <q-chip
-                          v-if="element.contains_text"
-                          dense
-                          size="sm"
-                          color="accent"
-                          text-color="white"
-                        >
-                          Contains Text
-                        </q-chip>
-                      </div>
-                      <div class="q-mt-xs text-grey-8">{{ element.element_desc }}</div>
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </div>
+        <!-- Content Area -->
+        <div class="col q-pa-md" style="overflow: auto;">
+          <div class="content-container">
+            <template v-if="activeTab === 'diagram'">
+              <DiagramPreview :url="diagram.url" :name="diagram.name" @delete="showDeleteConfirm = true"/>
+            </template>
+            <template v-else-if="activeTab === 'elements'">
+              <DiagramElements :elements="diagram.elements" @extract="handleExtractElements"/>
+            </template>
           </div>
         </div>
-      </q-card-section>
+      </div>
     </q-card>
   </q-dialog>
 
@@ -134,20 +49,20 @@
   <q-dialog v-model="showDeleteConfirm" persistent>
     <q-card>
       <q-card-section class="row items-center">
-        <div class="text-h6">{{ $t('projects.diagrams.deleteTitle') }}</div>
+        <div class="text-h6">{{ t('projects.diagrams.deleteTitle') }}</div>
       </q-card-section>
 
       <q-card-section>
-        <p>{{ $t('projects.diagrams.deleteConfirm', { name: diagram.name }) }}</p>
-        <p class="text-negative text-caption">{{ $t('common.actionCannotBeUndone') }}</p>
+        <p>{{ t('projects.diagrams.deleteConfirm', { name: diagram.name }) }}</p>
+        <p class="text-negative text-caption">{{ t('common.actionCannotBeUndone') }}</p>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat :label="$t('common.cancel')" v-close-popup />
+        <q-btn flat :label="t('common.cancel')" v-close-popup />
         <q-btn
           flat
           color="negative"
-          :label="$t('common.delete')"
+          :label="t('common.delete')"
           @click="handleDelete"
           :loading="loading"
         />
@@ -171,14 +86,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { FileText } from 'lucide-vue-next'
-import { useTimeFormatter } from '../../../utils/formatTime'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../../../stores/userStore'
 import { useDiagramsStore } from '../../../stores/diagramsStore'
 import { useQuasar } from 'quasar'
 import DiagramNameDialog from './DiagramNameDialog.vue'
 import DiagramDescriptionDialog from './DiagramDescriptionDialog.vue'
+import DiagramHeader from './diagrams/DiagramHeader.vue'
+import DiagramPreview from './diagrams/DiagramPreview.vue'
+import DiagramElements from './diagrams/DiagramElements.vue'
 import type { Diagram } from '../../../types'
   
 const props = defineProps<{
@@ -192,10 +109,16 @@ const emit = defineEmits<{
   (e: 'diagram-updated', diagram: Diagram): void
 }>()
 
-const { formatTime } = useTimeFormatter()
+const { t } = useI18n()
 const userStore = useUserStore()
 const diagramsStore = useDiagramsStore()
 const $q = useQuasar()
+
+const activeTab = ref('diagram')
+const tabs = [
+  { value: 'diagram', label: 'Diagram' },
+  { value: 'elements', label: 'Elements' }
+]
 
 const showNameEdit = ref(false)
 const showDescriptionEdit = ref(false)
@@ -206,8 +129,8 @@ const loading = ref(false)
 const handleExtractElements = async () => {
   extracting.value = true
   try {
-    // TODO: Implement element extraction
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const updatedDiagram = await diagramsStore.getDiagramDataExtract(props.projectId, props.diagram.id)
+    emit('diagram-updated', updatedDiagram)
     $q.notify({
       color: 'positive',
       message: 'Elements extracted successfully',
@@ -224,6 +147,7 @@ const handleExtractElements = async () => {
     extracting.value = false
   }
 }
+
 const handleDelete = async () => {
   try {
     await diagramsStore.deleteDiagram(props.projectId, props.diagram.id)
@@ -231,14 +155,14 @@ const handleDelete = async () => {
     emit('update:modelValue', false)
     $q.notify({
       color: 'positive',
-      message: $t('projects.diagrams.deleteSuccess'),
+      message: t('projects.diagrams.deleteSuccess'),
       position: 'top'
     })
   } catch (error) {
     console.error('Failed to delete diagram:', error)
     $q.notify({
       color: 'negative',
-      message: $t('projects.diagrams.deleteFailed'),
+      message: t('projects.diagrams.deleteFailed'),
       position: 'top'
     })
   }
@@ -301,86 +225,58 @@ const openInNewTab = (url?: string) => {
 </script>
 
 <style scoped>
-.diagram-preview {
-  width: 100%;
-  height: auto;
+.menu-container {
+  width: 200px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.02);
+  overflow-y: auto;
+}
+
+.body--dark .menu-container {
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  background: white;
   border-radius: 8px;
-  transition: transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.diagram-preview:hover {
-  transform: scale(1.02);
+.body--dark .content-container {
+  background: #1d1d1d;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.pdf-preview {
-  padding: 2rem;
-}
-
-.canvas-container {
-  position: relative;
-  width: 100%;
-  min-height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-  text-decoration: none;
-  color: inherit;
-}
-
-.canvas-container:hover {
-  transform: scale(1.02);
-}
-
-.canvas-container:hover::after {
-  content: 'Click to open PDF';
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.canvas-container canvas {
-  max-width: 100%;
-  height: auto !important;
-}
-
-.empty-preview {
-  width: 100%;
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.03);
+.menu-item-active {
+  color: var(--q-secondary) !important;
+  background: rgba(38, 166, 154, 0.1) !important;
+  font-weight: 500;
   border-radius: 8px;
 }
 
-.body--dark .empty-preview {
-  background: rgba(255, 255, 255, 0.05);
+.body--dark .menu-item-active {
+  background: rgba(38, 166, 154, 0.15) !important;
 }
 
-.preview-icon {
-  width: 48px;
-  height: 48px;
-}
-
-.pdf-icon {
-  width: 96px;
-  height: 96px;
-}
-
-.preview-area {
-  aspect-ratio: 16/9;
+.q-item {
   border-radius: 8px;
-  overflow: auto;
-  background: rgba(0, 0, 0, 0.03);
-  transition: background-color 0.2s ease;
-  display: flex;
+  margin: 4px 0;
+  padding: 12px 16px;
+  min-height: 48px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.q-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--q-secondary);
+}
+
+.body--dark .q-item:hover {
+  background: rgba(255, 255, 255, 0.07);
 }
 </style>

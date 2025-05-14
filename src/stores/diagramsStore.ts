@@ -42,6 +42,28 @@ export const useDiagramsStore = defineStore('diagrams', () => {
   )
 
   // Actions
+  async function getDiagramDataExtract(projectId: string, diagramId: string) {
+    loading.value = true
+    error.value = null
+    try {
+      const response = await api.get(`/projects/${projectId}/diagrams/${diagramId}/extract`)
+      const projectDiagrams = diagramsByProject.value.get(projectId) || []
+      const index = projectDiagrams.findIndex(d => d.id === diagramId)
+      
+      if (index !== -1) {
+        projectDiagrams[index] = response
+        diagramsByProject.value.set(projectId, projectDiagrams)
+      }
+      
+      return response
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Failed to extract diagram data'
+      throw error.value
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function fetchProjectDiagrams(projectId: string) {
     loading.value = true
     error.value = null
@@ -155,6 +177,7 @@ export const useDiagramsStore = defineStore('diagrams', () => {
     getDiagramsByProjectId,
     getDiagramById,
     fetchProjectDiagrams,
+    getDiagramDataExtract,
     getDiagram,
     createDiagram,
     updateDiagram,
