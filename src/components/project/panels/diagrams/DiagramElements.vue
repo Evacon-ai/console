@@ -1,8 +1,7 @@
-```vue
 <template>
   <div class="diagram-elements">
     <div v-if="elements?.length" class="q-mt-md">
-      <div class="text-subtitle2 q-mb-sm">Elements</div>
+      <div class="text-subtitle2 q-mb-sm">{{ $t('projects.diagrams.elements') }}</div>
       <q-list bordered separator>
         <q-item v-for="element in elements" :key="element.identifier_text">
           <q-item-section>
@@ -15,7 +14,7 @@
                   :color="element.type_category ? 'primary' : 'grey'"
                   text-color="white"
                 >
-                  {{ element.type_category || 'No Category' }}
+                  {{ element.type_category || $t('projects.diagrams.noCategory') }}
                 </q-chip>
                 <q-chip
                   dense
@@ -23,7 +22,7 @@
                   :color="element.type ? 'secondary' : 'grey'"
                   text-color="white"
                 >
-                  {{ element.type || 'No Type' }}
+                  {{ element.type || $t('projects.diagrams.noType') }}
                 </q-chip>
                 <q-chip
                   v-if="element.contains_text"
@@ -32,7 +31,7 @@
                   color="accent"
                   text-color="white"
                 >
-                  Contains Text
+                  {{ $t('projects.diagrams.containsText') }}
                 </q-chip>
               </div>
               <div class="q-mt-xs text-grey-8">{{ element.element_desc }}</div>
@@ -43,13 +42,13 @@
     </div>
     <div v-else class="column column items-center justify-center">
       <div class="text-grey text-center q-pa-md">
-        No elements extracted yet. Click "Extract elements" to analyze the diagram.
+        {{ $t('projects.diagrams.noElements') }}
       </div>
       <div class="q-pb-md">
         <q-btn
           color="primary"
           icon="code"
-          :label="'Extract elements'"
+          :label="$t('projects.diagrams.extractElements')"
           @click="$emit('extract')"
           :loading="extracting"
         />
@@ -88,4 +87,3 @@ const emit = defineEmits<{
   margin-top: 8px;
 }
 </style>
-```

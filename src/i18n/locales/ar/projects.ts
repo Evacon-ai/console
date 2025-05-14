@@ -64,7 +64,24 @@ export default {
     editName: 'تعديل اسم المخطط',
     name: 'الاسم',
     nameRequired: 'الاسم مطلوب',
-    editDescription: 'تعديل الوصف'
+    editDescription: 'تعديل الوصف',
+    elements: 'العناصر',
+    noElements: 'لم يتم استخراج أي عناصر بعد. انقر على "استخراج العناصر" لتحليل المخطط.',
+    extractElements: 'استخراج العناصر',
+    noCategory: 'لا تصنيف',
+    noType: 'لا نوع',
+    containsText: 'يحتوي على نص',
+    elementDetails: 'تفاصيل العنصر',
+    elementType: 'نوع العنصر',
+    elementCategory: 'فئة العنصر',
+    elementDescription: 'وصف العنصر',
+    elementIdentifier: 'معرف العنصر',
+    extractSuccess: 'تم استخراج العناصر بنجاح',
+    extractFailed: 'فشل في استخراج العناصر',
+    tabs: {
+      diagram: 'المخطط',
+      elements: 'العناصر'
+    }
   },
   wizard: {
     projectName: 'اسم المشروع',

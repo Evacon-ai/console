@@ -64,7 +64,24 @@ export default {
     editName: 'ערוך שם תרשים',
     name: 'שם',
     nameRequired: 'שם נדרש',
-    editDescription: 'ערוך תיאור'
+    editDescription: 'ערוך תיאור',
+    elements: 'אלמנטים',
+    noElements: 'טרם חולצו אלמנטים. לחץ על "חלץ אלמנטים" כדי לנתח את התרשים.',
+    extractElements: 'חלץ אלמנטים',
+    noCategory: 'ללא קטגוריה',
+    noType: 'ללא סוג',
+    containsText: 'מכיל טקסט',
+    elementDetails: 'פרטי אלמנט',
+    elementType: 'סוג אלמנט',
+    elementCategory: 'קטגוריית אלמנט',
+    elementDescription: 'תיאור אלמנט',
+    elementIdentifier: 'מזהה אלמנט',
+    extractSuccess: 'האלמנטים חולצו בהצלחה',
+    extractFailed: 'שגיאה בחילוץ אלמנטים',
+    tabs: {
+      diagram: 'תרשים',
+      elements: 'אלמנטים'
+    }
   },
   wizard: {
     projectName: 'שם הפרויקט',

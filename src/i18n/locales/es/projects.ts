@@ -64,7 +64,24 @@ export default {
     editName: 'Editar nombre del diagrama',
     name: 'Nombre',
     nameRequired: 'El nombre es requerido',
-    editDescription: 'Editar descripción'
+    editDescription: 'Editar descripción',
+    elements: 'Elementos',
+    noElements: 'No hay elementos extraídos todavía. Haga clic en "Extraer elementos" para analizar el diagrama.',
+    extractElements: 'Extraer elementos',
+    noCategory: 'Sin categoría',
+    noType: 'Sin tipo',
+    containsText: 'Contiene texto',
+    elementDetails: 'Detalles del elemento',
+    elementType: 'Tipo de elemento',
+    elementCategory: 'Categoría del elemento',
+    elementDescription: 'Descripción del elemento',
+    elementIdentifier: 'Identificador del elemento',
+    extractSuccess: 'Elementos extraídos correctamente',
+    extractFailed: 'Error al extraer elementos',
+    tabs: {
+      diagram: 'Diagrama',
+      elements: 'Elementos'
+    }
   },
   wizard: {
     projectName: 'Nombre del Proyecto',

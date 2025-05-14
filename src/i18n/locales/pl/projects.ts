@@ -64,7 +64,24 @@ export default {
     editName: 'Edytuj nazwę diagramu',
     name: 'Nazwa',
     nameRequired: 'Nazwa jest wymagana',
-    editDescription: 'Edytuj opis'
+    editDescription: 'Edytuj opis',
+    elements: 'Elementy',
+    noElements: 'Nie wyodrębniono jeszcze żadnych elementów. Kliknij "Wyodrębnij elementy", aby przeanalizować diagram.',
+    extractElements: 'Wyodrębnij elementy',
+    noCategory: 'Brak kategorii',
+    noType: 'Brak typu',
+    containsText: 'Zawiera tekst',
+    elementDetails: 'Szczegóły elementu',
+    elementType: 'Typ elementu',
+    elementCategory: 'Kategoria elementu',
+    elementDescription: 'Opis elementu',
+    elementIdentifier: 'Identyfikator elementu',
+    extractSuccess: 'Elementy zostały pomyślnie wyodrębnione',
+    extractFailed: 'Nie udało się wyodrębnić elementów',
+    tabs: {
+      diagram: 'Diagram',
+      elements: 'Elementy'
+    }
   },
   wizard: {
     projectName: 'Nazwa projektu',

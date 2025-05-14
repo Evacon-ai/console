@@ -64,7 +64,24 @@ export default {
     editName: 'Изменить название диаграммы',
     name: 'Название',
     nameRequired: 'Название обязательно',
-    editDescription: 'Изменить описание'
+    editDescription: 'Изменить описание',
+    elements: 'Элементы',
+    noElements: 'Элементы еще не извлечены. Нажмите "Извлечь элементы" для анализа диаграммы.',
+    extractElements: 'Извлечь элементы',
+    noCategory: 'Без категории',
+    noType: 'Без типа',
+    containsText: 'Содержит текст',
+    elementDetails: 'Детали элемента',
+    elementType: 'Тип элемента',
+    elementCategory: 'Категория элемента',
+    elementDescription: 'Описание элемента',
+    elementIdentifier: 'Идентификатор элемента',
+    extractSuccess: 'Элементы успешно извлечены',
+    extractFailed: 'Не удалось извлечь элементы',
+    tabs: {
+      diagram: 'Диаграмма',
+      elements: 'Элементы'
+    }
   },
   wizard: {
     projectName: 'Название проекта',

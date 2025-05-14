@@ -116,8 +116,8 @@ const $q = useQuasar()
 
 const activeTab = ref('diagram')
 const tabs = [
-  { value: 'diagram', label: 'Diagram' },
-  { value: 'elements', label: 'Elements' }
+  { value: 'diagram', label: t('projects.diagrams.tabs.diagram') },
+  { value: 'elements', label: t('projects.diagrams.tabs.elements') }
 ]
 
 const showNameEdit = ref(false)

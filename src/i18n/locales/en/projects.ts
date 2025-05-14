@@ -58,7 +58,24 @@ export default {
     editName: 'Edit Diagram Name',
     name: 'Name',
     nameRequired: 'Name is required',
-    editDescription: 'Edit Description'
+    editDescription: 'Edit Description',
+    elements: 'Elements',
+    noElements: 'No elements extracted yet. Click "Extract elements" to analyze the diagram.',
+    extractElements: 'Extract elements', 
+    noCategory: 'No Category',
+    noType: 'No Type',
+    containsText: 'Contains Text',
+    elementDetails: 'Element Details',
+    elementType: 'Element Type',
+    elementCategory: 'Element Category',
+    elementDescription: 'Element Description',
+    elementIdentifier: 'Element Identifier',
+    extractSuccess: 'Elements extracted successfully',
+    extractFailed: 'Failed to extract elements',
+    tabs: {
+      diagram: 'Diagram',
+      elements: 'Elements'
+    }
   },
   wizard: {
     projectName: 'Project Name',

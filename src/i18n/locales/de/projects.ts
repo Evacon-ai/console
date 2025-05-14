@@ -64,7 +64,24 @@ export default {
     editName: 'Diagrammname bearbeiten',
     name: 'Name',
     nameRequired: 'Name ist erforderlich',
-    editDescription: 'Beschreibung bearbeiten'
+    editDescription: 'Beschreibung bearbeiten',
+    elements: 'Elemente',
+    noElements: 'Noch keine Elemente extrahiert. Klicken Sie auf "Elemente extrahieren", um das Diagramm zu analysieren.',
+    extractElements: 'Elemente extrahieren',
+    noCategory: 'Keine Kategorie',
+    noType: 'Kein Typ',
+    containsText: 'Enthält Text',
+    elementDetails: 'Elementdetails',
+    elementType: 'Elementtyp',
+    elementCategory: 'Elementkategorie',
+    elementDescription: 'Elementbeschreibung',
+    elementIdentifier: 'Elementkennung',
+    extractSuccess: 'Elemente erfolgreich extrahiert',
+    extractFailed: 'Fehler beim Extrahieren der Elemente',
+    tabs: {
+      diagram: 'Diagramm',
+      elements: 'Elemente'
+    }
   },
   wizard: {
     projectName: 'Projektname',

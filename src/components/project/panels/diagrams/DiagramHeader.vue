@@ -1,4 +1,3 @@
-```vue
 <template>
   <div class="diagram-header q-pa-md">
     <div class="row items-center justify-between q-mb-sm">
@@ -56,4 +55,3 @@ const { formatTime } = useTimeFormatter()
   background: linear-gradient(to right, rgba(255, 255, 255, 0.03), transparent);
 }
 </style>
-```
