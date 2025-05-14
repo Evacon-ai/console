@@ -1,4 +1,3 @@
-```vue
 <template>
   <div class="row no-wrap">
     <div class="diagram-preview-container">
@@ -64,12 +63,12 @@ const isPdfFile = (url: string | undefined): boolean => {
 <style scoped>
 .diagram-preview-container {
   flex-grow: 1;
-  height: calc(100vh - 300px);
-  overflow: hidden;
+  overflow: auto; /* allow scrolling if needed */
   background: rgba(0, 0, 0, 0.02);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start; /* align top */
+  justify-content: flex-start; /* align left */
+  padding: 12px;
 }
 
 .body--dark .diagram-preview-container {
@@ -78,7 +77,7 @@ const isPdfFile = (url: string | undefined): boolean => {
 
 .diagram-preview {
   max-width: 100%;
-  max-height: 100%;
+  height: auto; /* prevent vertical stretching */
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -117,4 +116,3 @@ const isPdfFile = (url: string | undefined): boolean => {
   height: 48px;
 }
 </style>
-```
