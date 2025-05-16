@@ -4,7 +4,7 @@
       <template v-if="url && isImageFile(url)">
         <a :href="url" target="_blank" rel="noopener noreferrer">
           <img 
-            :src="url" 
+            :src="previewUrl" 
             :alt="name"
             class="diagram-preview"
           />
@@ -45,6 +45,7 @@ import { FileText } from 'lucide-vue-next'
 
 const props = defineProps<{
   url?: string
+  previewUrl?: string
   name: string
 }>()
 

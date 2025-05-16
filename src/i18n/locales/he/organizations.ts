@@ -57,6 +57,29 @@ export default {
       country: 'מדינה',
       countryRequired: 'מדינה נדרשת'
     },
+    contact: {
+      edit: 'ערוך איש קשר',
+      name: 'שם',
+      nameRequired: 'שם איש קשר נדרש',
+      editEmail: 'ערוך דוא"ל',
+      email: 'דוא"ל',
+      emailRequired: 'דוא"ל נדרש',
+      emailTooLong: 'אורך הדוא"ל חייב להיות פחות מ-255 תווים',
+      phone: 'טלפון',
+      updatePhone: 'עדכן טלפון',
+      phoneNumber: 'מספר טלפון',
+      countryCode: 'קוד מדינה',
+      chooseCountry: 'בחר מדינה',
+      searchCountry: 'חפש מדינה',
+      example: 'דוגמה:',
+      invalidPhone: 'אנא הזן מספר טלפון תקין'
+    },
+    website: {
+      edit: 'ערוך אתר אינטרנט',
+      url: 'כתובת אתר אינטרנט',
+      invalidUrl: 'נא להזין כתובת URL תקינה',
+      emptyHint: 'השאר ריק אם אין אתר אינטרנט'
+    },
     name: {
       edit: 'ערוך שם ארגון',
       name: 'שם הארגון',
@@ -69,6 +92,16 @@ export default {
       invalidFormat: 'אנא בחר קובץ תמונה חוקי (PNG, JPG, או GIF)',
       fileTooLarge: 'גודל הקובץ חייב להיות פחות מ-5MB',
       uploadFailed: 'העלאת הלוגו נכשלה'
+    },
+    timezone: {
+      edit: 'ערוך אזור זמן',
+      label: 'אזור זמן',
+      required: 'אזור זמן נדרש'
+    },
+    notes: {
+      edit: 'ערוך הערות',
+      notes: 'הערות',
+      notesRequired: 'הערות נדרשות'
     }
   },
   organization: 'ארגון',

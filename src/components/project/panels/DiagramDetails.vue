@@ -34,7 +34,7 @@
         <div class="col q-pa-md" style="overflow: auto;">
           <div class="content-container">
             <template v-if="activeTab === 'diagram'">
-              <DiagramPreview :url="diagram.url" :name="diagram.name" @delete="showDeleteConfirm = true"/>
+              <DiagramPreview :url="diagram.url" :previewUrl="diagram.previewUrl" :name="diagram.name" @delete="showDeleteConfirm = true"/>
             </template>
             <template v-else-if="activeTab === 'elements'">
               <DiagramElements :elements="diagram.elements" @extract="handleExtractElements"/>

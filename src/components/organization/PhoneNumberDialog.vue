@@ -18,6 +18,17 @@
             color="primary"
             :class="darkClass"
             :preferred-countries="['US', 'CA', 'IL', 'GB', 'DE', 'FR', 'AU']"
+            :translations="{
+              countrySelector: {
+                placeholder: $t('organizations.details.contact.countryCode'),
+                error: $t('organizations.details.contact.chooseCountry'),
+                searchPlaceholder: $t('organizations.details.contact.searchCountry'),
+              },
+              phoneInput: {
+                placeholder: $t('organizations.details.contact.phoneNumber'),
+                example: $t('organizations.details.contact.example'),
+              },
+            }"
             @update="onUpdate"
           />
         </q-card-section>
@@ -79,12 +90,12 @@ watch(() => props.modelValue, (newVal) => {
 
 const onUpdate = (data: { isValid: boolean, number: string, countryCode: string }) => {
   form.value.isValid = data.isValid
-  error.value = data.isValid ? '' : 'Please enter a valid phone number'
+  error.value = data.isValid ? '' : $t('organizations.details.contact.invalidPhone')
 }
 
 const onSubmit = async () => {
   if (!form.value.isValid) {
-    error.value = 'Please enter a valid phone number'
+    error.value = $t('organizations.details.contact.invalidPhone')
     return
   }
 

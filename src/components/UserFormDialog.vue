@@ -141,6 +141,10 @@ const { t } = useI18n()
 const userStore = useUserStore()
 const organizationsStore = useOrganizationsStore()
 
+onMounted(() => {
+  organizationsStore.fetchOrganizations()
+})
+
 const dialogOpen = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
@@ -184,6 +188,12 @@ const organizationOptions = computed(() => {
 
 const getSelectedOrg = computed(() => {
   return organizationsStore.organizations.find(org => org.id === form.value.organization_id)
+})
+
+watch(() => form.value.organization_id, (newId) => {
+  if (newId) {
+    organizationsStore.fetchOrganizationById(newId)
+  }
 })
 
 const onSubmit = async () => {

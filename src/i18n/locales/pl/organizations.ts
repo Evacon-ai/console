@@ -57,6 +57,29 @@ export default {
       country: 'Kraj',
       countryRequired: 'Kraj jest wymagany'
     },
+    contact: {
+      edit: 'Edytuj kontakt',
+      name: 'Nazwa',
+      nameRequired: 'Nazwa kontaktu jest wymagana',
+      editEmail: 'Edytuj email',
+      email: 'Email',
+      emailRequired: 'Email jest wymagany',
+      emailTooLong: 'Email musi mieć mniej niż 255 znaków',
+      phone: 'Telefon',
+      updatePhone: 'Aktualizuj telefon',
+      phoneNumber: 'Numer telefonu',
+      countryCode: 'Kod kraju',
+      chooseCountry: 'Wybierz kraj',
+      searchCountry: 'Szukaj kraju',
+      example: 'Przykład:',
+      invalidPhone: 'Proszę podać prawidłowy numer telefonu'
+    },
+    website: {
+      edit: 'Edytuj stronę internetową',
+      url: 'Adres strony internetowej',
+      invalidUrl: 'Proszę podać prawidłowy URL',
+      emptyHint: 'Pozostaw puste jeśli brak strony'
+    },
     name: {
       edit: 'Edytuj nazwę organizacji',
       name: 'Nazwa organizacji',
@@ -69,6 +92,16 @@ export default {
       invalidFormat: 'Wybierz prawidłowy plik obrazu (PNG, JPG lub GIF)',
       fileTooLarge: 'Rozmiar pliku musi być mniejszy niż 5MB',
       uploadFailed: 'Nie udało się przesłać logo'
+    },
+    timezone: {
+      edit: 'Edytuj strefę czasową',
+      label: 'Strefa czasowa',
+      required: 'Strefa czasowa jest wymagana'
+    },
+    notes: {
+      edit: 'Edytuj notatki',
+      notes: 'Notatki',
+      notesRequired: 'Notatki są wymagane'
     }
   },
   organization: 'Organizacja',

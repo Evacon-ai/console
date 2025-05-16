@@ -25,11 +25,13 @@ import NewPassword from './pages/NewPassword.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-  { 
-    path: '/', 
-    redirect: () => {
-      return { name: 'dashboard' }
-    }
+  {
+    path: '/',
+    name: 'root',
+    component: {
+      template: '<div></div>' // dummy component
+    },
+    meta: { requiresAuth: true }
   },
   { 
     path: '/login', 
@@ -98,15 +100,23 @@ const userStore = useUserStore(pinia)
 
 // Navigation guard
 router.beforeEach(async (to, from, next) => {
+  // Wait for session load
   await userStore.initSession()
+  const isCustomer = userStore.currentUser?.level === 'customer'
 
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-    next({ name: 'login' })
-  } else if (to.meta.requiresGuest && userStore.isAuthenticated) {
-    next({ name: 'dashboard' })
-  } else {
-    next()
+    return next({ name: 'login' })
   }
+
+  if (to.meta.requiresGuest && userStore.isAuthenticated) {
+    return next({ name: isCustomer ? 'projects' : 'dashboard' })
+  }
+
+  if (to.name === 'root') {
+    return next({ name: isCustomer ? 'projects' : 'dashboard' })
+  }
+
+  return next()
 })
 
 // Set initial language from localStorage or default to 'en'

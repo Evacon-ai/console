@@ -35,62 +35,66 @@
       </div>
     </div>
 
-    <div class="row q-col-gutter-md" v-if="!projectsStore.loading">
-      <template v-if="projects.length">
-      <div class="col-12" v-for="project in projects" :key="project.id">
-        <q-card flat bordered class="cursor-pointer" @click="showProject(project)">
-          <q-card-section>
-            <div class="row items-start justify-between">
-              <div class="row items-center">
-                <div class="project-logo" :class="isRTL ? 'q-ml-md' : 'q-mr-md'">
-                  <template v-if="getOrganizationLogo(project.organization_id)">
-                    <img 
-                      :src="getOrganizationLogo(project.organization_id)" 
-                      :alt="project.name"
-                      class="project-logo-image"
-                    >
-                  </template>
-                  <template v-else>
-                    <div class="project-logo-fallback">
-                      <FolderGit2 class="w-6 h-6" />
-                    </div>
-                  </template>
-                </div>
-                <div>
-                  <div class="text-h6 q-mb-xs">{{ project.name }}</div>
-                  <div class="text-grey-7">{{ project.description }}</div>                  
-                </div>
-              </div>
-              <div class="column items-end">
-                <q-chip
-                  :color="getStatusColor(project.status)"
-                  text-color="white" 
-                  class="status-btn q-mb-sm"
-                  size="sm" 
-                >
-                  
-                  {{ $t(`organizations.status.${project.status}`) }}
-                </q-chip>
-              </div>
-            </div>
-          </q-card-section>
+    <!-- Loading State -->
+    <div v-if="projectsStore.loading" class="row justify-center items-center" style="min-height: 200px;">
+      <q-spinner color="primary" size="3em" />
+    </div>
 
-          <q-card-section class="q-pt-none">
-            <div class="row items-center justify-between q-pl-xs">
-              <div v-if="project.location" class="text-caption text-grey-7 row items-center">
-                <LocationDisplay
-                  :city="project.location.city"
-                  :state="project.location.state"
-                  :country="project.location.country"
-                />
+    <div v-else class="row q-col-gutter-md">
+      <template v-if="projects && projects.length">
+        <div class="col-12" v-for="project in projects" :key="project.id">
+          <q-card flat bordered class="cursor-pointer" @click="showProject(project)">
+            <q-card-section>
+              <div class="row items-start justify-between">
+                <div class="row items-center">
+                  <div class="project-logo" :class="isRTL ? 'q-ml-md' : 'q-mr-md'">
+                    <template v-if="getOrganizationLogo(project.organization_id)">
+                      <img 
+                        :src="getOrganizationLogo(project.organization_id)" 
+                        :alt="project.name"
+                        class="project-logo-image"
+                      >
+                    </template>
+                    <template v-else>
+                      <div class="project-logo-fallback">
+                        <FolderGit2 class="w-6 h-6" />
+                      </div>
+                    </template>
+                  </div>
+                  <div>
+                    <div class="text-h6 q-mb-xs">{{ project.name }}</div>
+                    <div class="text-grey-7">{{ project.description }}</div>                  
+                  </div>
+                </div>
+                <div class="column items-end">
+                  <q-chip
+                    :color="getStatusColor(project.status)"
+                    text-color="white" 
+                    class="status-btn q-mb-sm"
+                    size="sm" 
+                  >
+                    {{ $t(`organizations.status.${project.status}`) }}
+                  </q-chip>
+                </div>
               </div>
-              <div class="row items-center text-grey-7">
-                {{ $t('projects.generated', { time: formatTime(project.created_at) }) }}
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <div class="row items-center justify-between q-pl-xs">
+                <div v-if="project.location" class="text-caption text-grey-7 row items-center">
+                  <LocationDisplay
+                    :city="project.location.city"
+                    :state="project.location.state"
+                    :country="project.location.country"
+                  />
+                </div>
+                <div class="row items-center text-grey-7">
+                  {{ $t('projects.generated', { time: formatTime(project.created_at) }) }}
+                </div>
               </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
+            </q-card-section>
+          </q-card>
+        </div>
       </template>
       <template v-else>
         <div class="col-12 text-center q-pa-xl">
@@ -129,6 +133,7 @@ import LocationDisplay from '../components/LocationDisplay.vue'
 import { useTimeFormatter } from '../utils/formatTime'
 import { useRoute, useRouter } from 'vue-router'
 import type { Project } from '../types'
+import { countries } from '../utils/countries'
 
 const { locale } = useI18n()
 const projectsStore = useProjectsStore()
@@ -157,14 +162,11 @@ const getCountryCode = (countryName: string) => {
   return country?.code || 'US'
 }
 
-// Ensure projects is always an array
 const projects = computed(() => {
-  const allProjects = Array.isArray(projectsStore.projects) ? projectsStore.projects : []
-  
+  const allProjects = projectsStore.allProjects
   if (selectedOrganization.value) {
     return allProjects.filter(project => project.organization_id === selectedOrganization.value.id)
   }
-  
   return allProjects
 })
 
@@ -209,7 +211,13 @@ const onProjectCreated = async (id: string) => {
 onMounted(async () => {
   try {
     await projectsStore.fetchProjects()
-    await organizationsStore.fetchOrganizations()
+    if (projectsStore.projects.length > 0) {
+      // Fetch organizations for any loaded projects
+      const uniqueOrgIds = new Set(projectsStore.projects.map(p => p.organization_id))
+      await Promise.all(Array.from(uniqueOrgIds).map(id => 
+        organizationsStore.fetchOrganizationById(id)
+      ))
+    }
   } catch (error) {
     console.error('Failed to fetch projects:', error)
   }

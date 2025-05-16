@@ -118,7 +118,14 @@ const onSubmit = async () => {
     })
 
     if (success) {
-      router.push('/dashboard')
+      const userStore = useUserStore()
+      const level = userStore.currentUser?.level
+    
+      if (level === 'customer') {
+        router.replace({ name: 'projects' })
+      } else {
+        router.replace({ name: 'dashboard' })
+      }
     }
   } else {
     const success = await userStore.login({
@@ -130,7 +137,14 @@ const onSubmit = async () => {
       if (remember.value) {
         localStorage.setItem('remember', 'true')
       }
-      router.push('/dashboard')
+      const userStore = useUserStore()
+      const level = userStore.currentUser?.level
+    
+      if (level === 'customer') {
+        router.replace({ name: 'projects' })
+      } else {
+        router.replace({ name: 'dashboard' })
+      }
     }
   }
 }

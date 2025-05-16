@@ -28,7 +28,7 @@
     >
       <!-- Logo at the top of drawer -->
       <div class="drawer-header q-ma-sm">
-        <Logo :showText="true" textClass="text-subtitle1" :size="32" />
+        <Logo :showText="true" textClass="text-subtitle1" :size="32" @click="handleOrgClick" />
       </div>
 
       <!-- Navigation Menu -->
@@ -57,6 +57,13 @@
       </div>
     </q-drawer>
 
+    <OrganizationDetails
+      v-if="selectedOrg"
+      v-model="showOrgDetails"
+      :organization="selectedOrg"
+      @organization-updated="handleOrgUpdated"
+    />
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -68,17 +75,22 @@ import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Home, FolderKanban, Users, Building2, Menu } from 'lucide-vue-next'
-import { useQuasar } from 'quasar'
+import { useQuasar, useDialogPluginComponent } from 'quasar'
 import { useUserStore } from './stores/userStore'
+import { useOrganizationsStore } from './stores/organizationsStore'
 import Logo from './components/Logo.vue'
 import UserMenu from './components/UserMenu.vue'
+import OrganizationDetails from './components/OrganizationDetails.vue'
 
 const route = useRoute()
 const router = useRouter()
 const { locale } = useI18n()
 const userStore = useUserStore()
+const organizationsStore = useOrganizationsStore()
 const $q = useQuasar()
 const leftDrawerOpen = ref($q.screen.gt.sm)
+const showOrgDetails = ref(false)
+const selectedOrg = ref(null)
 
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 const isGuestPage = computed(() => {
@@ -86,12 +98,47 @@ const isGuestPage = computed(() => {
   return route?.path ? guestPages.includes(route.path) : false
 })
 
-const links = [
-  { icon: Home, label: 'common.home', path: '/dashboard' },
-  { icon: Building2, label: 'organizations.title', path: '/organizations' },
-  { icon: FolderKanban, label: 'common.projects', path: '/projects' },
-  { icon: Users, label: 'users.title', path: '/users' }
-]
+const links = computed(() => {
+  const allLinks = [
+    { icon: Home, label: 'common.home', path: '/dashboard' },
+    { icon: Building2, label: 'organizations.title', path: '/organizations' },
+    { icon: FolderKanban, label: 'common.projects', path: '/projects' },
+    { icon: Users, label: 'users.title', path: '/users' }
+  ]
+
+  // Evacon users see all menu items
+  if (userStore.currentUser?.level === 'evacon') {
+    return allLinks
+  }
+
+  // Customer admin sees projects and users
+  if (userStore.currentUser?.level === 'customer' && userStore.currentUser?.role === 'admin') {
+    return allLinks.filter(link => link.path === '/projects' || link.path === '/users')
+  }
+
+  // Customer user sees only projects
+  if (userStore.currentUser?.level === 'customer' && userStore.currentUser?.role === 'user') {
+    return allLinks.filter(link => link.path === '/projects')
+  }
+
+  return []
+})
+
+const handleOrgClick = (org) => {
+  selectedOrg.value = org
+  showOrgDetails.value = true
+  if (org?.id) {
+    organizationsStore.fetchOrganizationById(org.id)
+  }
+}
+
+const handleOrgUpdated = async (updatedOrg) => {
+  if (updatedOrg?.id) {
+    await organizationsStore.fetchOrganizationById(updatedOrg.id)
+    // Update the selected org with the latest data
+    selectedOrg.value = organizationsStore.organizations.find(org => org.id === updatedOrg.id) || selectedOrg.value
+  }
+}
 </script>
 
 <style>

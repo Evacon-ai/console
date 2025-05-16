@@ -57,6 +57,29 @@ export default {
       country: 'Land',
       countryRequired: 'Land ist erforderlich'
     },
+    contact: {
+      edit: 'Kontakt bearbeiten',
+      name: 'Name',
+      nameRequired: 'Kontaktname ist erforderlich',
+      editEmail: 'E-Mail bearbeiten',
+      email: 'E-Mail',
+      emailRequired: 'E-Mail ist erforderlich',
+      emailTooLong: 'E-Mail muss weniger als 255 Zeichen haben',
+      phone: 'Telefon',
+      updatePhone: 'Telefon aktualisieren',
+      phoneNumber: 'Telefonnummer',
+      countryCode: 'Ländercode',
+      chooseCountry: 'Land auswählen',
+      searchCountry: 'Land suchen',
+      example: 'Beispiel:',
+      invalidPhone: 'Bitte geben Sie eine gültige Telefonnummer ein'
+    },
+    website: {
+      edit: 'Webseite bearbeiten',
+      url: 'Webseite URL',
+      invalidUrl: 'Bitte geben Sie eine gültige URL ein',
+      emptyHint: 'Leer lassen, wenn keine Webseite vorhanden'
+    },
     name: {
       edit: 'Organisationsname bearbeiten',
       name: 'Organisationsname',
@@ -69,6 +92,16 @@ export default {
       invalidFormat: 'Bitte wählen Sie eine gültige Bilddatei (PNG, JPG oder GIF)',
       fileTooLarge: 'Dateigröße muss kleiner als 5MB sein',
       uploadFailed: 'Logo konnte nicht hochgeladen werden'
+    },
+    timezone: {
+      edit: 'Zeitzone bearbeiten',
+      label: 'Zeitzone',
+      required: 'Zeitzone ist erforderlich'
+    },
+    notes: {
+      edit: 'Notizen bearbeiten',
+      notes: 'Notizen',
+      notesRequired: 'Notizen sind erforderlich'
     }
   },
   organization: 'Organisation',
@@ -93,7 +126,7 @@ export default {
     removeConfirm: 'Sind Sie sicher, dass Sie {name} aus dieser Organisation entfernen möchten?',
     removeWarning: 'Diese Aktion kann nicht rückgängig gemacht werden.',
     onlyAdminsCanAdd: 'Nur Administratoren können Benutzer hinzufügen',
-    onlyAdminsCanChangeStatus: 'Nur Administratoren können den Organisationsstatus ändern',
+    onlyAdminsCanChangeStatus: 'Nur Administratoren können den Status der Organisation ändern',
     selectOrganization: 'Organisation auswählen',
     roles: {
       administrator: 'Administrator',

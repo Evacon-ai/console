@@ -325,7 +325,11 @@ const loadUsers = async () => {
 
 onMounted(() => {
   loadUsers()
-  organizationsStore.fetchOrganizations()
+  // Fetch organizations for any loaded users
+  const uniqueOrgIds = new Set(usersStore.users.map(u => u.organization_id).filter(Boolean))
+  Promise.all(Array.from(uniqueOrgIds).map(id => 
+    organizationsStore.fetchOrganizationById(id)
+  ))
 })
 
 const getOrgLogo = (orgId: string) => {

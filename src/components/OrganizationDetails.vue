@@ -37,7 +37,7 @@
                   :disable="!canEdit"
                 >
                   <q-tooltip v-if="!canEdit">
-                    Only administrators can change organization status
+                    {{ $t('organizations.users.onlyAdminsCanChangeStatus') }}
                   </q-tooltip>
                 </q-btn>
                 <q-btn
@@ -242,7 +242,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
-  (e: 'organization-updated'): void
+  (e: 'organization-updated', organization: Organization): void
 }>()
 
 const $q = useQuasar()
@@ -334,10 +334,13 @@ const onPhoneSubmit = async (contact: { phone: string }) => {
         phone: contact.phone
       }
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showPhoneEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update phone:', error)
   } finally {
@@ -357,10 +360,13 @@ const onContactSubmit = async (contact: { name: string }) => {
         name: contact.name
       }
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showContactEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update contact:', error)
   } finally {
@@ -380,10 +386,13 @@ const onEmailSubmit = async (contact: { email: string }) => {
         email: contact.email
       }
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showEmailEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update email:', error)
   } finally {
@@ -400,10 +409,13 @@ const onAddressSubmit = async (address: Organization['address']) => {
       ...props.organization,
       address
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showAddressEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update address:', error)
   } finally {
@@ -420,10 +432,13 @@ const onWebsiteSubmit = async (website: { website: string }) => {
       ...props.organization,
       website: website.website
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showWebsiteEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update website:', error)
   } finally {
@@ -440,10 +455,13 @@ const onTimezoneSubmit = async (data: { time_zone: string }) => {
       ...props.organization,
       time_zone: data.time_zone
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showTimezoneEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update timezone:', error)
   } finally {
@@ -460,10 +478,13 @@ const onNotesSubmit = async (data: { notes: string }) => {
       ...props.organization,
       notes: data.notes
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showNotesEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update notes:', error)
   } finally {
@@ -480,10 +501,13 @@ const onNameSubmit = async (data: { name: string }) => {
       ...props.organization,
       name: data.name
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showNameEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update name:', error)
   } finally {
@@ -500,10 +524,13 @@ const onLogoSubmit = async (data: { logo_url: string }) => {
       ...props.organization,
       logo_url: data.logo_url
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showLogoEdit.value = false
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    if (result) {
+      // Fetch the updated organization
+      await organizationsStore.fetchOrganizationById(props.organization.id)
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update logo:', error)
   } finally {
@@ -535,9 +562,10 @@ const toggleStatus = async () => {
       ...props.organization,
       account_status: newStatus
     }
-    await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
-    await organizationsStore.fetchOrganizations()
-    emit('organization-updated')
+    const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
+    if (result) {
+      emit('organization-updated', result)
+    }
   } catch (error) {
     console.error('Failed to update status:', error)
   } finally {

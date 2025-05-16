@@ -57,6 +57,29 @@ export default {
       country: 'Страна',
       countryRequired: 'Страна обязательна'
     },
+    contact: {
+      edit: 'Редактировать контакт',
+      name: 'Имя',
+      nameRequired: 'Имя контакта обязательно',
+      editEmail: 'Редактировать email',
+      email: 'Email',
+      emailRequired: 'Email обязателен',
+      emailTooLong: 'Email должен быть короче 255 символов',
+      phone: 'Телефон',
+      updatePhone: 'Обновить телефон',
+      phoneNumber: 'Номер телефона',
+      countryCode: 'Код страны',
+      chooseCountry: 'Выберите страну',
+      searchCountry: 'Поиск страны',
+      example: 'Пример:',
+      invalidPhone: 'Пожалуйста, введите действительный номер телефона'
+    },
+    website: {
+      edit: 'Редактировать веб-сайт',
+      url: 'URL веб-сайта',
+      invalidUrl: 'Пожалуйста, введите корректный URL',
+      emptyHint: 'Оставьте пустым, если нет веб-сайта'
+    },
     name: {
       edit: 'Редактировать название организации',
       name: 'Название организации',
@@ -69,6 +92,16 @@ export default {
       invalidFormat: 'Пожалуйста, выберите допустимый файл изображения (PNG, JPG или GIF)',
       fileTooLarge: 'Размер файла должен быть меньше 5МБ',
       uploadFailed: 'Не удалось загрузить логотип'
+    },
+    timezone: {
+      edit: 'Редактировать часовой пояс',
+      label: 'Часовой пояс',
+      required: 'Часовой пояс обязателен'
+    },
+    notes: {
+      edit: 'Редактировать заметки',
+      notes: 'Заметки',
+      notesRequired: 'Заметки обязательны'
     }
   },
   organization: 'Организация',

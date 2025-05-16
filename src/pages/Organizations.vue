@@ -189,11 +189,6 @@ const showOrganization = (org: Organization) => {
 
 const onOrganizationUpdated = async () => {
   await organizationsStore.fetchOrganizations()
-  // Find and update the selected organization with fresh data
-  const updatedOrg = organizationsStore.organizations.find(org => org.id === selectedOrg.value?.id)
-  if (updatedOrg) {
-    selectedOrg.value = { ...updatedOrg }
-  }
 }
 
 const onOrganizationCreated = async (id: string) => {

@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import { FolderGit2, FileText } from 'lucide-vue-next'
@@ -175,9 +175,14 @@ const tabs = [
 ]
 
 const getOrganizationLogo = (organizationId: string) => {
-  const organization = organizationsStore.organizations.find(org => org.id === organizationId)
-  return organization?.logo_url
+  return organizationsStore.organizations.find(org => org.id === organizationId)?.logo_url
 }
+
+onMounted(() => {
+  if (props.project?.organization_id) {
+    organizationsStore.fetchOrganizationById(props.project.organization_id)
+  }
+})
 
 const canEdit = computed(() => {
   return userStore.isEvaconAdmin

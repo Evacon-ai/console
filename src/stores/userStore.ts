@@ -12,12 +12,14 @@ import {
 } from 'firebase/auth'
 import { auth } from '../lib/firebase'
 import { mockApi } from '../lib/mockDb'
+import { useOrganizationsStore } from './organizationsStore'
 
 export const useUserStore = defineStore('user', () => {
   const currentUser = ref<User | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const userMetadata = ref<Map<string, UserMetadata>>(new Map())
+  const organizationsStore = useOrganizationsStore()
 
   const isAuthenticated = computed(() => currentUser.value !== null)
   const isEvaconAdmin = computed(() => currentUser.value?.level === 'evacon' && currentUser.value?.role === 'admin')
@@ -156,6 +158,11 @@ export const useUserStore = defineStore('user', () => {
           const userData = await api.get(`/users/me`)
           if (userData) {
             currentUser.value = userData
+            // Initialize stores with user data
+            if (userData.level === 'customer' && userData.organization_id) {
+              // Fetch organization details
+              await organizationsStore.fetchOrganizationById(userData.organization_id)
+            }
           } else {
             currentUser.value = null
           }

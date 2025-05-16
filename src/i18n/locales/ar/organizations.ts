@@ -57,6 +57,29 @@ export default {
       country: 'الدولة',
       countryRequired: 'الدولة مطلوبة'
     },
+    contact: {
+      edit: 'تعديل جهة الاتصال',
+      name: 'الاسم',
+      nameRequired: 'اسم جهة الاتصال مطلوب',
+      editEmail: 'تعديل البريد الإلكتروني',
+      email: 'البريد الإلكتروني',
+      emailRequired: 'البريد الإلكتروني مطلوب',
+      emailTooLong: 'يجب أن يكون البريد الإلكتروني أقل من 255 حرفاً',
+      phone: 'الهاتف',
+      updatePhone: 'تحديث الهاتف',
+      phoneNumber: 'رقم الهاتف',
+      countryCode: 'رمز الدولة',
+      chooseCountry: 'اختر الدولة',
+      searchCountry: 'ابحث عن دولة',
+      example: 'مثال:',
+      invalidPhone: 'الرجاء إدخال رقم هاتف صالح'
+    },
+    website: {
+      edit: 'تعديل الموقع الإلكتروني',
+      url: 'رابط الموقع الإلكتروني',
+      invalidUrl: 'الرجاء إدخال رابط صحيح',
+      emptyHint: 'اتركه فارغاً إذا لم يكن هناك موقع إلكتروني'
+    },
     name: {
       edit: 'تعديل اسم المؤسسة',
       name: 'اسم المؤسسة',
@@ -69,6 +92,16 @@ export default {
       invalidFormat: 'الرجاء اختيار ملف صورة صالح (PNG, JPG, أو GIF)',
       fileTooLarge: 'يجب أن يكون حجم الملف أقل من 5MB',
       uploadFailed: 'فشل تحميل الشعار'
+    },
+    timezone: {
+      edit: 'تعديل المنطقة الزمنية',
+      label: 'المنطقة الزمنية',
+      required: 'المنطقة الزمنية مطلوبة'
+    },
+    notes: {
+      edit: 'تعديل الملاحظات',
+      notes: 'الملاحظات',
+      notesRequired: 'الملاحظات مطلوبة'
     }
   },
   organization: 'المؤسسة',
@@ -93,7 +126,7 @@ export default {
     removeConfirm: 'هل أنت متأكد أنك تريد إزالة {name} من هذه المؤسسة؟',
     removeWarning: 'لا يمكن التراجع عن هذا الإجراء.',
     onlyAdminsCanAdd: 'يمكن للمسؤولين فقط إضافة مستخدمين',
-    onlyAdminsCanChangeStatus: 'يمكن للمسؤولين فقط تغيير حالة المؤسسة',
+    onlyAdminsCanChangeStatus: 'فقط المسؤولون يمكنهم تغيير حالة المؤسسة',
     selectOrganization: 'اختر المؤسسة',
     roles: {
       administrator: 'مسؤول',

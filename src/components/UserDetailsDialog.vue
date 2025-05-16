@@ -199,7 +199,9 @@ const form = ref({
 })
 
 onMounted(() => {
-  organizationsStore.fetchOrganizations()
+  if (props.user?.organization_id) {
+    organizationsStore.fetchOrganizationById(props.user.organization_id)
+  }
 })
 
 const canEdit = computed(() => {
@@ -315,7 +317,9 @@ const handleDelete = async () => {
 
 watch(() => dialogOpen.value, (newVal) => {
   if (newVal) {
-    organizationsStore.fetchOrganizations()
+    if (props.user?.organization_id) {
+      organizationsStore.fetchOrganizationById(props.user.organization_id)
+    }
   }
 })
 </script>
