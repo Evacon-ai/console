@@ -44,6 +44,7 @@
           />
 
           <q-select
+            v-if="userStore.currentUser?.level === 'evacon'"
             v-model="form.level"
             :options="levelOptions"
             :label="$t('users.level')"
@@ -118,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
 import { useOrganizationsStore } from '../stores/organizationsStore'
@@ -201,8 +202,14 @@ const onSubmit = async () => {
   error.value = null
 
   try {
-
     // Send new user creation command to the server:
+
+    let orgId = null
+    if (userStore.currentUser?.level==="customer") {
+      orgId = userStore.currentUser?.organization_id
+    } else {
+      orgId = form.value.level === 'customer' ? form.value.organization_id : null
+    }
     
     await api.post('/users', {
       created_by: userStore.currentUser?.id,
@@ -211,7 +218,7 @@ const onSubmit = async () => {
       email: form.value.email,
       level: form.value.level,
       role: form.value.role,
-      organization_id: form.value.level === 'customer' ? form.value.organization_id : null
+      organization_id: orgId
     })
 
     dialogOpen.value = false

@@ -1,16 +1,7 @@
 <template>
   <div class="row no-wrap">
     <div class="diagram-preview-container">
-      <template v-if="url && isImageFile(url)">
-        <a :href="url" target="_blank" rel="noopener noreferrer">
-          <img 
-            :src="previewUrl" 
-            :alt="name"
-            class="diagram-preview"
-          />
-        </a>
-      </template>
-      <template v-else-if="url && isPdfFile(url)">
+      <template v-if="previewUrl">
         <a :href="url" target="_blank" rel="noopener noreferrer">
           <img 
             :src="previewUrl" 

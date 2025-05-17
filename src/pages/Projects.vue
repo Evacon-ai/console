@@ -15,6 +15,7 @@
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
+            v-if="showNewProjectButton"
             color="primary"
             icon="add"
             :label="$t('common.newProject')"
@@ -125,6 +126,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProjectsStore } from '../stores/projectsStore'
+import { useUserStore } from '../stores/userStore'
 import { useOrganizationsStore } from '../stores/organizationsStore'
 import { FolderGit2, Calendar } from 'lucide-vue-next'
 import NewProject from '../components/project/NewProject.vue'
@@ -137,6 +139,7 @@ import { countries } from '../utils/countries'
 
 const { locale } = useI18n()
 const projectsStore = useProjectsStore()
+const userStore = useUserStore()
 const organizationsStore = useOrganizationsStore()
 const route = useRoute()
 const router = useRouter()
@@ -170,6 +173,10 @@ const projects = computed(() => {
   return allProjects
 })
 
+const showNewProjectButton = computed(() => {
+  return userStore.currentUser?.level==="evacon" || userStore.currentUser?.role==="admin"
+})
+  
 const getOrganizationLogo = (organizationId: string) => {
   const organization = organizationsStore.organizations.find(org => org.id === organizationId)
   return organization?.logo_url

@@ -51,7 +51,8 @@
           />
 
           <q-select
-            v-if="form.level === 'customer'"
+            v-if="form.level === 'customer' && userStore.currentUser?.level === 'evacon'"
+            v-show="canEdit"
             v-model="form.organization_id"
             :options="organizationOptions" 
             :label="$t('organizations.organization')"
@@ -59,7 +60,7 @@
             outlined
             emit-value
             map-options
-            :disable="loading || !canEdit"
+            :disable="loading || (userStore.currentUser?.level === 'customer' && userStore.currentUser?.role === 'admin')"
           >
             <template v-slot:selected>
               <div class="row items-center" v-if="getSelectedOrg">
@@ -205,8 +206,12 @@ onMounted(() => {
 })
 
 const canEdit = computed(() => {
-  // Only Evacon admins can edit users
-  return userStore.isEvaconAdmin
+  // Evacon admins can edit all users
+  // Customer admins can edit users in their own organization
+  return userStore.isEvaconAdmin || 
+    (userStore.currentUser?.level === 'customer' && 
+     userStore.currentUser?.role === 'admin' && 
+     userStore.currentUser?.organization_id === props.user?.organization_id)
 })
 
 const availableRoles = computed(() => {
@@ -274,6 +279,11 @@ const getFullName = (user: UserMetadata | null) => {
 const onSubmit = async () => {
   if (!canEdit.value) return
   
+  // For customer admins, ensure organization_id is set to their own organization
+  if (userStore.currentUser?.level === 'customer' && userStore.currentUser?.role === 'admin') {
+    form.value.organization_id = userStore.currentUser.organization_id
+  }
+  
   loading.value = true
   error.value = null
 
@@ -298,6 +308,15 @@ const onSubmit = async () => {
 
 const handleDelete = async () => {
   if (!props.user) return
+  
+  // Customer admins can only delete users from their own organization
+  if (userStore.currentUser?.level === 'customer' && 
+      userStore.currentUser?.role === 'admin' && 
+      props.user.organization_id !== userStore.currentUser.organization_id) {
+    error.value = t('users.cannotDeleteUserFromDifferentOrg')
+    showDeleteConfirm.value = false
+    return
+  }
   
   loading.value = true
   error.value = null

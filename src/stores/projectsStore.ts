@@ -48,7 +48,6 @@ export const useProjectsStore = defineStore('projects', () => {
       }
       
       // Ensure we always set an array
-      console.log('Fetched projects response:', response)
       projects.value = response || []
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to load projects'
