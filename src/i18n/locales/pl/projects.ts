@@ -10,6 +10,12 @@ export default {
     required: 'Opis jest wymagany'
   },
   status: {
+    options: {
+      active: 'Aktywny',
+      completed: 'Zakończony',
+      on_hold: 'Wstrzymany',
+      canceled: 'Anulowany'
+    },
     active: 'Aktywny',
     completed: 'Zakończony',
     on_hold: 'Wstrzymany',
@@ -78,6 +84,9 @@ export default {
     elementIdentifier: 'Identyfikator elementu',
     extractSuccess: 'Elementy zostały pomyślnie wyodrębnione',
     extractFailed: 'Nie udało się wyodrębnić elementów',
+    extractingMessage: 'Wyodrębnianie elementów - proszę nie zamykać przeglądarki, ponieważ może to potrwać do kilku minut',
+    updateNameFailed: 'Nie udało się zaktualizować nazwy diagramu',
+    updateDescriptionFailed: 'Nie udało się zaktualizować opisu diagramu',
     tabs: {
       diagram: 'Diagram',
       elements: 'Elementy'

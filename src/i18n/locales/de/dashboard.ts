@@ -1,13 +1,13 @@
 export default {
   title: 'Startseite',
   stats: {
-    activeProjects: 'Aktive Projekte',
-    teamMembers: 'Teammitglieder',
-    recentActivity: 'Letzte Aktivitäten'
+    activeOrganizations: 'Aktive Organisationen',
+    openProjects: 'Offene Projekte',
+    registeredUsers: 'Registrierte Benutzer'
   },
   activity: {
     title: 'Letzte Aktivitäten',
-    timeAgo: 'vor {time}',
+    timeAgo: '{time}',
     day: 'Tag | Tage'
   }
 }

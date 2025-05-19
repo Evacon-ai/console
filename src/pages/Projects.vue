@@ -74,7 +74,7 @@
                     class="status-btn q-mb-sm"
                     size="sm" 
                   >
-                    {{ $t(`organizations.status.${project.status}`) }}
+                    {{ $t(`projects.status.options.${project.status}`) }}
                   </q-chip>
                 </div>
               </div>

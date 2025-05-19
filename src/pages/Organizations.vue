@@ -187,7 +187,11 @@ const showOrganization = (org: Organization) => {
   showDetails.value = true
 }
 
-const onOrganizationUpdated = async () => {
+const onOrganizationUpdated = async (updatedOrg: Organization) => {
+  // Update the selected organization with the latest data
+  selectedOrg.value = { ...updatedOrg }
+  
+  // Refresh the organizations list
   await organizationsStore.fetchOrganizations()
 }
 

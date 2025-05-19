@@ -8,7 +8,9 @@ export default {
   accountInfo: 'معلومات الحساب',
   personalInfo: 'المعلومات الشخصية',
   editProfile: 'تعديل الملف الشخصي',
+  editName: 'تعديل الاسم',
   saveChanges: 'حفظ التغييرات',
+  contactSupportForEmail: 'لتغيير عنوان بريدك الإلكتروني، يرجى الاتصال بدعم Evacon',
   roles: {
     evacon_admin: 'مدير إيفاكون',
     evacon_staff: 'موظف إيفاكون',

@@ -337,8 +337,6 @@ const onPhoneSubmit = async (contact: { phone: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showPhoneEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -363,8 +361,6 @@ const onContactSubmit = async (contact: { name: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showContactEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -389,8 +385,6 @@ const onEmailSubmit = async (contact: { email: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showEmailEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -412,8 +406,6 @@ const onAddressSubmit = async (address: Organization['address']) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showAddressEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -435,8 +427,6 @@ const onWebsiteSubmit = async (website: { website: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showWebsiteEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -458,8 +448,6 @@ const onTimezoneSubmit = async (data: { time_zone: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showTimezoneEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -481,8 +469,6 @@ const onNotesSubmit = async (data: { notes: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showNotesEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -504,8 +490,6 @@ const onNameSubmit = async (data: { name: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showNameEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {
@@ -527,8 +511,6 @@ const onLogoSubmit = async (data: { logo_url: string }) => {
     const result = await organizationsStore.updateOrganization(props.organization.id, updatedOrg)
     showLogoEdit.value = false
     if (result) {
-      // Fetch the updated organization
-      await organizationsStore.fetchOrganizationById(props.organization.id)
       emit('organization-updated', result)
     }
   } catch (error) {

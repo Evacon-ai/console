@@ -10,6 +10,12 @@ export default {
     required: 'Beschreibung ist erforderlich'
   },
   status: {
+    options: {
+      active: 'Aktiv',
+      completed: 'Abgeschlossen',
+      on_hold: 'Angehalten',
+      canceled: 'Abgebrochen'
+    },
     active: 'Aktiv',
     completed: 'Abgeschlossen',
     on_hold: 'Angehalten',
@@ -78,6 +84,9 @@ export default {
     elementIdentifier: 'Elementkennung',
     extractSuccess: 'Elemente erfolgreich extrahiert',
     extractFailed: 'Fehler beim Extrahieren der Elemente',
+    extractingMessage: 'Elemente werden extrahiert - bitte schließen Sie den Browser nicht, da dies bis zu einigen Minuten dauern kann',
+    updateNameFailed: 'Fehler beim Aktualisieren des Diagrammnamens',
+    updateDescriptionFailed: 'Fehler beim Aktualisieren der Diagrammbeschreibung',
     tabs: {
       diagram: 'Diagramm',
       elements: 'Elemente'

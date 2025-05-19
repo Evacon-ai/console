@@ -150,6 +150,23 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function updateUserProfile(id: string, updates: Partial<User>) {
+    loading.value = true
+    error.value = null
+    try {
+      const updatedUser = await api.put(`/users/${id}`, updates)
+      if (currentUser.value && currentUser.value.id === id) {
+        currentUser.value = { ...currentUser.value, ...updatedUser }
+      }
+      return true
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Failed to update profile'
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function initSession() {
     return new Promise((resolve) => {
       const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -187,6 +204,7 @@ export const useUserStore = defineStore('user', () => {
     login,
     logout,
     resetPassword,
+    updateUserProfile,
     updatePassword,
     initSession
   }

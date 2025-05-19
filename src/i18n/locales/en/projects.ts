@@ -10,6 +10,12 @@ export default {
     required: 'Description is required'
   },
   status: {
+    options: {
+      active: 'Active',
+      completed: 'Completed',
+      on_hold: 'On Hold',
+      canceled: 'Canceled'
+    },
     edit: 'Change Project Status',
     label: 'Status',
     required: 'Status is required'
@@ -72,6 +78,9 @@ export default {
     elementIdentifier: 'Element Identifier',
     extractSuccess: 'Elements extracted successfully',
     extractFailed: 'Failed to extract elements',
+    extractingMessage: 'Extracting elements - please do not close the browser as it might take up to a few minutes',
+    updateNameFailed: 'Failed to update diagram name',
+    updateDescriptionFailed: 'Failed to update diagram description',
     tabs: {
       diagram: 'Diagram',
       elements: 'Elements'

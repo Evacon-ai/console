@@ -127,24 +127,31 @@ const extracting = ref(false)
 const loading = ref(false)
 
 const handleExtractElements = async () => {
+  $q.loading.show({
+    message: t('projects.diagrams.extractingMessage'),
+    backgroundColor: 'primary',
+    spinnerColor: 'white',
+    spinnerSize: 80
+  })
   extracting.value = true
   try {
     const updatedDiagram = await diagramsStore.getDiagramDataExtract(props.projectId, props.diagram.id)
     emit('diagram-updated', updatedDiagram)
     $q.notify({
       color: 'positive',
-      message: 'Elements extracted successfully',
+      message: t('projects.diagrams.extractSuccess'),
       position: 'top'
     })
   } catch (error) {
     console.error('Failed to extract elements:', error)
     $q.notify({
       color: 'negative',
-      message: 'Failed to extract elements',
+      message: t('projects.diagrams.extractFailed'),
       position: 'top'
     })
   } finally {
     extracting.value = false
+    $q.loading.hide()
   }
 }
 
@@ -194,7 +201,7 @@ const onNameSubmit = async (data: { name: string }) => {
     console.error('Failed to update name:', error)
     $q.notify({
       color: 'negative',
-      message: 'Failed to update diagram name',
+      message: t('projects.diagrams.updateNameFailed'),
       position: 'top'
     })
   }
@@ -211,7 +218,7 @@ const onDescriptionSubmit = async (data: { description: string }) => {
     console.error('Failed to update description:', error)
     $q.notify({
       color: 'negative',
-      message: 'Failed to update diagram description',
+      message: t('projects.diagrams.updateDescriptionFailed'),
       position: 'top'
     })
   }

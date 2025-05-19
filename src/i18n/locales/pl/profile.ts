@@ -8,7 +8,9 @@ export default {
   accountInfo: 'Informacje o koncie',
   personalInfo: 'Informacje osobiste',
   editProfile: 'Edytuj profil',
+  editName: 'Edytuj nazwę',
   saveChanges: 'Zapisz zmiany',
+  contactSupportForEmail: 'Aby zmienić adres e-mail, skontaktuj się z pomocą techniczną Evacon',
   roles: {
     evacon_admin: 'Administrator Evacon',
     evacon_staff: 'Pracownik Evacon',

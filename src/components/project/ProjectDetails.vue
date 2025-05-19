@@ -50,7 +50,7 @@
                 size="sm"
                 :disable="!canEdit"
               >
-                {{ $t(`organizations.status.${project.status}`) }}
+                {{ $t(`projects.status.options.${project.status}`) }}
                 <q-tooltip v-if="!canEdit">
                   {{ $t('projects.onlyAdminsCanChangeStatus') }}
                 </q-tooltip>

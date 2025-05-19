@@ -1,13 +1,13 @@
 export default {
   title: 'בית',
   stats: {
-    activeProjects: 'פרויקטים פעילים',
-    teamMembers: 'חברי צוות',
-    recentActivity: 'פעילות אחרונה'
+    activeOrganizations: 'ארגונים פעילים',
+    openProjects: 'פרויקטים פתוחים',
+    registeredUsers: 'משתמשים רשומים'
   },
   activity: {
     title: 'פעילות אחרונה',
-    timeAgo: 'לפני {time}',
+    timeAgo: '{time}',
     day: 'יום | ימים'
   }
 }

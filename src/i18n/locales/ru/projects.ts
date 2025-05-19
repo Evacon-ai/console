@@ -15,6 +15,12 @@ export default {
     required: 'Статус обязателен'
   },
   status: {
+    options: {
+      active: 'Активный',
+      completed: 'Завершен',
+      on_hold: 'Приостановлен',
+      canceled: 'Отменен'
+    },
     active: 'Активный',
     completed: 'Завершен',
     on_hold: 'Приостановлен',
@@ -78,6 +84,9 @@ export default {
     elementIdentifier: 'Идентификатор элемента',
     extractSuccess: 'Элементы успешно извлечены',
     extractFailed: 'Не удалось извлечь элементы',
+    extractingMessage: 'Извлечение элементов - пожалуйста, не закрывайте браузер, так как это может занять до нескольких минут',
+    updateNameFailed: 'Не удалось обновить название диаграммы',
+    updateDescriptionFailed: 'Не удалось обновить описание диаграммы',
     tabs: {
       diagram: 'Диаграмма',
       elements: 'Элементы'

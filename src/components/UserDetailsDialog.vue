@@ -51,7 +51,7 @@
           />
 
           <q-select
-            v-if="form.level === 'customer' && userStore.currentUser?.level === 'evacon'"
+            v-if="form.level === 'customer'"
             v-show="canEdit"
             v-model="form.organization_id"
             :options="organizationOptions" 
@@ -79,6 +79,13 @@
               <div v-else>Select organization</div>
             </template>
           </q-select>
+
+          <!-- Hidden organization field for customer admins -->
+          <q-input
+            v-if="form.level === 'customer' && userStore.currentUser?.level === 'customer' && userStore.currentUser?.role === 'admin'"
+            v-model="form.organization_id"
+            type="hidden"
+          />
 
           <div class="text-caption text-grey-7 q-mt-lg">
             <div class="row items-center q-gutter-x-sm">

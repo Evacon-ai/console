@@ -10,6 +10,12 @@ export default {
     required: 'الوصف مطلوب'
   },
   status: {
+    options: {
+      active: 'نشط',
+      completed: 'مكتمل',
+      on_hold: 'معلق',
+      canceled: 'ملغي'
+    },
     active: 'نشط',
     completed: 'مكتمل',
     on_hold: 'معلق',
@@ -78,6 +84,9 @@ export default {
     elementIdentifier: 'معرف العنصر',
     extractSuccess: 'تم استخراج العناصر بنجاح',
     extractFailed: 'فشل في استخراج العناصر',
+    extractingMessage: 'جاري استخراج العناصر - يرجى عدم إغلاق المتصفح حيث قد يستغرق ذلك بضع دقائق',
+    updateNameFailed: 'فشل في تحديث اسم المخطط',
+    updateDescriptionFailed: 'فشل في تحديث وصف المخطط',
     tabs: {
       diagram: 'المخطط',
       elements: 'العناصر'
