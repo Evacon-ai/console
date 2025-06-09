@@ -16,12 +16,6 @@ export default {
       on_hold: 'معلق',
       canceled: 'ملغي'
     },
-    active: 'نشط',
-    completed: 'مكتمل',
-    on_hold: 'معلق',
-    canceled: 'ملغي'
-  },
-  status: {
     edit: 'تغيير حالة المشروع',
     label: 'الحالة',
     required: 'الحالة مطلوبة'
@@ -84,12 +78,14 @@ export default {
     elementIdentifier: 'معرف العنصر',
     extractSuccess: 'تم استخراج العناصر بنجاح',
     extractFailed: 'فشل في استخراج العناصر',
-    extractingMessage: 'جاري استخراج العناصر - يرجى عدم إغلاق المتصفح حيث قد يستغرق ذلك بضع دقائق',
+    extractingMessage: 'عملية استخراج العناصر جارية - يرجى الانتظار',
+    extractStarted: 'بدأ استخراج العناصر',
+    extractStartFailed: 'فشل في بدء استخراج العناصر',
     updateNameFailed: 'فشل في تحديث اسم المخطط',
     updateDescriptionFailed: 'فشل في تحديث وصف المخطط',
     tabs: {
       diagram: 'المخطط',
-      elements: 'العناصر'
+      io_list: 'قائمة المدخلات/المخرجات'
     }
   },
   wizard: {

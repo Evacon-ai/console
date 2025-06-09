@@ -21,6 +21,11 @@ export const useUsersStore = defineStore('users', () => {
     Array.isArray(users.value) ? users.value.filter(user => user.level === 'evacon') : []
   )
 
+  const getUserById = (userId: string) => computed(() => {
+    if (!Array.isArray(users.value)) return null
+    return users.value.find(user => user.id === userId) || null
+  })
+
   // Actions
   async function fetchUsers() {
     loading.value = true
@@ -87,6 +92,7 @@ export const useUsersStore = defineStore('users', () => {
     users,
     loading,
     error,
+    getUserById,
     organizationUsers,
     customerUsers,
     evaconUsers,

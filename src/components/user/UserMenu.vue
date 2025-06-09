@@ -120,7 +120,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { User, Languages, LogOut, Moon, Sun } from 'lucide-vue-next'
 import { useQuasar } from 'quasar'
-import { useUserStore } from '../stores/userStore'
+import { useUserStore } from '../../stores/userStore'
 
 const router = useRouter()
 const { locale, t } = useI18n()

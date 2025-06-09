@@ -27,10 +27,10 @@ export const useDiagramsStore = defineStore('diagrams', () => {
   
     return 0
   }
-  
-  const getDiagramsByProjectId = (projectId: string) => computed(() => {
+
+  const getDiagramsByProjectId = computed(() => (projectId: string) => {
     const diagrams = diagramsByProject.value.get(projectId) || []
-    return [...diagrams].sort((a, b) => {
+    return diagrams.sort((a, b) => {
       const dateA = parseDate(a.created_at)
       const dateB = parseDate(b.created_at)
       return dateB - dateA // Newest first
@@ -38,32 +38,11 @@ export const useDiagramsStore = defineStore('diagrams', () => {
   })
 
   const getDiagramById = (projectId: string, diagramId: string) => computed(() => 
+
     diagramsByProject.value.get(projectId)?.find(diagram => diagram.id === diagramId)
   )
 
   // Actions
-  async function getDiagramDataExtract(projectId: string, diagramId: string) {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await api.get(`/projects/${projectId}/diagrams/${diagramId}/extract`)
-      const projectDiagrams = diagramsByProject.value.get(projectId) || []
-      const index = projectDiagrams.findIndex(d => d.id === diagramId)
-      
-      if (index !== -1) {
-        projectDiagrams[index] = response
-        diagramsByProject.value.set(projectId, projectDiagrams)
-      }
-      
-      return response
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to extract diagram data'
-      throw error.value
-    } finally {
-      loading.value = false
-    }
-  }
-
   async function fetchProjectDiagrams(projectId: string) {
     loading.value = true
     error.value = null
@@ -174,10 +153,9 @@ export const useDiagramsStore = defineStore('diagrams', () => {
     loading,
     error,
     parseDiagramFileName,
-    getDiagramsByProjectId,
+    getDiagramsByProjectId, 
     getDiagramById,
     fetchProjectDiagrams,
-    getDiagramDataExtract,
     getDiagram,
     createDiagram,
     updateDiagram,

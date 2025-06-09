@@ -57,6 +57,12 @@
           row-key="id"
           :loading="false"
           :pagination="{ rowsPerPage: 5 }"
+          :rows-per-page-label="$t('common.table.rowsPerPage')"
+          :records-per-page-label="$t('common.table.recordsPerPage')"
+          :no-data-label="$t('common.table.noData')"
+          :no-results-label="$t('common.table.noResults')"
+          :loading-label="$t('common.table.loading')"
+          :selected-records-label="$t('common.table.selectedRecords')"
         >
           <template v-slot:loading>
             <q-inner-loading showing color="primary">

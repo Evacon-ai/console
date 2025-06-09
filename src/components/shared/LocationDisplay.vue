@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { countries } from '../utils/countries'
+import { countries } from '../../utils/countries'
 
 const props = defineProps<{
   city?: string

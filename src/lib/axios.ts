@@ -3,7 +3,7 @@ import { auth } from './firebase'
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: 'https://backend-754396764509.us-central1.run.app/api',
+  baseURL: `https://${import.meta.env.VITE_API_HOST}/api`,
   headers: {
     'Content-Type': 'application/json'
   }

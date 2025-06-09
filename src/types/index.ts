@@ -75,6 +75,18 @@ export interface Project {
   diagrams?: Diagram[]
 }
 
+export interface Job {
+  id: string
+  organization_id: string
+  type: string
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  payload: any
+  result?: any
+  error?: string
+  created_at: string
+  updated_at: string
+}
+
 export interface Diagram {
   id: string
   project_id: string

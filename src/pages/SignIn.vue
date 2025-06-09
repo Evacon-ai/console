@@ -90,8 +90,8 @@ import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/userStore'
-import Logo from '../components/Logo.vue'
-import LanguageSelector from '../components/LanguageSelector.vue'
+import Logo from '../components/shared/Logo.vue'
+import LanguageSelector from '../components/shared/LanguageSelector.vue'
 
 const router = useRouter()
 const route = useRoute()

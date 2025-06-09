@@ -18,6 +18,7 @@ import Dashboard from './pages/Dashboard.vue'
 import Projects from './pages/Projects.vue'
 import Profile from './pages/Profile.vue'
 import Organizations from './pages/Organizations.vue'
+import Jobs from './pages/Jobs.vue'
 import Users from './pages/Users.vue'
 import SignIn from './pages/SignIn.vue'
 import ResetPassword from './pages/ResetPassword.vue'
@@ -79,6 +80,12 @@ const routes = [
     name: 'users',
     component: Users,
     meta: { requiresAuth: true }
+  },
+  { 
+    path: '/jobs', 
+    name: 'jobs',
+    component: Jobs,
+    meta: { requiresAuth: true, requiresEvacon: true }
   },
   {
     path: '/:pathMatch(.*)*',

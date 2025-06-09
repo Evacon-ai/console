@@ -34,10 +34,10 @@
         <div class="col q-pa-md" style="overflow: auto;">
           <div class="content-container">
             <template v-if="activeTab === 'diagram'">
-              <DiagramPreview :url="diagram.url" :previewUrl="diagram.previewUrl" :name="diagram.name" @delete="showDeleteConfirm = true"/>
+              <DiagramPreview :url="diagram.url" :previewUrl="diagram.preview_url" :name="diagram.name" @delete="showDeleteConfirm = true"/>
             </template>
             <template v-else-if="activeTab === 'elements'">
-              <DiagramElements :elements="diagram.elements" @extract="handleExtractElements"/>
+              <DiagramElements :elements="currentDiagram?.elements" :diagram-id="diagram.id" :project="project" @extract="handleExtractElements"/>
             </template>
           </div>
         </div>
@@ -86,9 +86,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../../../stores/userStore'
+import { useJobsStore } from '../../../stores/jobsStore'
 import { useDiagramsStore } from '../../../stores/diagramsStore'
 import { useQuasar } from 'quasar'
 import DiagramNameDialog from './DiagramNameDialog.vue'
@@ -102,6 +103,7 @@ const props = defineProps<{
   modelValue: boolean
   diagram: Diagram
   projectId: string
+  project: Project
 }>()
 
 const emit = defineEmits<{
@@ -111,13 +113,14 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const userStore = useUserStore()
+const jobsStore = useJobsStore()
 const diagramsStore = useDiagramsStore()
 const $q = useQuasar()
 
 const activeTab = ref('diagram')
 const tabs = [
   { value: 'diagram', label: t('projects.diagrams.tabs.diagram') },
-  { value: 'elements', label: t('projects.diagrams.tabs.elements') }
+  { value: 'elements', label: t('projects.diagrams.tabs.io_list') }
 ]
 
 const showNameEdit = ref(false)
@@ -125,6 +128,18 @@ const showDescriptionEdit = ref(false)
 const showDeleteConfirm = ref(false)
 const extracting = ref(false)
 const loading = ref(false)
+
+// Get the current diagram from the store to ensure reactivity
+const currentDiagram = computed(() => {
+  return diagramsStore.getDiagramById(props.projectId, props.diagram.id).value
+})
+
+// Watch for changes in the current diagram and emit updates
+watch(currentDiagram, (newDiagram) => {
+  if (newDiagram && newDiagram.id === props.diagram.id) {
+    emit('diagram-updated', newDiagram)
+  }
+}, { deep: true })
 
 const handleExtractElements = async () => {
   $q.loading.show({
@@ -135,18 +150,29 @@ const handleExtractElements = async () => {
   })
   extracting.value = true
   try {
-    const updatedDiagram = await diagramsStore.getDiagramDataExtract(props.projectId, props.diagram.id)
-    emit('diagram-updated', updatedDiagram)
+    const newJob = await jobsStore.createJob({
+      type: 'diagram_elements_extraction',
+      status: 'pending',
+      organization_id: props.project.organization_id,
+      payload: {
+        diagram_id: props.diagram.id,
+        project_id: props.projectId
+      }
+    })
+    
+    // Add the new job to organizationJobs list
+    jobsStore.organizationJobs.push(newJob)
+    
     $q.notify({
       color: 'positive',
-      message: t('projects.diagrams.extractSuccess'),
+      message: t('projects.diagrams.extractStarted'),
       position: 'top'
     })
   } catch (error) {
     console.error('Failed to extract elements:', error)
     $q.notify({
       color: 'negative',
-      message: t('projects.diagrams.extractFailed'),
+      message: t('projects.diagrams.extractStartFailed'),
       position: 'top'
     })
   } finally {

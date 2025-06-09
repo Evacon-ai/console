@@ -16,12 +16,6 @@ export default {
       on_hold: 'En Espera',
       canceled: 'Cancelado'
     },
-    active: 'Activo',
-    completed: 'Completado',
-    on_hold: 'En Espera',
-    canceled: 'Cancelado'
-  },
-  status: {
     edit: 'Cambiar Estado del Proyecto',
     label: 'Estado',
     required: 'El estado es requerido'
@@ -84,12 +78,14 @@ export default {
     elementIdentifier: 'Identificador del elemento',
     extractSuccess: 'Elementos extraídos correctamente',
     extractFailed: 'Error al extraer elementos',
-    extractingMessage: 'Extrayendo elementos - por favor no cierre el navegador ya que podría tomar hasta unos minutos',
+    extractingMessage: 'Extracción de elementos en progreso - por favor espere',
+    extractStarted: 'Extracción de elementos iniciada',
+    extractStartFailed: 'Error al iniciar la extracción de elementos',
     updateNameFailed: 'Error al actualizar el nombre del diagrama',
     updateDescriptionFailed: 'Error al actualizar la descripción del diagrama',
     tabs: {
       diagram: 'Diagrama',
-      elements: 'Elementos'
+      io_list: 'Lista de E/S'
     }
   },
   wizard: {

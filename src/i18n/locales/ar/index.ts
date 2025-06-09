@@ -6,6 +6,7 @@ import profile from './profile'
 import dashboard from './dashboard'
 import organizations from './organizations'
 import time from './time'
+import jobs from './jobs'
 
 export default {
   common,
@@ -15,5 +16,6 @@ export default {
   profile,
   dashboard,
   organizations,
-  time
+  time,
+  jobs
 }

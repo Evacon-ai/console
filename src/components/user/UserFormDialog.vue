@@ -121,13 +121,13 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useUserStore } from '../stores/userStore'
-import { useOrganizationsStore } from '../stores/organizationsStore'
+import { useUserStore } from '../../stores/userStore'
+import { useOrganizationsStore } from '../../stores/organizationsStore'
 import { Building2 } from 'lucide-vue-next'
 import { createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
-import { auth } from '../lib/firebase'
-import { generateRandomPassword } from '../utils/password'
-import api from '../lib/axios'
+import { auth } from '../../lib/firebase'
+import { generateRandomPassword } from '../../utils/password'
+import api from '../../lib/axios'
 
 const props = defineProps<{
   modelValue: boolean

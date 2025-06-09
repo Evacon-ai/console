@@ -122,8 +122,8 @@ import { useOrganizationsStore } from '../stores/organizationsStore'
 import { useProjectsStore } from '../stores/projectsStore'
 import { useUserStore } from '../stores/userStore'
 import CreateDialog from '../components/organization/CreateDialog.vue'
-import OrganizationDetails from '../components/OrganizationDetails.vue'
-import LocationDisplay from '../components/LocationDisplay.vue'
+import OrganizationDetails from '../components/organization/OrganizationDetails.vue'
+import LocationDisplay from '../components/shared/LocationDisplay.vue'
 import type { Organization } from '../types'
 
 const { locale } = useI18n()

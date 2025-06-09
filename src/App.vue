@@ -71,26 +71,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Home, FolderKanban, Users, Building2, Menu } from 'lucide-vue-next'
+import { Home, FolderKanban, Users, Building2, Menu, Cog } from 'lucide-vue-next'
 import { useQuasar, useDialogPluginComponent } from 'quasar'
 import { useUserStore } from './stores/userStore'
+import { useJobsStore } from './stores/jobsStore'
 import { useOrganizationsStore } from './stores/organizationsStore'
-import Logo from './components/Logo.vue'
-import UserMenu from './components/UserMenu.vue'
-import OrganizationDetails from './components/OrganizationDetails.vue'
+import Logo from './components/shared/Logo.vue'
+import UserMenu from './components/user/UserMenu.vue'
+import OrganizationDetails from './components/organization/OrganizationDetails.vue'
 
 const route = useRoute()
 const router = useRouter()
 const { locale } = useI18n()
 const userStore = useUserStore()
+const jobsStore = useJobsStore()
 const organizationsStore = useOrganizationsStore()
 const $q = useQuasar()
 const leftDrawerOpen = ref($q.screen.gt.sm)
 const showOrgDetails = ref(false)
 const selectedOrg = ref(null)
+
+// Initialize WebSocket connection when user is authenticated
+watch(() => userStore.isAuthenticated, (isAuthenticated) => {
+  if (isAuthenticated) {
+    jobsStore.initializeWebSocket()
+  }
+})
 
 const isRTL = computed(() => ['ar', 'he'].includes(locale.value))
 const isGuestPage = computed(() => {
@@ -103,12 +112,13 @@ const links = computed(() => {
     { icon: Home, label: 'common.home', path: '/dashboard' },
     { icon: Building2, label: 'organizations.title', path: '/organizations' },
     { icon: FolderKanban, label: 'common.projects', path: '/projects' },
-    { icon: Users, label: 'users.title', path: '/users' }
+    { icon: Users, label: 'users.title', path: '/users' },
+    { icon: Cog, label: 'jobs.title', path: '/jobs', evacon: true }
   ]
 
   // Evacon users see all menu items
   if (userStore.currentUser?.level === 'evacon') {
-    return allLinks
+    return allLinks.filter(link => !link.evacon || userStore.currentUser?.level === 'evacon')
   }
 
   // Customer admin sees projects and users

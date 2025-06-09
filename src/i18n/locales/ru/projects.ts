@@ -12,19 +12,13 @@ export default {
   status: {
     edit: 'Изменить статус проекта',
     label: 'Статус',
-    required: 'Статус обязателен'
-  },
-  status: {
+    required: 'Статус обязателен',
     options: {
       active: 'Активный',
       completed: 'Завершен',
       on_hold: 'Приостановлен',
       canceled: 'Отменен'
-    },
-    active: 'Активный',
-    completed: 'Завершен',
-    on_hold: 'Приостановлен',
-    canceled: 'Отменен'
+    }
   },
   name: {
     edit: 'Редактировать название проекта',
@@ -84,12 +78,14 @@ export default {
     elementIdentifier: 'Идентификатор элемента',
     extractSuccess: 'Элементы успешно извлечены',
     extractFailed: 'Не удалось извлечь элементы',
-    extractingMessage: 'Извлечение элементов - пожалуйста, не закрывайте браузер, так как это может занять до нескольких минут',
+    extractingMessage: 'Выполняется извлечение элементов - пожалуйста, подождите',
+    extractStarted: 'Начато извлечение элементов',
+    extractStartFailed: 'Не удалось начать извлечение элементов',
     updateNameFailed: 'Не удалось обновить название диаграммы',
     updateDescriptionFailed: 'Не удалось обновить описание диаграммы',
     tabs: {
       diagram: 'Диаграмма',
-      elements: 'Элементы'
+      io_list: 'Список входов/выходов'
     }
   },
   wizard: {

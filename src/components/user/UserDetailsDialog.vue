@@ -159,12 +159,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useUserStore } from '../stores/userStore'
-import { useUsersStore } from '../stores/usersStore'
-import { useOrganizationsStore } from '../stores/organizationsStore'
+import { useUserStore } from '../../stores/userStore'
+import { useUsersStore } from '../../stores/usersStore'
+import { useOrganizationsStore } from '../../stores/organizationsStore'
 import { UserPlus, UserCog, Building2 } from 'lucide-vue-next'
-import { useTimeFormatter } from '../utils/formatTime'
-import type { UserRole } from '../types'
+import { useTimeFormatter } from '../../utils/formatTime'
+import type { UserRole } from '../../types'
 
 interface UserMetadata {
   first_name: string

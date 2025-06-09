@@ -16,12 +16,6 @@ export default {
       on_hold: 'בהמתנה',
       canceled: 'בוטל'
     },
-    active: 'פעיל',
-    completed: 'הושלם',
-    on_hold: 'בהמתנה',
-    canceled: 'בוטל'
-  },
-  status: {
     edit: 'שנה סטטוס פרויקט',
     label: 'סטטוס',
     required: 'סטטוס נדרש'
@@ -84,12 +78,14 @@ export default {
     elementIdentifier: 'מזהה אלמנט',
     extractSuccess: 'האלמנטים חולצו בהצלחה',
     extractFailed: 'שגיאה בחילוץ אלמנטים',
-    extractingMessage: 'מחלץ אלמנטים - אנא אל תסגור את הדפדפן מכיוון שזה עשוי לקחת עד מספר דקות',
+    extractingMessage: 'תהליך חילוץ אלמנטים בביצוע - אנא המתן',
+    extractStarted: 'חילוץ האלמנטים החל',
+    extractStartFailed: 'שגיאה בהתחלת חילוץ האלמנטים',
     updateNameFailed: 'שגיאה בעדכון שם הדיאגרמה',
     updateDescriptionFailed: 'שגיאה בעדכון תיאור הדיאגרמה',
     tabs: {
       diagram: 'תרשים',
-      elements: 'אלמנטים'
+      io_list: 'רשימת קלט/פלט'
     }
   },
   wizard: {

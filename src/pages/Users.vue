@@ -232,8 +232,8 @@ import { useTimeFormatter } from '../utils/formatTime'
 import { useUserStore } from '../stores/userStore'
 import { useUsersStore } from '../stores/usersStore'
 import { useOrganizationsStore } from '../stores/organizationsStore'
-import UserFormDialog from '../components/UserFormDialog.vue'
-import UserDetailsDialog from '../components/UserDetailsDialog.vue'
+import UserFormDialog from '../components/user/UserFormDialog.vue'
+import UserDetailsDialog from '../components/user/UserDetailsDialog.vue'
 
 const { t } = useI18n()
 const { formatTime } = useTimeFormatter()

@@ -78,12 +78,14 @@ export default {
     elementIdentifier: 'Element Identifier',
     extractSuccess: 'Elements extracted successfully',
     extractFailed: 'Failed to extract elements',
-    extractingMessage: 'Extracting elements - please do not close the browser as it might take up to a few minutes',
+    extractingMessage: 'Element extraction in progress - please wait',
+    extractStarted: 'Element extraction started',
+    extractStartFailed: 'Failed to start element extraction',
     updateNameFailed: 'Failed to update diagram name',
     updateDescriptionFailed: 'Failed to update diagram description',
     tabs: {
       diagram: 'Diagram',
-      elements: 'Elements'
+      io_list: 'I/O List'
     }
   },
   wizard: {

@@ -2,7 +2,7 @@
   <div class="project-diagrams">
     <div class="text-subtitle1 text-weight-medium q-mb-lg">{{ $t('projects.diagrams.title') }}</div>
 
-    <template v-if="diagramsStore.getDiagramsByProjectId(project.id).value.length"> 
+    <template v-if="diagramsStore.getDiagramsByProjectId(project.id)?.length"> 
       <div class="row q-col-gutter-md row full-height">
         <div class="col-12 col-sm-6 col-md-4 row">  
           <q-card 
@@ -27,14 +27,14 @@
               <div class="text-grey-7 q-mt-sm">{{ $t('projects.diagrams.uploadHint') }}</div>
             </q-card>
           </div>
-        <div v-for="diagram in diagramsStore.getDiagramsByProjectId(project.id).value" :key="diagram.id" class="col-12 col-sm-6 col-md-4">          
+        <div v-for="diagram in diagramsStore.getDiagramsByProjectId(project.id) || []" :key="diagram.id" class="col-12 col-sm-6 col-md-4">          
           <q-card flat bordered class="diagram-card"  @click="handleDiagramClick(diagram)">
             <q-card-section>
               <!-- Preview Area -->
               <div class="preview-area">
-                <template v-if="diagram.thumbnailUrl">
+                <template v-if="diagram.thumbnail_url">
                   <img 
-                    :src="diagram.thumbnailUrl" 
+                    :src="diagram.thumbnail_url" 
                     :alt="diagram.name"
                     class="diagram-preview"
                   />
@@ -97,6 +97,7 @@
       v-model="showDetails"
       :diagram="selectedDiagram"
       :project-id="project.id"
+      :project="project"
       @diagram-updated="onDiagramUpdated"
     />
   </div>
@@ -109,6 +110,7 @@ import { useQuasar } from 'quasar'
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { useTimeFormatter } from '../../../utils/formatTime'
 import { useDiagramsStore } from '../../../stores/diagramsStore'
+import { useJobsStore } from '../../../stores/jobsStore'
 import DiagramDetails from './DiagramDetails.vue'
 import type { Project, Diagram } from '../../../types'
 
@@ -118,6 +120,7 @@ const props = defineProps<{
 
 const { formatTime } = useTimeFormatter()
 const diagramsStore = useDiagramsStore()
+const jobsStore = useJobsStore()
 const $q = useQuasar()
 const fileInput = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
@@ -127,6 +130,7 @@ const showDetails = ref(false)
 onMounted(async () => {
   try {
     await diagramsStore.fetchProjectDiagrams(props.project.id)
+    await jobsStore.fetchOrganizationPendingJobs(props.project.organization_id)
   } catch (error) {
     console.error('Failed to fetch diagrams:', error)
   }

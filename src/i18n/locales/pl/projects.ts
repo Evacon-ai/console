@@ -16,12 +16,6 @@ export default {
       on_hold: 'Wstrzymany',
       canceled: 'Anulowany'
     },
-    active: 'Aktywny',
-    completed: 'Zakończony',
-    on_hold: 'Wstrzymany',
-    canceled: 'Anulowany'
-  },
-  status: {
     edit: 'Zmień status projektu',
     label: 'Status',
     required: 'Status jest wymagany'
@@ -84,12 +78,14 @@ export default {
     elementIdentifier: 'Identyfikator elementu',
     extractSuccess: 'Elementy zostały pomyślnie wyodrębnione',
     extractFailed: 'Nie udało się wyodrębnić elementów',
-    extractingMessage: 'Wyodrębnianie elementów - proszę nie zamykać przeglądarki, ponieważ może to potrwać do kilku minut',
+    extractingMessage: 'Trwa wyodrębnianie elementów - proszę czekać',
+    extractStarted: 'Rozpoczęto wyodrębnianie elementów',
+    extractStartFailed: 'Nie udało się rozpocząć wyodrębniania elementów',
     updateNameFailed: 'Nie udało się zaktualizować nazwy diagramu',
     updateDescriptionFailed: 'Nie udało się zaktualizować opisu diagramu',
     tabs: {
       diagram: 'Diagram',
-      elements: 'Elementy'
+      io_list: 'Lista We/Wy'
     }
   },
   wizard: {

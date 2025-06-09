@@ -38,8 +38,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Cpu } from 'lucide-vue-next'
-import { useUserStore } from '../stores/userStore'
-import { useOrganizationsStore } from '../stores/organizationsStore'
+import { useUserStore } from '../../stores/userStore'
+import { useOrganizationsStore } from '../../stores/organizationsStore'
 
 const userStore = useUserStore()
 const organizationsStore = useOrganizationsStore()
